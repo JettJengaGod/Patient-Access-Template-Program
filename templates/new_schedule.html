@@ -4,6 +4,109 @@
 {% block head %}{% endblock %} {% comment %}Include any page specific css or js here{% endcomment %}
 
 {% block content %}
-    <h3 class="text-center">Create New Schedule</h3>
-
+    <h4 class="text-center">Create New Schedule</h4>
+    <form>
+    <div>
+        <h3>Schedule Period</h3>
+        <button type="button" class="btn btn-primary">Day</button>
+        <button type="button"  class="btn btn-primary">Week</button>
+        <button type="button"  class="btn btn-primary">Month</button>
+        <hr>
+    </div>
+    <div>
+        <h3>RN Schedules</h3>
+        <div class="form-group">
+            <label for="textboxChairs">Available Chairs:</label>
+            <input type="number" class="form-control" id="textboxChairs">
+        </div>
+        <button type="button" class="btn btn-primary" style="float: right;">Load</button><br><br>
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Start Time</th>
+                <th>Lunch Time</th>
+                <th>Lunch Duration</th>
+                <th>End Time</th>
+            </tr>
+            <tr>
+                <td>
+                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </td>
+                <td>Nurse 1</td>
+                <td><input type="time" title="Start Time"></td>
+                <td><input type="time" title="Lunch Time"></td>
+                <td><input type="number" title="Duration"></td>
+                <td><input type="time" title="End Time"></td>
+            </tr>
+            <tr>
+                <td>
+                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </td>
+                <td>Nurse 2</td>
+                <td><input type="time" title="Start Time"></td>
+                <td><input type="time" title="Lunch Time"></td>
+                <td><input type="number" title="Duration"></td>
+                <td><input type="time" title="End Time"></td>
+            </tr>
+        </table>
+    <hr>
+    </div>
+    <div>
+        <h3>Needed Timeslots</h3>
+        {% comment %}
+        <div class="form-group">
+            <label for="dropdownTimeslot">Time Period</label>
+            <select id="dropdownTimeslot" class="dropdown-toggle">
+                <option role="menuitem" value="10">10 minutes</option>
+                <option role="menuitem" value="20">20 minutes</option>
+                <option role="menuitem" value="30">30 minutes</option>
+                <option role="menuitem" value="40">40 minutes</option>
+            </select>
+        </div>
+        {% endcomment %}
+        <div class="dropdown" style="display: inline-block;">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownTimeslot" data-toggle="dropdown">Time Period
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownTimeslot">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">10 Minutes</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">20 Minutes</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">30 Minutes</a></li>
+              <li role="presentation" class="divider"></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Custom Time</a></li>
+            </ul>
+        </div>
+        <div class="form-group" style="max-width: 150px; display: inline-block;">
+            <label for="textboxNumberOfSlots">Amount Needed:</label>
+            <input type="number" class="form-control" id="textboxNumberOfSlots">
+        </div>
+        <button type="button" class="btn btn-primary">Add</button><br><br>
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>Time Period</th>
+                <th>Total Needed</th>
+            </tr>
+            <tr>
+                <td>
+                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </td>
+                <td>10 min</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>
+                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </td>
+                <td>50 min</td>
+                <td>7</td>
+            </tr>
+        </table>
+        <br>
+        <button type="button" class="btn btn-primary btn-lg">Submit</button><br><br>
+    </div>
+    </form>
+    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Previous</button>
+    <button type="button" class="btn btn-default">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></button>
+    <button type="button" class="btn btn-default" style="float: right;">Cancel</button>
 {% endblock %}
