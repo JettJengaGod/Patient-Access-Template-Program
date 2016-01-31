@@ -1,26 +1,139 @@
 {% extends "Master.html" %}
 
 {% block title %}New Schedule{% endblock %}
-{% block head %}{% endblock %} {% comment %}Include any page specific css or js here{% endcomment %}
+{% block head %}
+    <script>
+    function buttonDayClick() {
+
+    }
+    function buttonAddNurseClick() {
+        var table = document.getElementById('nurseTable');
+        var rowCount = table.rows.length - 1;//insert at rowCount - 1 to leave button row as an add button
+        var newRow = table.insertRow(rowCount);
+        //var colCount = table.rows[0].cells.length;
+
+        var cell1 = newRow.insertCell(0);
+        cell1.innerHTML="<button type='button' aria-label='Delete' onclick='buttonRemoveNurseClick(" + rowCount +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
+
+        var cell2 = newRow.insertCell(1);
+        cell2.innerHTML="Nurse " + rowCount;
+
+        var cell3 = newRow.insertCell(2);
+        var inputStartTime = document.createElement("input");
+        inputStartTime.type = "time";
+        inputStartTime.name="StartTime" + rowCount;
+        cell3.appendChild(inputStartTime);
+
+        var cell4 = newRow.insertCell(3);
+        var inputLunchTime = document.createElement("input");
+        inputLunchTime.type = "time";
+        inputLunchTime.name="LunchTime" + rowCount;
+        cell4.appendChild(inputLunchTime);
+
+        var cell5 = newRow.insertCell(4);
+        var inputLunchDuration = document.createElement("input");
+        inputLunchDuration.type = "number";
+        inputLunchDuration.name="LunchDuration" + rowCount;
+        cell5.appendChild(inputLunchDuration);
+
+        var cell6 = newRow.insertCell(5);
+        var inputEndTime = document.createElement("input");
+        inputEndTime.type = "time";
+        inputEndTime.name="EndTime" + rowCount;
+        cell6.appendChild(inputEndTime);
+    }
+    function buttonAddTimeslotClick() {
+        var timePeriod = $("#dropdownTimeslot option:selected")[0].value + " min";
+        var amount = parseInt($("#textboxNumberOfSlots")[0].value);
+        var table = document.getElementById('tableTimeslots');
+        var rowCount = table.rows.length;
+        var unique = true;
+
+        for(var i=1; i < rowCount; i++) //check if updating row
+            if(table.rows[i].cells[1].innerHTML == timePeriod) //if already the time entered
+            {
+                unique = false;
+                var AmountCell = table.rows[i].cells[2];
+                var CurrentAmount = parseInt(AmountCell.innerHTML);
+                AmountCell.textContent = CurrentAmount + amount;
+                break;
+            }
+
+        if(unique) //if inserting row,
+        {
+            var newRow = table.insertRow(rowCount);
+            var cell1 = newRow.insertCell(0);
+            cell1.innerHTML="<button type='button' aria-label='Delete' onclick='buttonRemoveTimeslotClick(" + rowCount +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
+
+            var cell2 = newRow.insertCell(1);
+            cell2.innerHTML=timePeriod;
+
+            var cell3 = newRow.insertCell(2);
+            cell3.innerHTML=amount;
+        }
+        $("#textboxNumberOfSlots")[0].value = "";
+    }
+    function  buttonRemoveNurseClick(rowIndex){
+        try {
+            var table = document.getElementById('nurseTable');
+            var rowCount = table.rows.length;
+
+            table.deleteRow(rowIndex);
+            rowCount--;
+
+            for(var i=1; i < rowCount - 1; i++) {
+                var row = table.rows[i];
+                var cell2 = row.cells[1];
+                if(cell2.innerHTML.split(' ')[1] != i){
+                    row.cells[0].innerHTML = "<button type='button' aria-label='Delete' onclick='buttonRemoveNurseClick(" + i +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
+                    cell2.innerHTML = "Nurse " + i;
+                    for (var j = 2; j < 5; j++) {
+                        var cell = row.cells[j];
+                        cell.childNodes[0].name = cell.childNodes[0].name.match('[\w]') + i;
+                    }
+                }
+            }
+            }catch(e) {
+                alert(e);
+            }
+    }
+    function  buttonRemoveTimeslotClick(rowIndex){
+        try {
+            var table = document.getElementById('tableTimeslots');
+            var rowCount = table.rows.length;
+
+            table.deleteRow(rowIndex);
+            rowCount--;
+
+            for(var i=1; i < rowCount; i++) { //update the removeClick index
+                var row = table.rows[i];
+                row.cells[0].innerHTML = "<button type='button' aria-label='Delete' onclick='buttonRemoveTimeslotClick(" + i +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
+            }
+            }catch(e) {
+                alert(e);
+            }
+    }
+    </script>
+{% endblock %}
 
 {% block content %}
     <h4 class="text-center">Create New Schedule</h4>
-    <form>
+    <form method="POST" action="/submit/">
     <div>
         <h3>Schedule Period</h3>
-        <button type="button" class="btn btn-primary">Day</button>
-        <button type="button"  class="btn btn-primary">Week</button>
-        <button type="button"  class="btn btn-primary">Month</button>
+        <button id="buttonDay" type="button" class="btn btn-primary" onclick="buttonDayClick()" >Day</button>
+        <button id="buttonWeek" type="button"  class="btn btn-primary" disabled="disabled">Week</button>
+        <button id="buttonMonth"  class="btn btn-primary" disabled="disabled">Month</button>
         <hr>
     </div>
     <div>
         <h3>RN Schedules</h3>
-        <div class="form-group">
-            <label for="textboxChairs">Available Chairs:</label>
-            <input type="number" class="form-control" id="textboxChairs">
+        <div class="form-group" style="max-width: 150px; display: inline-block;">
+            <label for="textboxChairs">Available Chairs:</label> #TODO validate if there is valid input given
+            <input name="NumberOfChairs" type="number" class="form-control" id="textboxChairs">
         </div>
         <button type="button" class="btn btn-primary" style="float: right;">Load</button><br><br>
-        <table class="table table-striped">
+        <table id="nurseTable" class="table table-striped">
             <tr>
                 <th></th>
                 <th></th>
@@ -31,40 +144,34 @@
             </tr>
             <tr>
                 <td>
-                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    <button type="button" aria-label="Delete" onclick="buttonRemoveNurseClick(1); return false;"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                 </td>
                 <td>Nurse 1</td>
-                <td><input type="time" title="Start Time"></td>
-                <td><input type="time" title="Lunch Time"></td>
-                <td><input type="number" title="Duration"></td>
-                <td><input type="time" title="End Time"></td>
+                <td><input type="time" name="StartTime1"></td>
+                <td><input type="time" name="LunchTime1"></td>
+                <td><input type="number" name="LunchDuration1"></td>
+                <td><input type="time" name="EndTime1"></td>
             </tr>
             <tr>
                 <td>
-                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    <button type="button" aria-label="Add"><span class="glyphicon glyphicon-plus" aria-hidden="true" onclick="buttonAddNurseClick(); return false;"></span></button>
                 </td>
-                <td>Nurse 2</td>
-                <td><input type="time" title="Start Time"></td>
-                <td><input type="time" title="Lunch Time"></td>
-                <td><input type="number" title="Duration"></td>
-                <td><input type="time" title="End Time"></td>
             </tr>
         </table>
     <hr>
     </div>
     <div>
         <h3>Needed Timeslots</h3>
-        {% comment %}
         <div class="form-group">
             <label for="dropdownTimeslot">Time Period</label>
             <select id="dropdownTimeslot" class="dropdown-toggle">
-                <option role="menuitem" value="10">10 minutes</option>
-                <option role="menuitem" value="20">20 minutes</option>
-                <option role="menuitem" value="30">30 minutes</option>
-                <option role="menuitem" value="40">40 minutes</option>
+                <option value="10">10 minutes</option>
+                <option value="20">20 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="40">40 minutes</option>
             </select>
         </div>
-        {% endcomment %}
+        {% comment %}
         <div class="dropdown" style="display: inline-block;">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownTimeslot" data-toggle="dropdown">Time Period
             <span class="caret"></span></button>
@@ -76,37 +183,24 @@
               <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Custom Time</a></li>
             </ul>
         </div>
+        {% endcomment %}
         <div class="form-group" style="max-width: 150px; display: inline-block;">
             <label for="textboxNumberOfSlots">Amount Needed:</label>
             <input type="number" class="form-control" id="textboxNumberOfSlots">
         </div>
-        <button type="button" class="btn btn-primary">Add</button><br><br>
-        <table class="table table-striped">
+        <button type="button" class="btn btn-primary" onclick="buttonAddTimeslotClick()">Add</button><br><br>
+        <table id="tableTimeslots" class="table table-striped">
             <tr>
                 <th></th>
                 <th>Time Period</th>
                 <th>Total Needed</th>
             </tr>
-            <tr>
-                <td>
-                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-                </td>
-                <td>10 min</td>
-                <td>3</td>
-            </tr>
-            <tr>
-                <td>
-                    <button aria-label="Delete"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
-                </td>
-                <td>50 min</td>
-                <td>7</td>
-            </tr>
         </table>
         <br>
-        <button type="button" class="btn btn-primary btn-lg">Submit</button><br><br>
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button><br><br># TODO Read in all the inputs after the POST
     </div>
-    </form>
+    </form># TODO Add transitions between steps
     <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Previous</button>
-    <button type="button" class="btn btn-default">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></button>
+    <button type="button" class="btn btn-default">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
     <button type="button" class="btn btn-default" style="float: right;">Cancel</button>
 {% endblock %}
