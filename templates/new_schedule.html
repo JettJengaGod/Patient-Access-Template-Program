@@ -118,7 +118,8 @@
 
 {% block content %}
     <h4 class="text-center">Create New Schedule</h4>
-    <form method="POST" action="/submit/">
+    <form method="POST" action="/generateSchedule/">
+    {% csrf_token %}
     <div>
         <h3>Schedule Period</h3>
         <button id="buttonDay" type="button" class="btn btn-primary" onclick="buttonDayClick()" >Day</button>
@@ -129,7 +130,8 @@
     <div>
         <h3>RN Schedules</h3>
         <div class="form-group" style="max-width: 150px; display: inline-block;">
-            <label for="textboxChairs">Available Chairs:</label> #TODO validate if there is valid input given
+            <label for="textboxChairs">Available Chairs:</label>
+            {#TODO validate if there is valid input given#}
             <input name="NumberOfChairs" type="number" class="form-control" id="textboxChairs">
         </div>
         <button type="button" class="btn btn-primary" style="float: right;">Load</button><br><br>
@@ -144,7 +146,7 @@
             </tr>
             <tr>
                 <td>
-                    <button type="button" aria-label="Delete" onclick="buttonRemoveNurseClick(1); return false;"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    <button type="button" aria-label="Delete" onclick="buttonRemoveNurseClick(1)"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                 </td>
                 <td>Nurse 1</td>
                 <td><input type="time" name="StartTime1"></td>
@@ -154,7 +156,7 @@
             </tr>
             <tr>
                 <td>
-                    <button type="button" aria-label="Add"><span class="glyphicon glyphicon-plus" aria-hidden="true" onclick="buttonAddNurseClick(); return false;"></span></button>
+                    <button type="button" aria-label="Add" onclick="buttonAddNurseClick()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
                 </td>
             </tr>
         </table>
@@ -171,19 +173,19 @@
                 <option value="40">40 minutes</option>
             </select>
         </div>
-        {% comment %}
-        <div class="dropdown" style="display: inline-block;">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownTimeslot" data-toggle="dropdown">Time Period
-            <span class="caret"></span></button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownTimeslot">
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">10 Minutes</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">20 Minutes</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">30 Minutes</a></li>
-              <li role="presentation" class="divider"></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Custom Time</a></li>
-            </ul>
-        </div>
-        {% endcomment %}
+
+{#        <div class="dropdown" style="display: inline-block;">#}
+{#            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownTimeslot" data-toggle="dropdown">Time Period#}
+{#            <span class="caret"></span></button>#}
+{#            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownTimeslot">#}
+{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">10 Minutes</a></li>#}
+{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">20 Minutes</a></li>#}
+{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">30 Minutes</a></li>#}
+{#              <li role="presentation" class="divider"></li>#}
+{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Custom Time</a></li>#}
+{#            </ul>#}
+{#        </div>#}
+
         <div class="form-group" style="max-width: 150px; display: inline-block;">
             <label for="textboxNumberOfSlots">Amount Needed:</label>
             <input type="number" class="form-control" id="textboxNumberOfSlots">
@@ -197,9 +199,11 @@
             </tr>
         </table>
         <br>
-        <button type="submit" class="btn btn-primary btn-lg">Submit</button><br><br># TODO Read in all the inputs after the POST
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button><br><br>
+        {#TODO Read in all the inputs after the POST#}
     </div>
-    </form># TODO Add transitions between steps
+    </form>
+    {#TODO Add transitions between steps#}
     <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Previous</button>
     <button type="button" class="btn btn-default">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
     <button type="button" class="btn btn-default" style="float: right;">Cancel</button>

@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^$', PatientScheduling.views.new_schedule),
     url(r'^admin/', admin.site.urls),
     url(r'^newSchedule/', PatientScheduling.views.new_schedule),
+    url(r'^generateSchedule/', PatientScheduling.views.generate_schedule)
 ]
