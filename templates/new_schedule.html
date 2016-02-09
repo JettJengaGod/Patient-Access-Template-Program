@@ -3,112 +3,57 @@
 {% block title %}New Schedule{% endblock %}
 {% block head %}
     <script>
+    function updateElementIndex(object, prefix, index) {
+		var id_regex = new RegExp('(' + prefix + '-\\d+)');
+		var replacement = prefix + '-' + index;
+		if ($(object).attr("for")) $(object).attr("for", $(object).attr("for").replace(id_regex, replacement));
+		if (object.id) object.id = object.id.replace(id_regex, replacement);
+		if (object.name) object.name = object.name.replace(id_regex, replacement);
+        if (object.className && object.className == "delete-button")
+            $(object).removeAttr("onclick").unbind().click(function () {
+                    RemoveRowClick(index+1, prefix);
+            });
+	}
     function buttonDayClick() {
 
     }
-    function buttonAddNurseClick() {
-        var table = document.getElementById('nurseTable');
-        var rowCount = table.rows.length - 1;//insert at rowCount - 1 to leave button row as an add button
-        var newRow = table.insertRow(rowCount);
-        //var colCount = table.rows[0].cells.length;
-
-        var cell1 = newRow.insertCell(0);
-        cell1.innerHTML="<button type='button' aria-label='Delete' onclick='buttonRemoveNurseClick(" + rowCount +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
-
-        var cell2 = newRow.insertCell(1);
-        cell2.innerHTML="Nurse " + rowCount;
-
-        var cell3 = newRow.insertCell(2);
-        var inputStartTime = document.createElement("input");
-        inputStartTime.type = "time";
-        inputStartTime.name="StartTime" + rowCount;
-        cell3.appendChild(inputStartTime);
-
-        var cell4 = newRow.insertCell(3);
-        var inputLunchTime = document.createElement("input");
-        inputLunchTime.type = "time";
-        inputLunchTime.name="LunchTime" + rowCount;
-        cell4.appendChild(inputLunchTime);
-
-        var cell5 = newRow.insertCell(4);
-        var inputLunchDuration = document.createElement("input");
-        inputLunchDuration.type = "number";
-        inputLunchDuration.name="LunchDuration" + rowCount;
-        cell5.appendChild(inputLunchDuration);
-
-        var cell6 = newRow.insertCell(5);
-        var inputEndTime = document.createElement("input");
-        inputEndTime.type = "time";
-        inputEndTime.name="EndTime" + rowCount;
-        cell6.appendChild(inputEndTime);
-    }
-    function buttonAddTimeslotClick() {
-        var timePeriod = $("#dropdownTimeslot option:selected")[0].value + " min";
-        var amount = parseInt($("#textboxNumberOfSlots")[0].value);
-        var table = document.getElementById('tableTimeslots');
-        var rowCount = table.rows.length;
-        var unique = true;
-
-        for(var i=1; i < rowCount; i++) //check if updating row
-            if(table.rows[i].cells[1].innerHTML == timePeriod) //if already the time entered
-            {
-                unique = false;
-                var AmountCell = table.rows[i].cells[2];
-                var CurrentAmount = parseInt(AmountCell.innerHTML);
-                AmountCell.textContent = CurrentAmount + amount;
-                break;
-            }
-
-        if(unique) //if inserting row,
-        {
-            var newRow = table.insertRow(rowCount);
-            var cell1 = newRow.insertCell(0);
-            cell1.innerHTML="<button type='button' aria-label='Delete' onclick='buttonRemoveTimeslotClick(" + rowCount +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
-
-            var cell2 = newRow.insertCell(1);
-            cell2.innerHTML=timePeriod;
-
-            var cell3 = newRow.insertCell(2);
-            cell3.innerHTML=amount;
+    function AddRowClick(prefix) {
+        try {
+            var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            var row = $('.dynamic-' + prefix + '-row:first').clone(true).get(0);
+            row.id = prefix + '-row-' + (form_count+1); //table row number starting at 1
+            $(row).insertAfter($('.dynamic-' + prefix + '-row:last'));
+            $(row).children().children().each(function () {
+                updateElementIndex(this, prefix, form_count);
+                $(this).val('');
+            });
+            if(prefix == "RN")
+                row.cells[1].textContent =  'Nurse ' + (form_count + 1);
+            $('#id_' + prefix + '-TOTAL_FORMS').val(form_count + 1);
+        }catch(e) {
+            alert(e);
         }
-        $("#textboxNumberOfSlots")[0].value = "";
     }
-    function  buttonRemoveNurseClick(rowIndex){
-        try {
-            var table = document.getElementById('nurseTable');
-            var rowCount = table.rows.length;
-
+    function RemoveRowClick(rowIndex, prefix){
+        {#TODO Prevent the user from removing all RN rows - minimum of one#}
+         var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+         try {
+            var table = document.getElementById(prefix + 'Table');
             table.deleteRow(rowIndex);
-            rowCount--;
 
-            for(var i=1; i < rowCount - 1; i++) {
-                var row = table.rows[i];
-                var cell2 = row.cells[1];
-                if(cell2.innerHTML.split(' ')[1] != i){
-                    row.cells[0].innerHTML = "<button type='button' aria-label='Delete' onclick='buttonRemoveNurseClick(" + i +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
-                    cell2.innerHTML = "Nurse " + i;
-                    for (var j = 2; j < 5; j++) {
-                        var cell = row.cells[j];
-                        cell.childNodes[0].name = cell.childNodes[0].name.match('[\w]') + i;
-                    }
-                }
-            }
-            }catch(e) {
-                alert(e);
-            }
-    }
-    function  buttonRemoveTimeslotClick(rowIndex){
-        try {
-            var table = document.getElementById('tableTimeslots');
-            var rowCount = table.rows.length;
-
-            table.deleteRow(rowIndex);
-            rowCount--;
-
-            for(var i=1; i < rowCount; i++) { //update the removeClick index
-                var row = table.rows[i];
-                row.cells[0].innerHTML = "<button type='button' aria-label='Delete' onclick='buttonRemoveTimeslotClick(" + i +")'><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button>";
-            }
+            for(var tableIndex=1; tableIndex < form_count; tableIndex++) {
+                var row = table.rows[tableIndex];
+                var RNNumber = tableIndex - 1;
+                if(row.id.split('-')[2] != tableIndex) { //If the ID does not match the row number
+                    row.id = prefix + '-row-' + tableIndex;
+                    $(row).children().children().each(function () {
+                        updateElementIndex(this, prefix, RNNumber);
+                    });
+                    if(prefix == "RN")
+                        row.cells[1].textContent =  'Nurse ' + tableIndex;
+                }//end if
+            }//end for loop
+             $('#id_' + prefix + '-TOTAL_FORMS').val(--form_count);
             }catch(e) {
                 alert(e);
             }
@@ -118,7 +63,7 @@
 
 {% block content %}
     <h4 class="text-center">Create New Schedule</h4>
-    <form method="POST" action="/generateSchedule/">
+    <form method="POST" action="/newSchedule/">
     {% csrf_token %}
     <div>
         <h3>Schedule Period</h3>
@@ -129,78 +74,62 @@
     </div>
     <div>
         <h3>RN Schedules</h3>
-        <div class="form-group" style="max-width: 150px; display: inline-block;">
-            <label for="textboxChairs">Available Chairs:</label>
-            {#TODO validate if there is valid input given#}
-            <input name="NumberOfChairs" type="number" class="form-control" id="textboxChairs">
-        </div>
-        <button type="button" class="btn btn-primary" style="float: right;">Load</button><br><br>
-        <table id="nurseTable" class="table table-striped">
-            <tr>
-                <th></th>
-                <th></th>
-                <th>Start Time</th>
-                <th>Lunch Time</th>
-                <th>Lunch Duration</th>
-                <th>End Time</th>
-            </tr>
-            <tr>
+        {{ ChairsForm }}
+        <button type="button" class="btn btn-primary" style="float: right;">Load Nurse Schedule</button><br><br>
+        {{ RNFormSet.management_form }}
+        <table id="{{ RNFormSet.prefix }}Table" class='table table-striped'>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Start Time</th>
+            <th>Lunch Time</th>
+            <th>Lunch Duration</th>
+            <th>End Time</th>
+        </tr>
+        {% for form in RNFormSet.forms %}
+            <tr id="{{ RNFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ RNFormSet.prefix }}-row">
                 <td>
-                    <button type="button" aria-label="Delete" onclick="buttonRemoveNurseClick(1)"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                 </td>
-                <td>Nurse 1</td>
-                <td><input type="time" name="StartTime1"></td>
-                <td><input type="time" name="LunchTime1"></td>
-                <td><input type="number" name="LunchDuration1"></td>
-                <td><input type="time" name="EndTime1"></td>
+                <td class="RNNumber">Nurse {{ forloop.counter }}</td>
+                <td>{{ form.StartTime }}</td>
+                <td>{{ form.LunchTime }}</td>
+                <td>{{ form.LunchDuration }}</td>
+                <td>{{ form.EndTime }}</td>
             </tr>
-            <tr>
-                <td>
-                    <button type="button" aria-label="Add" onclick="buttonAddNurseClick()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-                </td>
-            </tr>
+        {% endfor %}
+            <tr><td colspan="6">
+                <button type="button" aria-label="Add" onclick="AddRowClick('{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </td></tr>
         </table>
+
+        <br>
     <hr>
     </div>
     <div>
         <h3>Needed Timeslots</h3>
-        <div class="form-group">
-            <label for="dropdownTimeslot">Time Period</label>
-            <select id="dropdownTimeslot" class="dropdown-toggle">
-                <option value="10">10 minutes</option>
-                <option value="20">20 minutes</option>
-                <option value="30">30 minutes</option>
-                <option value="40">40 minutes</option>
-            </select>
-        </div>
-
-{#        <div class="dropdown" style="display: inline-block;">#}
-{#            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownTimeslot" data-toggle="dropdown">Time Period#}
-{#            <span class="caret"></span></button>#}
-{#            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownTimeslot">#}
-{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">10 Minutes</a></li>#}
-{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">20 Minutes</a></li>#}
-{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">30 Minutes</a></li>#}
-{#              <li role="presentation" class="divider"></li>#}
-{#              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Custom Time</a></li>#}
-{#            </ul>#}
-{#        </div>#}
-
-        <div class="form-group" style="max-width: 150px; display: inline-block;">
-            <label for="textboxNumberOfSlots">Amount Needed:</label>
-            <input type="number" class="form-control" id="textboxNumberOfSlots">
-        </div>
-        <button type="button" class="btn btn-primary" onclick="buttonAddTimeslotClick()">Add</button><br><br>
-        <table id="tableTimeslots" class="table table-striped">
-            <tr>
+        {{ AppointmentFormSet.management_form }}
+        <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
+        <tr>
                 <th></th>
                 <th>Time Period</th>
                 <th>Total Needed</th>
+        </tr>
+        {% for form in AppointmentFormSet.forms %}
+            <tr id="{{ AppointmentFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ AppointmentFormSet.prefix }}-row">
+                <td>
+                    <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ AppointmentFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </td>
+                <td>{{ form.TimePeriod }}</td>
+                <td>{{ form.Amount }}</td>
             </tr>
+        {% endfor %}
+        <tr><td colspan="6">
+            <button type="button" aria-label="Add" onclick="AddRowClick('{{ AppointmentFormSet.prefix }}')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+        </td></tr>
         </table>
         <br>
         <button type="submit" class="btn btn-primary btn-lg">Submit</button><br><br>
-        {#TODO Read in all the inputs after the POST#}
     </div>
     </form>
     {#TODO Add transitions between steps#}
