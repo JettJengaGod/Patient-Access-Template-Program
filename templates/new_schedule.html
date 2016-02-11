@@ -20,6 +20,12 @@
     function AddRowClick(prefix) {
         try {
             var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            if(form_count == 1 ) //if there was only one row, enable the delete button again
+            {
+                var table = document.getElementById(prefix + 'Table');
+                var lastDeleteButton = table.rows[1].cells[0].children[0];
+                lastDeleteButton.disabled = false;
+            }
             var row = $('.dynamic-' + prefix + '-row:first').clone(true).get(0);
             row.id = prefix + '-row-' + (form_count+1); //table row number starting at 1
             $(row).insertAfter($('.dynamic-' + prefix + '-row:last'));
@@ -35,7 +41,6 @@
         }
     }
     function RemoveRowClick(rowIndex, prefix){
-        {#TODO Prevent the user from removing all RN rows - minimum of one#}
          var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
          try {
             var table = document.getElementById(prefix + 'Table');
@@ -57,6 +62,11 @@
             }catch(e) {
                 alert(e);
             }
+        if(form_count == 1 ) //if there is now only one row left, disable delete button
+        {
+            var lastDeleteButton = table.rows[1].cells[0].children[0];
+            lastDeleteButton.disabled = true;
+        }
     }
     </script>
 {% endblock %}
@@ -118,7 +128,7 @@
         {% for form in AppointmentFormSet.forms %}
             <tr id="{{ AppointmentFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ AppointmentFormSet.prefix }}-row">
                 <td>
-                    <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ AppointmentFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    <button type="button" aria-label="Delete" class="delete-button" disabled="disabled" onclick="RemoveRowClick({{ forloop.counter }}, '{{ AppointmentFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                 </td>
                 <td>{{ form.TimePeriod }}</td>
                 <td>{{ form.Amount }}</td>
