@@ -4,6 +4,24 @@
     <database-info product="SQLite" version="3.8.9" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
     <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
     <schema name="" catalog=""/>
+    <table name="PatientScheduling_appointment" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="NurseScheduleID_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_PatientScheduling_appointment_1" columns="NurseScheduleID_id" ref-table="PatientScheduling_nurseschedule" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="PatientScheduling_appointment_8604f7b0" unique="true" columns="NurseScheduleID_id"/>
+    </table>
+    <table name="PatientScheduling_nurse" schema="" catalog="" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="PatientScheduling_nurseschedule" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="NurseID_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_PatientScheduling_nurseschedule_1" columns="NurseID_id" ref-table="PatientScheduling_nurse" ref-schema="" ref-catalog="" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="PatientScheduling_nurseschedule_cb52c43d" unique="true" columns="NurseID_id"/>
+    </table>
     <table name="auth_group" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="name" sqlType="VARCHAR(80)" precision="0" scale="-1" nullable="false" jdbcType="12"/>

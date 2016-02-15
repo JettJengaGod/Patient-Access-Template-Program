@@ -1,20 +1,20 @@
 from django import forms
-from django.forms import formset_factory
+from django.forms import formset_factory, ModelForm
+
+from PatientScheduling.models import NurseSchedule
 
 
 class ChairsForm(forms.Form):
     NumberOfChairs = forms.IntegerField(label='Number of Available Chairs')
 
 
-class RNForm(forms.Form):
-    StartTime = forms.TimeField(label='Start Time')
-    LunchTime = forms.TimeField(label='Lunch Time')
-    LunchDuration = forms.IntegerField(label='Lunch Duration')
-    EndTime = forms.TimeField(label='End Time')
-    ID = int
+class RNForm(ModelForm):
+    class Meta:
+        model = NurseSchedule
+        fields = ['StartTime', 'LunchTime', 'LunchDuration', 'EndTime']
 
 
-RNFormSet = formset_factory(RNForm, min_num=3)
+RNFormSet = formset_factory(RNForm, min_num=3, can_delete=True)
 
 
 class AppointmentForm(forms.Form):
@@ -27,5 +27,5 @@ class AppointmentForm(forms.Form):
     Amount = forms.IntegerField(label='Amount', initial=0)
 
 
-AppointmentFormSet = formset_factory(AppointmentForm)
+AppointmentFormSet = formset_factory(AppointmentForm, can_delete=True)
 
