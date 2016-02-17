@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+import PatientScheduling.db_scripts
 import PatientScheduling.views
 
 urlpatterns = [
     url(r'^$', PatientScheduling.views.new_schedule),
     url(r'^admin/', admin.site.urls),
     url(r'^newSchedule/', PatientScheduling.views.new_schedule),
-    url(r'^generateSchedule/', PatientScheduling.views.generate_schedule)
+    url(r'^generateSchedule/', PatientScheduling.views.generate_schedule),
+    url(r'^db_scripts/', PatientScheduling.db_scripts.returnhtml)
 ]

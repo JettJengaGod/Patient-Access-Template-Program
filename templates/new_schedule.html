@@ -3,6 +3,20 @@
 {% block title %}New Schedule{% endblock %}
 {% block head %}
     <script>
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: '/db_scripts/',
+        contentType: "application/json",
+        data: { id: 1},
+        complete: function(response, textStatus) {
+            if(textStatus != 'success')
+                return alert("Status: " + textStatus);
+        },
+        success: function(html) {
+            $('#divelement').replaceWith(html);
+        }
+    });
     function updateElementIndex(object, prefix, index) {
 		var id_regex = new RegExp('(' + prefix + '-\\d+)');
 		var replacement = prefix + '-' + index;
@@ -75,6 +89,7 @@
     <h4 class="text-center">Create New Schedule</h4>
     <form method="POST" action="/newSchedule/">
     {% csrf_token %}
+    <div id="divelement">replace me!</div>
     <div>
         <h3>Schedule Period</h3>
         <button id="buttonDay" type="button" class="btn btn-primary" onclick="buttonDayClick()" >Day</button>
