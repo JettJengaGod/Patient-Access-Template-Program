@@ -97,6 +97,12 @@
             <th>End Time</th>
         </tr>
         {% for form in RNFormSet.forms %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ form.non_field_errors | striptags }} at Nurse {{ forloop.counter }}
+                </div>
+            {% endif %}
             <tr id="{{ RNFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ RNFormSet.prefix }}-row">
                 <td>
                     <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>

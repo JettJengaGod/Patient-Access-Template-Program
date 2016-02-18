@@ -1,4 +1,8 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+
+
+# def validate_():
 
 
 class Nurse(models.Model):
@@ -9,7 +13,7 @@ class NurseSchedule(models.Model):
     #  models.AutoField(primary_key=True) is a default field
     NurseID = models.ForeignKey(Nurse)
     ScheduleGroup = models.TextField
-    StartTime = models.TimeField(auto_now=False, default='8:00')
+    StartTime = models.TimeField(auto_now=False, default='8:00', blank=False)
     LunchTime = models.TimeField(auto_now=False, default='12:00')
     LunchDuration = models.PositiveIntegerField(default=60)
     EndTime = models.TimeField(auto_now=False, default='5:00')
