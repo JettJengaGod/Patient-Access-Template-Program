@@ -3,12 +3,14 @@
 {% block title %}New Schedule{% endblock %}
 {% block head %}
     <script>
+    nurse = {'ScheduleGroup':'weekends','team':'A','start':'8:00','lunch':'12:00','duration':60,'end':'16:00'};
+
     $.ajax({
         type: 'GET',
         dataType: 'html',
         url: '/db_scripts/',
         contentType: "application/json",
-        data: { id: 1},
+        data: nurse,
         complete: function(response, textStatus) {
             if(textStatus != 'success')
                 return alert("Status: " + textStatus);
@@ -94,13 +96,22 @@
         <h3>Schedule Period</h3>
         <button id="buttonDay" type="button" class="btn btn-primary" onclick="buttonDayClick()" >Day</button>
         <button id="buttonWeek" type="button"  class="btn btn-primary" disabled="disabled">Week</button>
-        <button id="buttonMonth"  class="btn btn-primary" disabled="disabled">Month</button>
         <hr>
     </div>
     <div>
         <h3>RN Schedules</h3>
-        {{ ChairsForm }}
-        <button type="button" class="btn btn-primary" style="float: right;">Load Nurse Schedule</button><br><br>
+        <div class="row">
+            <div class="col-md-6">
+                {{ ChairsForm }}
+            </div>
+            <div class="col-md-3">
+                <label for="scheduleGroup">Schedule Group:</label>
+                <input id="scheduleGroup" type="text" style="max-width: 150px">
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary">Load Nurse Schedule</button><br><br>
+            </div>
+        </div>
         {{ RNFormSet.management_form }}
         <table id="{{ RNFormSet.prefix }}Table" class='table table-striped'>
         <tr>

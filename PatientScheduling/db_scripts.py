@@ -1,6 +1,9 @@
-from django.core.serializers import json
+import json
 from django.http import HttpResponse
 
 
 def returnhtml(request):
-    return HttpResponse('this is dynamic html from db_scripts.py', content_type="application/json")
+    html = "saved: "
+    for key in request.GET:
+        html += key + " " + request.GET[key] + ", "
+    return HttpResponse(html, content_type="application/json")
