@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms import formset_factory, ModelForm
 
 from PatientScheduling.models import NurseSchedule
@@ -18,7 +19,12 @@ class RNForm(ModelForm):
 
     class Meta:
         model = NurseSchedule
-        fields = ['StartTime', 'LunchTime', 'LunchDuration', 'EndTime']
+        fields = ['StartTime', 'LunchTime', 'LunchDuration', 'EndTime', 'Team']
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'Team': "%(model_name)s's %(field_labels)s are not unique.",
+            }
+        }
 
     # TODO fix try | except
     def clean(self):

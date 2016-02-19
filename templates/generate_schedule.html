@@ -12,6 +12,7 @@
     {% if RNSet %}
         <table class="table">
             <tr style="font-weight: bold">
+                <th>Pod Team</th>
                 <th>Start Time</th>
                 <th>Lunch Time</th>
                 <th>Lunch Duration</th>
@@ -19,6 +20,7 @@
             </tr>
             {% for RN in RNSet %}
                 <tr>
+                    <td>{{ RN.Team }}</td>
                     <td>{{ RN.StartTime }}</td>
                     <td>{{ RN.LunchTime }}</td>
                     <td>{{ RN.LunchDuration }}</td>

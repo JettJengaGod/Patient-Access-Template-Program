@@ -91,6 +91,7 @@
         <tr>
             <th></th>
             <th></th>
+            <th>Pod Team</th>
             <th>Start Time</th>
             <th>Lunch Time</th>
             <th>Lunch Duration</th>
@@ -108,6 +109,7 @@
                     <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                 </td>
                 <td class="RNNumber">Nurse {{ forloop.counter }}</td>
+                <td>{{ form.Team }}</td>
                 <td>{{ form.StartTime }}</td>
                 <td>{{ form.LunchTime }}</td>
                 <td>{{ form.LunchDuration }}</td>

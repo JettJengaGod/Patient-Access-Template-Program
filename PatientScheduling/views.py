@@ -20,6 +20,7 @@ def new_schedule(request):
             for form in rn_form:
                 cd = form.cleaned_data
                 nurses.append(NurseSchedule(
+                    Team=cd.get('Team'),
                     StartTime=cd.get('StartTime'),
                     LunchTime=cd.get('LunchTime'),
                     LunchDuration=cd.get('LunchDuration'),
