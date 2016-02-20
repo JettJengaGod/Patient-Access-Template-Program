@@ -2,89 +2,7 @@
 
 {% block title %}New Schedule{% endblock %}
 {% block head %}
-    <script>
-    nurse = {'ScheduleGroup':'weekends','team':'A','start':'8:00','lunch':'12:00','duration':60,'end':'16:00'};
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'html',
-        url: '/db_scripts/',
-        contentType: "application/json",
-        data: nurse,
-        complete: function(response, textStatus) {
-            if(textStatus != 'success')
-                return alert("Status: " + textStatus);
-        },
-        success: function(html) {
-            $('#divelement').replaceWith(html);
-        }
-    });
-    function updateElementIndex(object, prefix, index) {
-		var id_regex = new RegExp('(' + prefix + '-\\d+)');
-		var replacement = prefix + '-' + index;
-		if ($(object).attr("for")) $(object).attr("for", $(object).attr("for").replace(id_regex, replacement));
-		if (object.id) object.id = object.id.replace(id_regex, replacement);
-		if (object.name) object.name = object.name.replace(id_regex, replacement);
-        if (object.className && object.className == "delete-button")
-            $(object).removeAttr("onclick").unbind().click(function () {
-                    RemoveRowClick(index+1, prefix);
-            });
-	}
-    function buttonDayClick() {
-
-    }
-    function AddRowClick(prefix) {
-        try {
-            var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-            if(form_count == 1 ) //if there was only one row, enable the delete button again
-            {
-                var table = document.getElementById(prefix + 'Table');
-                var lastDeleteButton = table.rows[1].cells[0].children[0];
-                lastDeleteButton.disabled = false;
-            }
-            var row = $('.dynamic-' + prefix + '-row:first').clone(true).get(0);
-            row.id = prefix + '-row-' + (form_count+1); //table row number starting at 1
-            $(row).insertAfter($('.dynamic-' + prefix + '-row:last'));
-            $(row).children().children().each(function () {
-                updateElementIndex(this, prefix, form_count);
-                $(this).val('');
-            });
-            if(prefix == "RN")
-                row.cells[1].textContent =  'Nurse ' + (form_count + 1);
-            $('#id_' + prefix + '-TOTAL_FORMS').val(form_count + 1);
-        }catch(e) {
-            alert(e);
-        }
-    }
-    function RemoveRowClick(rowIndex, prefix){
-         var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-         try {
-            var table = document.getElementById(prefix + 'Table');
-            table.deleteRow(rowIndex);
-
-            for(var tableIndex=1; tableIndex < form_count; tableIndex++) {
-                var row = table.rows[tableIndex];
-                var RNNumber = tableIndex - 1;
-                if(row.id.split('-')[2] != tableIndex) { //If the ID does not match the row number
-                    row.id = prefix + '-row-' + tableIndex;
-                    $(row).children().children().each(function () {
-                        updateElementIndex(this, prefix, RNNumber);
-                    });
-                    if(prefix == "RN")
-                        row.cells[1].textContent =  'Nurse ' + tableIndex;
-                }//end if
-            }//end for loop
-             $('#id_' + prefix + '-TOTAL_FORMS').val(--form_count);
-            }catch(e) {
-                alert(e);
-            }
-        if(form_count == 1 ) //if there is now only one row left, disable delete button
-        {
-            var lastDeleteButton = table.rows[1].cells[0].children[0];
-            lastDeleteButton.disabled = true;
-        }
-    }
-    </script>
+    <script src="/static/js/new_schedule.js" rel="script"></script>
 {% endblock %}
 
 {% block content %}
@@ -101,20 +19,19 @@
     <div>
         <h3>RN Schedules</h3>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 {{ ChairsForm }}
             </div>
-            <div class="col-md-3">
-                <label for="scheduleGroup">Schedule Group:</label>
-                <input id="scheduleGroup" type="text" style="max-width: 150px">
-            </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-primary">Load Nurse Schedule</button><br><br>
+            <div class="col-md-6">
+                <div style="display: inline-block;">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal">Save Nurse Schedule</button><br><br></div>
+                <div style="display: inline-block;">
+                <button type="button" class="btn btn-primary" onclick="LoadScheduleNames()" data-toggle="modal" data-target="#loadModal">Load Nurse Schedule</button><br><br></div>
             </div>
         </div>
         {{ RNFormSet.management_form }}
         <table id="{{ RNFormSet.prefix }}Table" class='table table-striped'>
-        <tr>
+        <tr class="table-header">
             <th></th>
             <th></th>
             <th>Pod Team</th>
@@ -180,4 +97,42 @@
     <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Previous</button>
     <button type="button" class="btn btn-default">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
     <button type="button" class="btn btn-default" style="float: right;">Cancel</button>
+
+    <div id="loadModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Load RN Schedules</h4>
+          </div>
+          <div class="modal-body">
+              <label for="savedSchedules">Select a schedule name:</label>
+              <select id="savedSchedules"></select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="LoadSchedule('{{ RNFormSet.prefix }}')" data-dismiss="modal">Load</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Save RN Schedules</h4>
+          </div>
+          <div class="modal-body">
+              <label for="id_ScheduleGroupName">Save as: </label>
+              <input id="id_ScheduleGroupName" type="text">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="SaveSchedule('{{ RNFormSet.prefix }}')" data-dismiss="modal">Save</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}
