@@ -67,3 +67,9 @@ target/
 
 # pyenv
 .python-version
+
+# pycharm files
+.idea/ECS193.iml
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/workspace.xml
