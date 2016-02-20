@@ -11,10 +11,14 @@ def model_one_letter(value):
         )
 
 
+class ScheduleGroups(models.Model):
+    Name = models.CharField(max_length=20, primary_key=True)
+
+
 class NurseSchedule(models.Model):
     NurseID = models.AutoField(primary_key=True)
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
-    ScheduleGroup = models.TextField  # used when loading saved schedules
+    ScheduleGroupName = models.ForeignKey(ScheduleGroups)
     StartTime = models.TimeField(auto_now=False, default='8:00', blank=False)
     LunchTime = models.TimeField(auto_now=False, default='12:00')
     LunchDuration = models.PositiveIntegerField(default=60)

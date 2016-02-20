@@ -24,7 +24,7 @@ def new_schedule(request):
                     StartTime=cd.get('StartTime'),
                     LunchTime=cd.get('LunchTime'),
                     LunchDuration=cd.get('LunchDuration'),
-                    EndTime=cd.get('EndTime')
+                    EndTime=cd.get('EndTime'),
                 ))
             appointments = []
             for form in app_form:
