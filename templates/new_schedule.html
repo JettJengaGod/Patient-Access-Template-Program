@@ -117,17 +117,25 @@
         <tr>
             <th></th>
             <th></th>
+            <th>Pod Team</th>
             <th>Start Time</th>
             <th>Lunch Time</th>
             <th>Lunch Duration</th>
             <th>End Time</th>
         </tr>
         {% for form in RNFormSet.forms %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ form.non_field_errors | striptags }} at Nurse {{ forloop.counter }}
+                </div>
+            {% endif %}
             <tr id="{{ RNFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ RNFormSet.prefix }}-row">
                 <td>
                     <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
                 </td>
                 <td class="RNNumber">Nurse {{ forloop.counter }}</td>
+                <td>{{ form.Team }}</td>
                 <td>{{ form.StartTime }}</td>
                 <td>{{ form.LunchTime }}</td>
                 <td>{{ form.LunchDuration }}</td>
