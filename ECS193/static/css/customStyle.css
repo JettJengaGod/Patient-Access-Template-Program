@@ -3,7 +3,7 @@
 }
 
 .lunch{
-    background-color: blue;
+    background-color: dodgerblue;
     min-height: 1px;
     min-width: 1px;
 }
@@ -20,4 +20,9 @@
       #d6d6c2 10px,
       #d6d6c2 20px
     );
+}
+
+.row_group:hover{
+    cursor: pointer;
+    background-color: #9acfea;
 }

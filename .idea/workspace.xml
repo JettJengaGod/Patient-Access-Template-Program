@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c70a0971-19fb-46d6-aa01-b16c5ab49a61" name="Default" comment="Fixed some bugs in the">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ECS193/static/js/calendar.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/templates/generate_schedule.html" afterPath="$PROJECT_DIR$/templates/calendar.html" />
+    <list default="true" id="c70a0971-19fb-46d6-aa01-b16c5ab49a61" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ECS193/static/css/customStyle.css" afterPath="$PROJECT_DIR$/ECS193/static/css/customStyle.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PatientScheduling/views.py" afterPath="$PROJECT_DIR$/PatientScheduling/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ECS193/static/js/calendar.js" afterPath="$PROJECT_DIR$/ECS193/static/js/calendar.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/calendar.html" afterPath="$PROJECT_DIR$/templates/calendar.html" />
     </list>
     <ignored path="ECS193.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -75,14 +74,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="calendar.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ECS193/static/js/calendar.js">
+      <file leaf-file-name="customStyle.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ECS193/static/css/customStyle.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="41" column="64" selection-start-line="41" selection-start-column="64" selection-end-line="41" selection-end-column="64" />
-              <folding>
-                <element signature="n#!!block;n#AddFill#0" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="-14.884615">
+              <caret line="24" column="10" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -90,9 +87,10 @@
       <file leaf-file-name="calendar.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/calendar.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.0">
-              <caret line="14" column="69" selection-start-line="14" selection-start-column="69" selection-end-line="14" selection-end-column="69" />
+            <state vertical-scroll-proportion="-9.730769">
+              <caret line="29" column="30" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="30" />
               <folding>
+                <element signature="e#1297#1345#0#HTML" expanded="true" />
                 <element signature="n#if#0;n#!!top" expanded="false" />
                 <element signature="n#if#1;n#!!top" expanded="false" />
                 <element signature="n#if#2;n#!!top" expanded="false" />
@@ -101,12 +99,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="customStyle.css" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ECS193/static/css/customStyle.css">
+      <file leaf-file-name="calendar.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ECS193/static/js/calendar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.32963988">
-              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-              <folding />
+            <state vertical-scroll-proportion="0.21963824">
+              <caret line="59" column="38" selection-start-line="59" selection-start-column="38" selection-end-line="59" selection-end-column="38" />
+              <folding>
+                <element signature="n#!!block;n#BuildRNRow#0" expanded="false" />
+                <element signature="n#!!block;n#AddFill#0" expanded="false" />
+                <element signature="n#!!block;n#rowSelect#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -147,9 +149,9 @@
         <option value="$PROJECT_DIR$/ECS193/static/js/new_schedule.js" />
         <option value="$PROJECT_DIR$/templates/new_schedule.html" />
         <option value="$PROJECT_DIR$/PatientScheduling/views.py" />
+        <option value="$PROJECT_DIR$/ECS193/static/css/customStyle.css" />
         <option value="$PROJECT_DIR$/templates/calendar.html" />
         <option value="$PROJECT_DIR$/ECS193/static/js/calendar.js" />
-        <option value="$PROJECT_DIR$/ECS193/static/css/customStyle.css" />
       </list>
     </option>
   </component>
@@ -655,7 +657,13 @@
       <option name="project" value="LOCAL" />
       <updated>1456005623036</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="basic day calendar is generated">
+      <created>1456083616904</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1456083616904</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -678,6 +686,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27906978" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -688,7 +697,6 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4680851" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -716,7 +724,8 @@
     <MESSAGE value="Converted input to django forms" />
     <MESSAGE value="Javascript now prevents the user from deleting all rows" />
     <MESSAGE value="You can now load and save nurse schedules! needs testing and better AI" />
-    <option name="LAST_COMMIT_MESSAGE" value="You can now load and save nurse schedules! needs testing and better AI" />
+    <MESSAGE value="basic day calendar is generated" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic day calendar is generated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1141,11 +1150,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ECS193/static/css/customStyle.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.884615">
+          <caret line="24" column="10" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/calendar.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.0">
-          <caret line="14" column="69" selection-start-line="14" selection-start-column="69" selection-end-line="14" selection-end-column="69" />
+        <state vertical-scroll-proportion="-9.730769">
+          <caret line="29" column="30" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="30" />
           <folding>
+            <element signature="e#1297#1345#0#HTML" expanded="true" />
             <element signature="n#if#0;n#!!top" expanded="false" />
             <element signature="n#if#1;n#!!top" expanded="false" />
             <element signature="n#if#2;n#!!top" expanded="false" />
@@ -1155,19 +1173,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ECS193/static/js/calendar.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="64" selection-start-line="41" selection-start-column="64" selection-end-line="41" selection-end-column="64" />
+        <state vertical-scroll-proportion="0.21963824">
+          <caret line="59" column="38" selection-start-line="59" selection-start-column="38" selection-end-line="59" selection-end-column="38" />
           <folding>
+            <element signature="n#!!block;n#BuildRNRow#0" expanded="false" />
             <element signature="n#!!block;n#AddFill#0" expanded="false" />
+            <element signature="n#!!block;n#rowSelect#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ECS193/static/css/customStyle.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32963988">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>

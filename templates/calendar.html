@@ -27,24 +27,15 @@
             <th>5:00</th>
         </tr>
         {% for RN in RNSet %}
-            <tr>
-                <td rowspan="3">
+            <tr id="row-group-{{ forloop.counter }}" onclick="rowSelect({{ forloop.counter }},3)" class="row_group">
+                <td rowspan="4">
                     {{ RN.Team }}
                     <input id="rn_id_row_{{ forloop.counter }}" type="hidden" value="{{ RN.id }}">
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td id="collapse-row-{{ forloop.counter }}" style="display: none; background-color: #3c3c3c" colspan="11"></td>
             </tr>
-            {% for i in "xx" %} {# xx represents two chars#}
-                <tr>
+            {% for i in "123" %} {# 123 represents the three chars#}
+                <tr id="RN-{{ forloop.parentloop.counter }}-row-{{ i }}">
                     <td></td>
                     <td></td>
                     <td></td>
