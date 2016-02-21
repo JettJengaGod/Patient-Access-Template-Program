@@ -1,3 +1,23 @@
 .pageWrapper{
     margin: 5%;
 }
+
+.lunch{
+    background-color: blue;
+    min-height: 1px;
+    min-width: 1px;
+}
+
+.unavailable{
+    background-color: #d6d6c2;
+}
+
+.striped{
+    background: repeating-linear-gradient(
+      45deg,
+      #ffffff,
+      #ffffff 10px,
+      #d6d6c2 10px,
+      #d6d6c2 20px
+    );
+}

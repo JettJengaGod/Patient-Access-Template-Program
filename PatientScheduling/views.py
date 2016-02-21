@@ -31,11 +31,11 @@ def new_schedule(request):
                 cd = form.cleaned_data
                 appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
             context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': appointments}
-            return render(request, 'generate_schedule.html', context)
+            return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}
     return render(request, 'new_schedule.html', context)
 
 
 def generate_schedule(request):
-    return render(request, 'generate_schedule.html')
+    return render(request, 'calendar.html')
