@@ -9,7 +9,6 @@
     <h4 class="text-center">Create New Schedule</h4>
     <form method="POST" action="/newSchedule/">
     {% csrf_token %}
-    <div id="divelement">replace me!</div>
     <div>
         <h3>Schedule Period</h3>
         <button id="buttonDay" type="button" class="btn btn-primary" onclick="buttonDayClick()" >Day</button>
@@ -18,13 +17,18 @@
     </div>
     <div>
         <h3>RN Schedules</h3>
+        <h4 id="pageAlert" class="label-success text-center" style="font-weight: bold"></h4>
         <div class="row">
             <div class="col-md-3">
                 {{ ChairsForm }}
             </div>
             <div class="col-md-6">
                 <div style="display: inline-block;">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal">Save Nurse Schedule</button><br><br></div>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal" onclick="
+                        $('#yesOverwrite').hide();
+                        $('#noOverwrite').hide();
+                        $('#save_alert').hide();"
+                    >Save Nurse Schedule</button><br><br></div>
                 <div style="display: inline-block;">
                 <button type="button" class="btn btn-primary" onclick="LoadScheduleNames()" data-toggle="modal" data-target="#loadModal">Load Nurse Schedule</button><br><br></div>
             </div>
@@ -59,7 +63,7 @@
                 <td>{{ form.EndTime }}</td>
             </tr>
         {% endfor %}
-            <tr><td colspan="6">
+            <tr><td colspan="7">
                 <button type="button" aria-label="Add" onclick="AddRowClick('{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
             </td></tr>
         </table>
@@ -127,10 +131,25 @@
           <div class="modal-body">
               <label for="id_ScheduleGroupName">Save as: </label>
               <input id="id_ScheduleGroupName" type="text">
+              <br>
+              <label id="save_alert">This is an alert!</label>
+              <button id="yesOverwrite" type="button" class="btn btn-primary" data-dismiss="modal" onclick="
+                    if(SaveSchedule('{{ RNFormSet.prefix }}', true))
+                            $('#saveModal').modal('hide');
+                  ">Yes</button>
+              <button id="noOverwrite" type="button" class="btn btn-primary" onclick="
+                   $('#yesOverwrite').hide();
+                    $('#noOverwrite').hide();
+                    $('#save_alert').hide();
+                    $('#id_ScheduleGroupName').attr('readonly','false');
+                ">No</button>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="SaveSchedule('{{ RNFormSet.prefix }}')" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-primary" onclick="
+                    if(SaveSchedule('{{ RNFormSet.prefix }}', false))
+                        $('#saveModal').modal('hide');
+                ">Save</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

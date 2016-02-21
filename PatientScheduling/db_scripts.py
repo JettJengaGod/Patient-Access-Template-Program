@@ -25,8 +25,8 @@ def delete_schedule_group(request):
     try:
         ScheduleGroups.objects.get(Name=name).delete()
     except (KeyError, ScheduleGroups.DoesNotExist):
-        return
-    return
+        return HttpResponse('failed to delete ' + name, content_type="application/json")
+    return HttpResponse('removed all ' + name + ' schedules', content_type="application/json")
 
 
 def add_to_schedule_group(request):

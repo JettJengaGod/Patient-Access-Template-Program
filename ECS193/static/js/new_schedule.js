@@ -1,7 +1,40 @@
 
-    function SaveSchedule(prefix){
+
+    function removeOptions(selectbox) {
+        var i;
+        for(i=selectbox.options.length-1;i>=0;i--)
+            selectbox.remove(i);
+    }
+
+    function SaveSchedule(prefix, overwrite){
         var ScheduleGroup = $('#id_ScheduleGroupName').val();
+        var alert = document.getElementById("save_alert");
+        $('#yesOverwrite').hide();
+        $('#noOverwrite').hide();
+        $('#save_alert').hide();
+        $('#id_ScheduleGroupName').attr('readonly','readonly');
+
         if(ScheduleGroup.match(/[\w+\.\_]+/)) {
+            var alreadyExists = ScheduleNameUsed(ScheduleGroup);
+            if(alreadyExists && overwrite == false)     //ask the user if they want to overwrite
+            {
+                $('#save_alert').show();
+                alert.innerHTML = 'That name is already used. Would you like to overwrite it?';
+                $('#yesOverwrite').show();
+                $('#noOverwrite').show();
+                return false;
+            }
+            else if(alreadyExists && overwrite == true)  //delete so we can overwrite
+            {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'html',
+                    url: '/delete_schedule_group/',
+                    contentType: "application/json",
+                    data: {'ScheduleGroupName': ScheduleGroup}
+                });
+            }
+
             var table = document.getElementById(prefix + 'Table');
             for (var i = 1; i < table.rows.length - 1; i++) {
                 var row = table.rows[i];
@@ -18,30 +51,22 @@
                     dataType: 'html',
                     url: '/add_to_schedule_group/',
                     contentType: "application/json",
-                    data: nurse,
-                    complete: function (response, textStatus) {
-                        if (textStatus != 'success' && i == 1)
-                            return alert(textStatus + ': ' + response.responseText);
-                    },
-                    success: function (html) {
-                        $('#divelement').replaceWith(html);
-                    }
+                    data: nurse
                 });
             }
+            document.getElementById("pageAlert").innerHTML = ScheduleGroup + ' has been saved';
+            return true;
+        }
+        else {
+            $('#id_ScheduleGroupName').attr('readonly','false');
+            alert.show();
+            alert.innerHTML = ScheduleGroup + ' is not a valid ScheduleName';
+            return false;
         }
     }
     function LoadSchedule(prefix){
         var ScheduleGroup = $("#savedSchedules option:selected").html();
-        var testJson = '[' +
-            '{"model": "PatientScheduling.nurseschedule", "pk": 1, "fields": ' +
-                '{"Team": "A", "ScheduleGroupName": "weekend", "StartTime": "08:00:00", "LunchTime": "12:00:00", "LunchDuration": 60, "EndTime": "16:00:00"}}, ' +
-            '{"model": "PatientScheduling.nurseschedule", "pk": 2, "fields": ' +
-                '{"Team": "A", "ScheduleGroupName": "weekend", "StartTime": "08:00:00", "LunchTime": "12:00:00", "LunchDuration": 60, "EndTime": "16:00:00"}}, ' +
-            '{"model": "PatientScheduling.nurseschedule", "pk": 3, "fields": ' +
-                '{"Team": "A", "ScheduleGroupName": "weekend", "StartTime": "08:00:00", "LunchTime": "12:00:00", "LunchDuration": 60, "EndTime": "16:00:00"}}, ' +
-            '{"model": "PatientScheduling.nurseschedule", "pk": 4, "fields": ' +
-                '{"Team": "A", "ScheduleGroupName": "weekend", "StartTime": "08:00:00", "LunchTime": "12:00:00", "LunchDuration": 60, "EndTime": "16:00:00"}}' +
-            ']';
+        document.getElementById("pageAlert").innerHTML = ''; //clear any previous alerts
         if(ScheduleGroup.match(/[\w+\.\_]+/)) {
             $.ajax({
                 type: 'GET',
@@ -60,26 +85,28 @@
             });
         }
     }
-    function CheckScheduleName(){
-        var ScheduleGroup = $('#id_ScheduleGroupName').val();
+    function ScheduleNameUsed(ScheduleGroup){
         if(ScheduleGroup.match(/[\w+\.\_]+/)) {
+            var returnValue = false;
             $.ajax({
                 type: 'GET',
                 dataType: 'html',
                 url: '/check_schedule_group_name/',
                 contentType: "application/json",
                 data: {'ScheduleGroupName': ScheduleGroup},
+                async: false,
                 complete: function(response, textStatus) {
                     if(textStatus != 'success')
                         return alert(textStatus + ': ' + response.responseText);
                 },
                 success: function(result) {
                     if(result == 'True')
-                        $('#divelement').replaceWith('unique');
+                        returnValue = false; //unique
                     else
-                        $('#divelement').replaceWith('already used');
+                        returnValue = true; //already used
                 }
             });
+            return returnValue;
         }
     }
     function LoadScheduleNames(){
@@ -94,6 +121,11 @@
             success: function(result) {
                 var count = result.length;
                 var select = $('#savedSchedules');
+
+                //clear current options
+                removeOptions(document.getElementById("savedSchedules"));
+
+                //add the loaded options
                 for(var i = 0; i < count; i++)
                 {
                     var name = result[i].pk;
@@ -108,11 +140,15 @@
         var tableRows = table.rows.length - 2; //one row is header and one is add button
 
         if(tableRows < count) //need to add rows
-            while(tableRows != count)
+            while(tableRows != count) {
                 AddRowClick(prefix);
+                tableRows++;
+            }
         else if(tableRows > count) //need to remove extra rows
-            while(tableRows != count)
-                RemoveRowClick(prefix);
+            while(tableRows != count) {
+                RemoveRowClick(tableRows,prefix);
+                tableRows--;
+            }
 
         for(var i = 0; i < count; i++)
         {
@@ -125,6 +161,7 @@
             row.cells[6].firstChild.value = obj.EndTime;
         }
     }
+
     function updateElementIndex(object, prefix, index) {
 		var id_regex = new RegExp('(' + prefix + '-\\d+)');
 		var replacement = prefix + '-' + index;
@@ -180,7 +217,7 @@
                         row.cells[1].textContent =  'Nurse ' + tableIndex;
                 }//end if
             }//end for loop
-             // $('#id_' + prefix + '-TOTAL_FORMS').val(--form_count);
+             $('#id_' + prefix + '-TOTAL_FORMS').val(--form_count);
          }
          catch(e) {
                 alert(e);

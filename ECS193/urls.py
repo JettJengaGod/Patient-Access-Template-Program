@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^add_to_schedule_group/', PatientScheduling.db_scripts.add_to_schedule_group),
     url(r'^load_schedule_group/', PatientScheduling.db_scripts.load_schedule_group),
     url(r'^check_schedule_group_name/', PatientScheduling.db_scripts.check_schedule_group_name),
-    url(r'^load_schedule_group_names/', PatientScheduling.db_scripts.load_schedule_group_names)
+    url(r'^load_schedule_group_names/', PatientScheduling.db_scripts.load_schedule_group_names),
+    url(r'^delete_schedule_group/', PatientScheduling.db_scripts.delete_schedule_group)
 ]
