@@ -8,7 +8,7 @@ from PatientScheduling.models import NurseSchedule
 
 class ChairsForm(forms.Form):
     NumberOfChairs = forms.IntegerField(
-            label='Number of Available Chairs',
+            label='Max Number of Chairs per RN',
             required=True,
             initial=0,
             min_value=0,

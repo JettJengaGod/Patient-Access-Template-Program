@@ -22,7 +22,10 @@
     );
 }
 
-.row_group:hover{
+.table-grouper{
+    background-color: cadetblue;
+}
+.table-grouper:hover{
     cursor: pointer;
     background-color: #9acfea;
 }

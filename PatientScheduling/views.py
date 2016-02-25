@@ -30,10 +30,10 @@ def new_schedule(request):
             for form in app_form:
                 cd = form.cleaned_data
                 appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
-            context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': appointments}
+            context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': appointments}
             return render(request, 'calendar.html', context)
         else:
-            context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}
+            context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form, 'GroupCount': group_count}
     return render(request, 'new_schedule.html', context)
 
 
