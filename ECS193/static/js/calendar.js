@@ -20,16 +20,29 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
 
         //Mark lunch
         var LunchIndex = lunchTime.split(':')[0]-offset;
-        var lunchTimeOffset = parseInt(lunchTime.split(':')[1]);
-        var lunchTimePercent = (duration-lunchTimeOffset)/60;
-        if(lunchTimeOffset > 0)
-            AddFill(row.cells[LunchIndex++],1 - lunchTimeOffset/60,'lunch',false);
-        while(lunchTimePercent >= 1) { //if the total lunch duration is greater than 60 minutes
-            AddFill(row.cells[LunchIndex++],1,'lunch',true);
-            lunchTimePercent--;
+        var lunchTimeMinutes = parseInt(lunchTime.split(':')[1]);
+        var remaining = duration;
+        //handle case that lunch doesn't start on the hour
+        if(lunchTimeMinutes > 0) {
+            if(60 - lunchTimeMinutes > duration) //if it shouldn't fill the rest of the block
+            {
+                AddFill(row.cells[LunchIndex], 1 - (lunchTimeMinutes + duration) / 60, 'filler', false);
+                AddFill(row.cells[LunchIndex++], 1 - duration/60, 'lunch', false);
+                remaining = 0;
+            }
+            else {
+                AddFill(row.cells[LunchIndex++], 1 - lunchTimeMinutes / 60, 'lunch', false);
+                remaining -= 60 - lunchTimeMinutes;
+            }
         }
-        if(lunchTimePercent > 0)
-            AddFill(row.cells[LunchIndex],lunchTimePercent,'lunch',true);
+        //handle lunches that are more than one hour
+        while(remaining >= 60) { //if the total remaining lunch duration is greater than 60 minutes
+            AddFill(row.cells[LunchIndex++],1,'lunch',true);
+            remaining -= 60;
+        }
+        //handle lunches greater than one hour but don't end on the hour
+        if(remaining > 0)
+            AddFill(row.cells[LunchIndex],remaining/60,'lunch',true);
 
         //Mark times after RN leaves as unavailable
         var endTimeIndex = endTime.split(':')[0]-offset;
@@ -46,6 +59,12 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
     }
 }
 function AddFill(cell, fraction, className, leftAligned){
+    if(fraction > 1 || fraction < 0)
+    {
+        alert("The given fraction to fill the cell by is not a valid percent!")
+        return;
+    }
+
     cell.style.padding = 0;
     var div = document.createElement('div');
     div.innerHTML = '&nbsp;';
@@ -53,9 +72,9 @@ function AddFill(cell, fraction, className, leftAligned){
     div.className += ' ' + className;
     div.style.width = (fraction * 100) + '%';
     if(!leftAligned)
-    {
         div.style.float = 'right';
-    }
+    else
+        div.style.float = 'left';
 }
 
 function rowSelect(grouping, chairs){

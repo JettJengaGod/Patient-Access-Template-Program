@@ -33,7 +33,7 @@ def new_schedule(request):
             context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': appointments}
             return render(request, 'calendar.html', context)
         else:
-            context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form, 'GroupCount': group_count}
+            context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}
     return render(request, 'new_schedule.html', context)
 
 
