@@ -57,8 +57,10 @@ class Pod:
         self.nurses = nurses
 
     def __str__(self):
+        str = ""
         for nurse in self.nurses:
-            print nurse
+            str += nurse.__str__()
+        return str
 
     def single_schedule(self, length, appt_number):
         for i in range(len(self.nurses)):
@@ -92,7 +94,7 @@ class Pod:
                 lunch = self.check_other_nurses(time, current, appt_number)
                 if not lunch:
                     return False
-        appt = Appointment(length, current, chair, time)
+        appt = Appointment(length, current, chair, time, appt_number)
         if extra is not -1:
             self.nurses[extra[0]].help_start(time)
         current.schedule(length, appt_number, chair, time)
@@ -113,11 +115,17 @@ class Pod:
 
 
 class Appointment:
-    def __init__(self, length, nurse, chair, time):
+    def __init__(self, length, nurse, chair, time, appt):
         self.length = length
         self.nurse = nurse
         self.chair = chair
         self.time = time
+        self.number = appt
+
+    def __str__(self):
+        string = ""
+        string += "id " + str(self.nurse.id) + " length " + str(self.length) + " number " + str(self.number)
+        return string
 
 
 def schedule_slots(pods, appointments, final):
@@ -131,12 +139,14 @@ def schedule_slots(pods, appointments, final):
                 return
             a = pods[i].single_schedule(appointments[0], number)
             if a:
+                print a
                 appointments.pop(0)
                 final.append(a)
                 number += 1
         if number is stuck:
             discarded.append(appointments.pop(0))
             # return "Failed"
+    print(final)
     return discarded
 #
 # lunch, lunchlength, start, end, pod, identity
@@ -156,7 +166,7 @@ appt.extend(4 for x in range(20))
 appt.extend(3 for x in range(8))
 appt.extend(2 for x in range(23))
 pods = [Pod([Nurse(10+x, 4, 0, 33, 1, x) for x in range(4)]), Pod([Nurse(14+x, 4, 4, 39, 2, x+4) for x in range(4)]), \
-        Pod([Nurse(18+x, 4, 0, 33, 3, x+8) for x in range(4)]), Pod([Nurse(20+x, 4, 4, 39, 4, x+12) for x in range(4)])]
+        Pod([Nurse(18+x, 4, 0, 33, 3, x+8) for x in range(4)])]
 end = []
 print(schedule_slots(pods, appt, end))
 print end
