@@ -2,9 +2,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from PatientScheduling.forms import RNFormSet, AppointmentFormSet, ChairsForm
 from PatientScheduling.models import NurseSchedule
+from PatientScheduling.Algorithm import clean_input
 
 
 def new_schedule(request):
+    global idNumber
+    idNumber = 0
     chairs_form = ChairsForm()
     rn_form = RNFormSet(prefix='RN')
     app_form = AppointmentFormSet(prefix='APP')
@@ -31,6 +34,7 @@ def new_schedule(request):
                 cd = form.cleaned_data
                 appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
             context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': appointments}
+            clean_input(nurses, appointments)                   # this starts the algorithm
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}

@@ -1,5 +1,97 @@
+
+from PatientScheduling.models import NurseSchedule
+from PatientScheduling.models import Appointment
+import math
+
+
+def convert_to_format(time):
+
+    if len(time) is 8:
+        hour = int(time[0:2])
+        hour -= 8
+        minute = int(time[3:5])
+        minute /= 15
+        newTime = 4*hour +minute
+    else:
+        minute = int(time)
+        minute /= 15
+        newTime = minute
+    return newTime
+
+
+def convert_from_format(num):
+    minutes = num * 15
+    hours = math.floor(num/60)
+    minutes -= hours*60
+
+    finalString = str(hours)
+    if len(finalString) is 1:
+        finalString = "0" + finalString + ":"
+    else:
+        finalString = "0" + finalString + ":"
+
+    if minutes == 0:
+         finalString += "00:00"
+    else:
+        finalString += str(minutes) +":00"
+
+    return finalString
+
+
+
+
+
+def clean_input(nurseSchedules, appointments):
+    # first we convert them to nurses
+    nurses = []
+    for nurse in nurseSchedules:
+        nurses.append(Nurse(str(nurse.Team), convert_to_format(str(nurse.StartTime)),
+                            convert_to_format(str(nurse.LunchTime)), convert_to_format(str(nurse.LunchDuration)),
+                            convert_to_format(str(nurse.EndTime)), str(nurse.NurseID)))
+
+    # then we deal with the pods
+    tempPod = [[nurses[0]]] #first we seperate the nurses into pods
+    for nurse in nurses:
+        stored = False
+
+        for i in range(len(tempPod)):
+            if nurse.get_pod() == tempPod[i][0].get_pod():
+                tempPod[i].append(nurse)
+                stored = True
+                break
+
+        if stored is False:
+            tempPod.append(nurse)
+    pods = []    # making the nurses into pods
+    for nurseGroup in tempPod:
+        pods.append(Pod(nurseGroup))
+
+    # now we deal with the appointments
+    appt = []
+    for appointment in appointments:
+        appt.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
+
+    # now we send it into the scheduling algorithm
+    end = []
+    unscheduled = schedule_slots(pods, appt, end)
+
+    # now we clean the output
+    finalAppt = []
+    for appointment in end:
+        finalAppt.append(Appointment(Alg_Appointment.nurse, convert_from_format(Alg_Appointment.time),
+                                     convert_from_format(Alg_Appointment.time + Alg_Appointment.length),
+                                     Alg_Appointment.chair))
+
+    return finalAppt
+
+
+
+
+
+
 class Nurse:
-    def __init__(self, lunch, lunchlength, start, end, pod, identity):
+
+    def __init__(self,  pod, start, lunch, lunchlength,  end, identity):
         self.lunch = lunch
         self.lunchlength = lunchlength
         self.start = start
@@ -9,6 +101,9 @@ class Nurse:
         self.pod = pod
         self.id = identity
         self.populate()
+
+    def get_pod(self):
+        return self.pod
 
     def __str__(self):  # function to print out which chairs are occupied by what at what times
         string = ""
@@ -94,7 +189,7 @@ class Pod:
                 lunch = self.check_other_nurses(time, current, appt_number)
                 if not lunch:
                     return False
-        appt = Appointment(length, current, chair, time, appt_number)
+        appt = Alg_Appointment(length, current, chair, time, appt_number)
         if extra is not -1:
             self.nurses[extra[0]].help_start(time)
         current.schedule(length, appt_number, chair, time)
@@ -114,7 +209,7 @@ class Pod:
         return False
 
 
-class Appointment:
+class Alg_Appointment:
     def __init__(self, length, nurse, chair, time, appt):
         self.length = length
         self.nurse = nurse
@@ -150,25 +245,25 @@ def schedule_slots(pods, appointments, final):
     return discarded
 #
 # lunch, lunchlength, start, end, pod, identity
-appt = []
-appt.extend(28 for x in range(3))
-appt.extend(24 for x in range(3))
-appt.extend(22 for x in range(2))
-appt.extend(20 for x in range(5))
-appt.extend(18 for x in range(2))
-appt.extend(16 for x in range(8))
-appt.extend(14 for x in range(2))
-appt.extend(12 for x in range(12))
-appt.extend(10 for x in range(10))
-appt.extend(8 for x in range(9))
-appt.extend(6 for x in range(29))
-appt.extend(4 for x in range(20))
-appt.extend(3 for x in range(8))
-appt.extend(2 for x in range(23))
-pods = [Pod([Nurse(10+x, 4, 0, 33, 1, x) for x in range(4)]), Pod([Nurse(14+x, 4, 4, 39, 2, x+4) for x in range(4)]), \
-        Pod([Nurse(18+x, 4, 0, 33, 3, x+8) for x in range(4)])]
-end = []
-print(schedule_slots(pods, appt, end))
-print end
-for pod in pods:
-    print pod
+# appt = []
+# appt.extend(28 for x in range(3))
+# appt.extend(24 for x in range(3))
+# appt.extend(22 for x in range(2))
+# appt.extend(20 for x in range(5))
+# appt.extend(18 for x in range(2))
+# appt.extend(16 for x in range(8))
+# appt.extend(14 for x in range(2))
+# appt.extend(12 for x in range(12))
+# appt.extend(10 for x in range(10))
+# appt.extend(8 for x in range(9))
+# appt.extend(6 for x in range(29))
+# appt.extend(4 for x in range(20))
+# appt.extend(3 for x in range(8))
+# appt.extend(2 for x in range(23))
+# pods = [Pod([Nurse(10+x, 4, 0, 33, 1, x) for x in range(4)]), Pod([Nurse(14+x, 4, 4, 39, 2, x+4) for x in range(4)]), \
+#         Pod([Nurse(18+x, 4, 0, 33, 3, x+8) for x in range(4)])]
+# end = []
+# print(schedule_slots(pods, appt, end))
+print "1"
+# for pod in pods:
+#     print pod
