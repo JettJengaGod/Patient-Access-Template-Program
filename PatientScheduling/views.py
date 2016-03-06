@@ -15,7 +15,8 @@ def new_schedule(request):
         rn_form = RNFormSet(request.POST, prefix='RN')
         app_form = AppointmentFormSet(request.POST, prefix='APP')
         if rn_form.is_valid() & app_form.is_valid() & chairs_form.is_valid():
-            chairs = chairs_form.cleaned_data.get('NumberOfChairs')
+            chairs = range(chairs_form.cleaned_data.get('NumberOfChairs'))
+            ctemp = chairs_form.cleaned_data.get('NumberOfChairs') + 1
             nurses = []
             for form in rn_form:
                 cd = form.cleaned_data
@@ -30,7 +31,7 @@ def new_schedule(request):
             for form in app_form:
                 cd = form.cleaned_data
                 appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
-            context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': appointments}
+            context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': appointments, 'RNSize': ctemp}
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}

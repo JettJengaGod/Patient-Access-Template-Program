@@ -2,6 +2,12 @@
     margin: 5%;
 }
 
+.appt{
+    background-color: red;
+    min-height: 1px;
+    min-width: 1px;
+}
+
 .lunch{
     background-color: dodgerblue;
     min-height: 1px;

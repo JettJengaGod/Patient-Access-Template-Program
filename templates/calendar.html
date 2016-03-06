@@ -9,6 +9,22 @@
                 BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}');
             {% endfor %}
 
+            fillRNRow(1, 0, "8:00", "9:00");
+            fillRNRow(1, 0, "9:00", "9:50");
+            fillRNRow(1, 0, "10:00", "12:00");
+            fillRNRow(1, 0, "13:30", "16:30");
+            fillRNRow(1, 1, "8:10", "8:30");
+            fillRNRow(1, 1, "8:40", "9:00");
+            fillRNRow(1, 2, "9:10", "9:30");
+            fillRNRow(1, 2, "9:35", "9:40");
+            fillRNRow(1, 2, "9:45", "9:50");
+            fillRNRow(1, 2, "10:10", "11:00");
+            fillRNRow(1, 2, "13:00", "14:30");
+            fillRNRow(1, 2, "15:30", "17:00");
+            fillRNRow(1, 3, "8:00", "9:10");
+            fillRNRow(1, 3, "9:30", "9:50");
+            fillRNRow(1, 3, "9:50", "10:00");
+
         });
     </script>
 {% endblock %}
@@ -34,9 +50,9 @@
                 </tr>
             {% endifchanged %}
             <tr id="RN-{{ forloop.counter }}">
-                <td rowspan="5">{{ forloop.counter }}-{{ RN.Team }}</td>
+                <td rowspan={{ RNSize }}>{{ forloop.counter }}-{{ RN.Team }}</td>
             </tr>
-            {% for i in "1234" %} {# 123 represents the three chars#}
+            {% for i in Chairs %} {# 123 represents the three chars#}
                 <tr id="RN-{{ forloop.parentloop.counter }}-row-{{ i }}">
                     <td></td>
                     <td></td>

@@ -4,7 +4,7 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
     var table = document.getElementById("calendar");
     var maxCellIndex = 9;
     var offset = 8; //used to calculate row index from given hour
-    var i = 1;
+    var i = 0;
 
     var row = document.getElementById("RN-"+RNIndex+"-row-"+i);
     while(row)
@@ -58,6 +58,59 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
         row = document.getElementById("RN-"+RNIndex+"-row-"+i);
     }
 }
+
+var lastEndIndex = 0;
+var lastEndPercent = 0;
+
+function fillRNRow(RNIndex, chairIndex, startTime, endTime) {
+    var row = document.getElementById("RN-"+RNIndex+"-row-"+chairIndex);
+    var offset = 8;
+    var middlePercent = 0; // needed in case appointment in middle of cell
+    var whitePercent = 0; // needed to append white divs to separate appointments
+
+    var startIndex = startTime.split(':')[0] - offset;
+    var startMinutes = parseInt(startTime.split(':')[1]);
+    var startPercent = startMinutes/60;
+    var endIndex = endTime.split(':')[0] - offset;
+    var endMinutes = parseInt(endTime.split(':')[1]);
+    var endPercent = endMinutes/60;
+    var totalTime = (endIndex*60 + endMinutes) - (startIndex*60 + startMinutes);
+
+    // appointment doesn't start on the hour
+    if (startMinutes > 0) {
+        //right shift
+        if (startIndex != endIndex) {
+            AddFill(row.cells[startIndex++], 1 - startPercent, 'appt', false);
+            totalTime -= (60 - startMinutes);
+        }
+        // special case middle appointment
+        else {
+            // there is an appointment that goes into table cell; recalculate filler
+            if (startIndex == lastEndIndex) {
+                AddFill(row.cells[startIndex], (startPercent - lastEndPercent), 'filler', true);
+            }
+            else {
+                AddFill(row.cells[startIndex], startPercent, 'filler', true);
+            }
+            AddFill(row.cells[startIndex], (endPercent - startPercent), 'appt', true);
+            totalTime = 0;
+            endMinutes = 0;
+        }
+    }
+    // appointment doesn't end on the hour
+    if (endMinutes > 0) {
+        AddFill(row.cells[endIndex], endPercent, 'appt', true);
+        totalTime -= endMinutes;
+    }
+    // fills out entire hour slot
+    while (totalTime > 0) {
+        AddFill(row.cells[startIndex++], 1, 'appt', false);
+        totalTime -= 60;
+    }
+    lastEndIndex = endIndex;
+    lastEndPercent = endPercent;
+}
+
 function AddFill(cell, fraction, className, leftAligned){
     if(fraction > 1 || fraction < 0)
     {
