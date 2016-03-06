@@ -10,8 +10,8 @@ class ChairsForm(forms.Form):
     NumberOfChairs = forms.IntegerField(
             label='Max Number of Chairs per RN',
             required=True,
-            initial=0,
-            min_value=0,
+            initial=4,
+            min_value=1,
             max_value=99
     )
 

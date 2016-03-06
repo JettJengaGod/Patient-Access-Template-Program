@@ -3,25 +3,22 @@
 }
 
 .appt{
-    background-color: red;
-    min-height: 1px;
-    min-width: 1px;
 }
 
 .lunch{
     background-color: dodgerblue;
-    min-height: 1px;
-    min-width: 1px;
+    z-index: 2;
+    opacity: .5;
 }
 
 .filler{
     background-color: inherit;
-    min-height: 1px;
-    min-width: 1px;
 }
 
 .unavailable{
     background-color: #d6d6c2;
+    z-index: 2;
+    opacity: .5;
 }
 
 .striped{
