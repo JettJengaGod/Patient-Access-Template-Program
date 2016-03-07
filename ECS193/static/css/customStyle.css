@@ -3,27 +3,35 @@
 }
 
 .appt{
-}
-
-.lunch{
-    background-color: dodgerblue;
-    z-index: 2;
-    opacity: .5;
+    float: left;
+    display: inline-block;
 }
 
 .filler{
     background-color: inherit;
+    float: left;
+    display: inline-block;
+}
+
+.lunch{
+    z-index: 2;
+    opacity: .75;
+    height: 100%;
+    background: repeating-linear-gradient(
+      20deg,
+      transparent,
+      transparent 10px,
+      lightblue 10px,
+      lightblue 20px
+    );
 }
 
 .unavailable{
-    background-color: #d6d6c2;
     z-index: 2;
-    opacity: .5;
-}
-
-.striped{
+    opacity: .75;
+    height: 100%;
     background: repeating-linear-gradient(
-      45deg,
+      20deg,
       #ffffff,
       #ffffff 10px,
       #d6d6c2 10px,
@@ -32,9 +40,10 @@
 }
 
 .table-grouper{
-    background-color: cadetblue;
+    background-color: #003b71;
+    color: white;
 }
 .table-grouper:hover{
     cursor: pointer;
-    background-color: #9acfea;
+    background-color: #0084ff;
 }

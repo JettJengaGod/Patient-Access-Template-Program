@@ -123,7 +123,6 @@ function AddFill(cell, fraction, className, leftAligned, color){
     cell.appendChild(div);
     div.className += ' ' + className;
     div.style.width = (fraction * 100) + '%';
-    div.style.display = 'inline-block';
     div.style.backgroundColor = color;
     if(!leftAligned)
         div.style.float = 'right';
@@ -131,7 +130,13 @@ function AddFill(cell, fraction, className, leftAligned, color){
 
 function rowSelect(grouping){
     var groupRow = $('#collapse-row-'+grouping);
+    var arrow = document.getElementById('arrow-'+grouping);
     var row = groupRow.next();
+    if(arrow.className.indexOf('up') > 0)
+        arrow.className = "glyphicon glyphicon-chevron-down";
+    else
+        arrow.className = "glyphicon glyphicon-chevron-up";
+
     while(row[0] && !row.hasClass("table-grouper"))
     {
         if(row.is(':hidden'))
