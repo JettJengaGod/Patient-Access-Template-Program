@@ -58,9 +58,23 @@ RNFormSet = formset_factory(RNForm, min_num=3, can_delete=True)
 
 class AppointmentForm(forms.Form):
     TIMESLOTS = (
-       (10, '10 Minutes'),
-       (20, '20 Minutes'),
        (30, '30 Minutes'),
+       (45, '45 Minutes'),
+       (60, '1 Hour'),
+       (90, '1 Hour 30 Minutes'),
+       (120, '2 Hours'),
+       (150, '2 Hours 30 Minutes'),
+       (180, '3 Hours'),
+       (210, '3 Hours 30 Minutes'),
+       (240, '4 Hours'),
+       (270, '4 Hours 30 Minutes'),
+       (300, '5 Hours'),
+       (330, '5 Hours 30 Minutes'),
+       (360, '6 Hours'),
+       (390, '6 Hours 30 Minutes'),
+       (420, '7 Hours'),
+       (450, '7 Hours 30 Minutes'),
+       (480, '8 Hours'),
         )
     TimePeriod = forms.ChoiceField(label='Time Period', choices=TIMESLOTS)
     Amount = forms.IntegerField(label='Amount',

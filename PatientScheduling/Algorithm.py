@@ -22,20 +22,17 @@ def convert_to_format(time):
 
 def convert_from_format(num):
     minutes = num * 15
-    hours = math.floor(num/60)
+    hours = math.floor(minutes/int(60))
     minutes -= hours*60
-
-    finalString = str(hours)
-    if len(finalString) is 1:
-        finalString = "0" + finalString + ":"
-    else:
-        finalString = "0" + finalString + ":"
+    hours += 8
+    finalString = str(int(hours))
+    finalString = finalString + ":"
 
     if minutes == 0:
-        finalString += "00:00"
+        finalString += "0:0"
     else:
-        finalString += str(minutes) +":00"
-    finalString = datetime.strptime(finalString, '%H:%M:%S')
+        finalString += str(int(minutes)) +":00"
+    finalString = datetime.strptime(finalString, "%H:%M:%S")
     return finalString
 
 
@@ -45,7 +42,7 @@ def clean_input(nurseSchedules, appointments):
     for nurse in nurseSchedules:
         nurses.append(Nurse(str(nurse.Team), convert_to_format(str(nurse.StartTime)),
                             convert_to_format(str(nurse.LunchTime)), convert_to_format(str(nurse.LunchDuration)),
-                            convert_to_format(str(nurse.EndTime)), str(nurse.NurseID)))
+                            convert_to_format(str(nurse.EndTime)), nurse.NurseID))
 
     # then we deal with the pods
     tempPod = [[nurses[0]]] #first we seperate the nurses into pods
@@ -76,19 +73,15 @@ def clean_input(nurseSchedules, appointments):
     # now we clean the output
     finalAppt = []
     for appointment in end:
-        finalAppt.append(Appointment(Alg_Appointment.nurse.id, convert_from_format(Alg_Appointment.time),
-                                     convert_from_format(Alg_Appointment.time + Alg_Appointment.length),
-                                     Alg_Appointment.chair))
+        finalAppt.append(Appointment(NurseScheduleID=appointment.nurse.id,
+                                     ChairID=appointment.chair,
+                                     StartTime=convert_from_format(appointment.time),
+                                     EndTime=convert_from_format(appointment.time + appointment.length)))
 
     return finalAppt
 
 
-
-
-
-
 class Nurse:
-
     def __init__(self,  pod, start, lunch, lunchlength,  end, identity):
         self.lunch = lunch
         self.lunchlength = lunchlength
@@ -99,6 +92,9 @@ class Nurse:
         self.pod = pod
         self.id = identity
         self.populate()
+
+    def __len__(self):
+        return 1
 
     def get_pod(self):
         return self.pod
@@ -158,12 +154,13 @@ class Pod:
     def single_schedule(self, length, appt_number):
         for i in range(len(self.nurses)):
             for j in range(3):
-                for k in range(self.nurses[j].start, self.nurses[j].end-length+1):
+                for k in range(self.nurses[i].start, self.nurses[i].end-length+1):
                     check = self.check_time(i, j, k, length, appt_number)
                     if check:
                         return check
         return False
 
+    #Need to add support for only one nurse in a pod
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
         for i in range(2, length):
@@ -239,7 +236,7 @@ def schedule_slots(pods, appointments, final):
         if number is stuck:
             discarded.append(appointments.pop(0))
             # return "Failed"
-    print(final)
+    final.sort(key=lambda x: (x.nurse.id, x.chair, x.time))
     return discarded
 #
 # lunch, lunchlength, start, end, pod, identity

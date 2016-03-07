@@ -21,15 +21,18 @@ def new_schedule(request):
             chairs = range(chairs_form.cleaned_data.get('NumberOfChairs'))
             ctemp = chairs_form.cleaned_data.get('NumberOfChairs') + 1
             nurses = []
+            NurseNumber = 1
             for form in rn_form:
                 cd = form.cleaned_data
                 nurses.append(NurseSchedule(
+                    NurseID=NurseNumber,
                     Team=cd.get('Team'),
                     StartTime=cd.get('StartTime'),
                     LunchTime=cd.get('LunchTime'),
                     LunchDuration=cd.get('LunchDuration'),
                     EndTime=cd.get('EndTime'),
                 ))
+                NurseNumber +=1
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data

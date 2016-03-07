@@ -16,7 +16,7 @@ class ScheduleGroups(models.Model):
 
 
 class NurseSchedule(models.Model):
-    NurseID = models.PositiveIntegerField(default=models.AutoField(primary_key=True))
+    NurseID = models.PositiveIntegerField(primary_key=True)
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
     ScheduleGroupName = models.ForeignKey(ScheduleGroups)
     StartTime = models.TimeField(auto_now=False, default='8:00', blank=False)
@@ -31,4 +31,3 @@ class Appointment(models.Model):
     ChairID = models.PositiveIntegerField()
     StartTime = models.TimeField(auto_now=False)
     EndTime = models.TimeField(auto_now=False)
-    Chair = models.PositiveIntegerField(default=0)
