@@ -2,6 +2,7 @@
 from PatientScheduling.models import NurseSchedule
 from PatientScheduling.models import Appointment
 import math
+from datetime import datetime
 
 
 def convert_to_format(time):
@@ -31,14 +32,11 @@ def convert_from_format(num):
         finalString = "0" + finalString + ":"
 
     if minutes == 0:
-         finalString += "00:00"
+        finalString += "00:00"
     else:
         finalString += str(minutes) +":00"
-
+    finalString = datetime.strptime(finalString, '%H:%M:%S')
     return finalString
-
-
-
 
 
 def clean_input(nurseSchedules, appointments):
@@ -78,7 +76,7 @@ def clean_input(nurseSchedules, appointments):
     # now we clean the output
     finalAppt = []
     for appointment in end:
-        finalAppt.append(Appointment(Alg_Appointment.nurse, convert_from_format(Alg_Appointment.time),
+        finalAppt.append(Appointment(Alg_Appointment.nurse.id, convert_from_format(Alg_Appointment.time),
                                      convert_from_format(Alg_Appointment.time + Alg_Appointment.length),
                                      Alg_Appointment.chair))
 

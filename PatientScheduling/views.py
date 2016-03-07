@@ -33,8 +33,8 @@ def new_schedule(request):
             for form in app_form:
                 cd = form.cleaned_data
                 appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
+            appointments = clean_input(nurses, appointments)                   # this starts the algorithm
             context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': appointments}
-            clean_input(nurses, appointments)                   # this starts the algorithm
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}
