@@ -61,6 +61,22 @@
             {% endfor %}
         {% endfor %}
     </table>
-    <br>
-
+    <br><br>
+    <h3>INPUT GIVEN</h3>
+    <table class="table">
+        <tr>
+            <th>Nurse</th>
+            <th>Chair</th>
+            <th>StartTime</th>
+            <th>EndTime</th>
+        </tr>
+    {% for Appt in Appointments %}
+        <tr>
+            <td>{{ Appt.NurseScheduleID }}</td>
+        <td>{{ Appt.ChairID }}</td>
+        <td>{{ Appt.StartTime | time:"H:i" }}</td>
+        <td>{{ Appt.EndTime | time:"H:i" }}</td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}
