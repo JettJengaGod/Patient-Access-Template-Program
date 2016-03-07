@@ -2,25 +2,36 @@
     margin: 5%;
 }
 
-.lunch{
-    background-color: dodgerblue;
-    min-height: 1px;
-    min-width: 1px;
+.appt{
+    float: left;
+    display: inline-block;
 }
 
 .filler{
     background-color: inherit;
-    min-height: 1px;
-    min-width: 1px;
+    float: left;
+    display: inline-block;
+}
+
+.lunch{
+    z-index: 2;
+    opacity: .75;
+    height: 100%;
+    background: repeating-linear-gradient(
+      20deg,
+      transparent,
+      transparent 10px,
+      lightblue 10px,
+      lightblue 20px
+    );
 }
 
 .unavailable{
-    background-color: #d6d6c2;
-}
-
-.striped{
+    z-index: 2;
+    opacity: .75;
+    height: 100%;
     background: repeating-linear-gradient(
-      45deg,
+      20deg,
       #ffffff,
       #ffffff 10px,
       #d6d6c2 10px,
@@ -29,9 +40,10 @@
 }
 
 .table-grouper{
-    background-color: cadetblue;
+    background-color: #003b71;
+    color: white;
 }
 .table-grouper:hover{
     cursor: pointer;
-    background-color: #9acfea;
+    background-color: #0084ff;
 }

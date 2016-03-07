@@ -5,16 +5,19 @@
      <script src="/static/js/calendar.js" rel="script"></script>
     <script>
         $(document).ready(function(){
+            {% for Appt in appointments %}
+                AddAppointment(Appt.NurseScheduleID, Appt.ChairID, Appt.StartTime, Appt.EndTime);
+            {% endfor %}
+
             {% for RN in RNSet %}
                 BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}');
             {% endfor %}
-
         });
     </script>
 {% endblock %}
 {% block content %}
     <table id="calendar" class="table table-bordered table-responsive" width="100%">
-        <tr>
+        <tr style="background-color: beige">
             <th>Pod</th>
             <th>8:00</th>
             <th>9:00</th>
@@ -30,13 +33,16 @@
         {% for RN in RNSet %}
             {% ifchanged RN.Team %}
                 <tr id="collapse-row-{{ forloop.counter }}" onclick="rowSelect({{ forloop.counter }},4)" class="table-grouper">
-                    <td colspan="11">Pod {{ RN.Team }}</td>
+                    <td colspan="11">
+                        <span id="arrow-{{ forloop.counter }}" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;
+                        Pod {{ RN.Team }}
+                    </td>
                 </tr>
             {% endifchanged %}
-            <tr id="RN-{{ forloop.counter }}">
-                <td rowspan="5">{{ forloop.counter }}-{{ RN.Team }}</td>
+            <tr id="RN-{{ forloop.counter }}" style="background-color: beige">
+                <td rowspan={{ RNSize }}>{{ forloop.counter }}-{{ RN.Team }}</td>
             </tr>
-            {% for i in "1234" %} {# 123 represents the three chars#}
+            {% for i in Chairs %} {# 123 represents the three chars#}
                 <tr id="RN-{{ forloop.parentloop.counter }}-row-{{ i }}">
                     <td></td>
                     <td></td>
@@ -54,48 +60,4 @@
     </table>
     <br>
 
-    <h3>INPUT:</h3>
-    {% if Chairs %}
-        <span style="font-weight: bold">Chairs: </span>{{ Chairs }}
-    {% else %}
-        <p>No Chairs are Available</p>
-    {% endif %}
-    <br><br>
-    {% if RNSet %}
-        <table class="table">
-            <tr style="font-weight: bold">
-                <th>Pod Team</th>
-                <th>Start Time</th>
-                <th>Lunch Time</th>
-                <th>Lunch Duration</th>
-                <th>End Time</th>
-            </tr>
-            {% for RN in RNSet %}
-                <tr>
-                    <td>{{ RN.Team }}</td>
-                    <td>{{ RN.StartTime }}</td>
-                    <td>{{ RN.LunchTime }}</td>
-                    <td>{{ RN.LunchDuration }}</td>
-                    <td>{{ RN.EndTime }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No RNs are available.</p>
-    {% endif %}
-    <br>
-    {% if Appointments %}
-        <table>
-            <tr style="font-weight: bold">
-                <th>Appointments Needed</th>
-            </tr>
-        {% for App in Appointments %}
-            <tr>
-                <td>{{ App }}</td>
-            </tr>
-        {% endfor %}
-        </table>
-    {% else %}
-        <p>No appointments are available</p>
-    {% endif %}
 {% endblock %}
