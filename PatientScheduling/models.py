@@ -12,11 +12,13 @@ def model_one_letter(value):
 
 
 class ScheduleGroups(models.Model):
+    # models.AutoField(primary_key=True) is a default field
     Name = models.CharField(max_length=20, primary_key=True)
 
 
 class NurseSchedule(models.Model):
-    NurseID = models.PositiveIntegerField(primary_key=True)
+    # models.AutoField(primary_key=True) is a default field
+    NurseID = models.PositiveIntegerField(unique=True)
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
     ScheduleGroupName = models.ForeignKey(ScheduleGroups)
     StartTime = models.TimeField(auto_now=False, default='8:00', blank=False)

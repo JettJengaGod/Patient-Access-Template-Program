@@ -119,13 +119,17 @@ function AddFill(cell, fraction, className, leftAligned, color){
 
     cell.style.padding = 0;
     var div = document.createElement('div');
+    if(!leftAligned){
+        if(className == "lunch")//lunch divs can not be floated or they will refuse to overlap
+            div.style.marginLeft = (1-fraction)*100 + '%';
+        else
+            div.style.float = 'right';
+    }
     div.innerHTML = '&nbsp;';
     cell.appendChild(div);
     div.className += ' ' + className;
     div.style.width = (fraction * 100) + '%';
     div.style.backgroundColor = color;
-    if(!leftAligned)
-        div.style.float = 'right';
 }
 
 function rowSelect(grouping){

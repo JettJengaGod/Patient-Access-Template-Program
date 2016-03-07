@@ -16,7 +16,7 @@
 .lunch{
     z-index: 2;
     opacity: .75;
-    height: 100%;
+    height: 20px;
     background: repeating-linear-gradient(
       20deg,
       transparent,
@@ -25,11 +25,14 @@
       lightblue 20px
     );
 }
+.lunch-filler{
+    z-index: 2;
+    background-color: transparent;
+}
 
 .unavailable{
     z-index: 2;
     opacity: .75;
-    height: 100%;
     background: repeating-linear-gradient(
       20deg,
       #ffffff,

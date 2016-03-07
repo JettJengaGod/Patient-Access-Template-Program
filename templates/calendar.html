@@ -5,8 +5,8 @@
      <script src="/static/js/calendar.js" rel="script"></script>
     <script>
         $(document).ready(function(){
-            {% for Appt in appointments %}
-                AddAppointment(Appt.NurseScheduleID, Appt.ChairID, Appt.StartTime, Appt.EndTime);
+            {% for Appt in Appointments %}
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}');
             {% endfor %}
 
             {% for RN in RNSet %}
@@ -16,6 +16,9 @@
     </script>
 {% endblock %}
 {% block content %}
+    {% if not Appointments %}
+        <p>Error: there are no scheduled appointments</p>
+    {% endif %}
     <table id="calendar" class="table table-bordered table-responsive" width="100%">
         <tr style="background-color: beige">
             <th>Pod</th>

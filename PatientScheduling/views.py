@@ -32,13 +32,12 @@ def new_schedule(request):
                     LunchDuration=cd.get('LunchDuration'),
                     EndTime=cd.get('EndTime'),
                 ))
-                NurseNumber +=1
+                NurseNumber += 1
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data
                 needed_appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
-            scheduled_appointments = clean_input(nurses, needed_appointments)                   # this starts the algorithm
-            # call algorithm here and return ScheduledAppointments and UnscheduledAppointments
+            scheduled_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
             # TODO: Add to below context 'UnscheduledAppointments': UnscheduledAppointments
             # ScheduledAppointments must be sorted by nurse, by chair, and by time (earliest first)
             # assuming the following names are in the AppointmentClass: StartTime, EndTime, ChairID, NurseScheduleID
