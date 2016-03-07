@@ -2,7 +2,8 @@
 
 {% block title %}New Schedule{% endblock %}
 {% block head %}
-    <script src="/static/js/new_schedule.js" rel="script"></script>
+    {% load staticfiles %}
+    <script src="{% static "js/new_schedule.js" %}" rel="script"></script>
 {% endblock %}
 
 {% block content %}

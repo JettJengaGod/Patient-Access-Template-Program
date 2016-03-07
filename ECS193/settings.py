@@ -25,8 +25,8 @@ SECRET_KEY = 'u=(my1cm9k)ana)!#6zb$gio5z5cmku_+5a*az9rup^$l3-)a3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# Allow all host hosts/domain names for this site
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -119,7 +119,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '/ECS193/static/')
 STATICFILES_DIRS = [
     'ECS193/static/',
 ]
