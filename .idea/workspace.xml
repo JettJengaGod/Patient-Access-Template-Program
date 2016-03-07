@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c70a0971-19fb-46d6-aa01-b16c5ab49a61" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ECS193/static/css/customStyle.css" afterPath="$PROJECT_DIR$/ECS193/static/css/customStyle.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ECS193/static/js/calendar.js" afterPath="$PROJECT_DIR$/ECS193/static/js/calendar.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PatientScheduling/models.py" afterPath="$PROJECT_DIR$/PatientScheduling/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PatientScheduling/views.py" afterPath="$PROJECT_DIR$/PatientScheduling/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/calendar.html" afterPath="$PROJECT_DIR$/templates/calendar.html" />
     </list>
     <ignored path="ECS193.iws" />
@@ -41,11 +41,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/PatientScheduling/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.8888889">
+              <caret line="34" column="91" selection-start-line="34" selection-start-column="91" selection-end-line="34" selection-end-column="91" />
               <folding>
                 <element signature="e#0#58#0" expanded="true" />
               </folding>
@@ -66,21 +66,20 @@
       <file leaf-file-name="calendar.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/calendar.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.5454545">
-              <caret line="48" column="102" selection-start-line="48" selection-start-column="70" selection-end-line="48" selection-end-column="102" />
+            <state vertical-scroll-proportion="-2.4727273">
+              <caret line="8" column="51" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="51" />
               <folding>
-                <element signature="e#155#1224#0#HTML" expanded="false" />
-                <element signature="e#1357#1388#0#HTML" expanded="true" />
-                <element signature="e#2240#2271#0#HTML" expanded="true" />
+                <element signature="e#762#793#0#HTML" expanded="true" />
+                <element signature="e#1645#1676#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="calendar.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="calendar.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ECS193/static/js/calendar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41062802">
+            <state vertical-scroll-proportion="0.0">
               <caret line="130" column="28" selection-start-line="130" selection-start-column="28" selection-end-line="130" selection-end-column="28" />
               <folding>
                 <element signature="n#!!block;n#BuildRNRow#0" expanded="false" />
@@ -97,7 +96,7 @@
         <entry file="file://$PROJECT_DIR$/PatientScheduling/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <caret line="29" column="19" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -128,7 +127,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/ECS193/media/css/customStyle.css" />
-        <option value="$PROJECT_DIR$/PatientScheduling/models.py" />
         <option value="$PROJECT_DIR$/templates/generate_schedule.html" />
         <option value="$PROJECT_DIR$/ECS193/settings.py" />
         <option value="$PROJECT_DIR$/templates/Master.html" />
@@ -137,11 +135,12 @@
         <option value="$PROJECT_DIR$/PatientScheduling/db_scripts.py" />
         <option value="$PROJECT_DIR$/ECS193/static/js/new_schedule.js" />
         <option value="$PROJECT_DIR$/templates/new_schedule.html" />
-        <option value="$PROJECT_DIR$/PatientScheduling/views.py" />
         <option value="$PROJECT_DIR$/PatientScheduling/forms.py" />
         <option value="$PROJECT_DIR$/ECS193/static/css/customStyle.css" />
-        <option value="$PROJECT_DIR$/templates/calendar.html" />
         <option value="$PROJECT_DIR$/ECS193/static/js/calendar.js" />
+        <option value="$PROJECT_DIR$/PatientScheduling/models.py" />
+        <option value="$PROJECT_DIR$/templates/calendar.html" />
+        <option value="$PROJECT_DIR$/PatientScheduling/views.py" />
       </list>
     </option>
   </component>
@@ -646,7 +645,13 @@
       <option name="project" value="LOCAL" />
       <updated>1457307998343</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Allow scheduling appointments through lunch">
+      <created>1457310853673</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1457310853673</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -667,7 +672,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08396369" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17700455" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27906978" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -712,7 +717,8 @@
     <MESSAGE value="Have a basic collapse/un-collapse javascript working on the calendar" />
     <MESSAGE value="calendar now groups by pod" />
     <MESSAGE value="Appointments now get a random color" />
-    <option name="LAST_COMMIT_MESSAGE" value="Appointments now get a random color" />
+    <MESSAGE value="Allow scheduling appointments through lunch" />
+    <option name="LAST_COMMIT_MESSAGE" value="Allow scheduling appointments through lunch" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -747,9 +753,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="36" column="37" selection-start-line="36" selection-start-column="37" selection-end-line="36" selection-end-column="37" />
           <folding>
-            <element signature="e#155#1224#0#HTML" expanded="false" />
-            <element signature="e#1357#1388#0#HTML" expanded="true" />
-            <element signature="e#2240#2271#0#HTML" expanded="true" />
+            <element signature="e#762#793#0#HTML" expanded="true" />
+            <element signature="e#1645#1676#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -799,9 +804,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding>
-            <element signature="e#155#1224#0#HTML" expanded="false" />
-            <element signature="e#1357#1388#0#HTML" expanded="true" />
-            <element signature="e#2240#2271#0#HTML" expanded="true" />
+            <element signature="e#762#793#0#HTML" expanded="true" />
+            <element signature="e#1645#1676#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1092,16 +1096,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PatientScheduling/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/new_schedule.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.04308797">
@@ -1118,6 +1112,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/PatientScheduling/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="19" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ECS193/static/js/calendar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="130" column="28" selection-start-line="130" selection-start-column="28" selection-end-line="130" selection-end-column="28" />
+          <folding>
+            <element signature="n#!!block;n#BuildRNRow#0" expanded="false" />
+            <element signature="n#!!block;n#AddAppointment#0" expanded="false" />
+            <element signature="n#!!block;n#AddFill#0" expanded="false" />
+            <element signature="n#!!block;n#rowSelect#0" expanded="false" />
+            <element signature="n#!!block;n#RandomColor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ECS193/static/css/customStyle.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-16.846153">
@@ -1128,34 +1144,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/calendar.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.5454545">
-          <caret line="48" column="102" selection-start-line="48" selection-start-column="70" selection-end-line="48" selection-end-column="102" />
+        <state vertical-scroll-proportion="-2.4727273">
+          <caret line="8" column="51" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="51" />
           <folding>
-            <element signature="e#155#1224#0#HTML" expanded="false" />
-            <element signature="e#1357#1388#0#HTML" expanded="true" />
-            <element signature="e#2240#2271#0#HTML" expanded="true" />
+            <element signature="e#762#793#0#HTML" expanded="true" />
+            <element signature="e#1645#1676#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PatientScheduling/models.py">
+    <entry file="file://$PROJECT_DIR$/PatientScheduling/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ECS193/static/js/calendar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41062802">
-          <caret line="130" column="28" selection-start-line="130" selection-start-column="28" selection-end-line="130" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.8888889">
+          <caret line="34" column="91" selection-start-line="34" selection-start-column="91" selection-end-line="34" selection-end-column="91" />
           <folding>
-            <element signature="n#!!block;n#BuildRNRow#0" expanded="false" />
-            <element signature="n#!!block;n#AddAppointment#0" expanded="false" />
-            <element signature="n#!!block;n#AddFill#0" expanded="false" />
-            <element signature="n#!!block;n#rowSelect#0" expanded="false" />
-            <element signature="n#!!block;n#RandomColor#0" expanded="false" />
+            <element signature="e#0#58#0" expanded="true" />
           </folding>
         </state>
       </provider>

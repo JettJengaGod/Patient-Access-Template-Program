@@ -27,11 +27,15 @@ def new_schedule(request):
                     LunchDuration=cd.get('LunchDuration'),
                     EndTime=cd.get('EndTime'),
                 ))
-            appointments = []
+            neededAppointments = []
             for form in app_form:
                 cd = form.cleaned_data
-                appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
-            context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': appointments, 'RNSize': ctemp}
+                neededAppointments.append([cd.get('TimePeriod'), cd.get('Amount')])
+            # call algorithm here and return ScheduledAppointments and UnscheduledAppointments
+            # TODO: Add to below context 'UnscheduledAppointments': UnscheduledAppointments
+            # ScheduledAppointments must be sorted by nurse, by chair, and by time (earliest first)
+            # assuming the following names are in the AppointmentClass: StartTime, EndTime, ChairID, NurseScheduleID
+            context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': ScheduledAppointments, 'RNSize': ctemp}
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}
