@@ -120,14 +120,13 @@ class Nurse:
         for i in range(time, time + appointment):
             self.chairs[chair][i] = number
         for i in range(3):
-            if i is not chair:
-                self.chairs[i][time] = max(2, self.chairs[i][time])
-                self.chairs[i][time + 1] = max(2, self.chairs[i][time + 1])
+            self.chairs[i][time] = 2
+            self.chairs[i][time + 1] = 2
 
     def help_start(self, time):
         for i in range(3):
-            self.chairs[i][time] = max(2,self.chairs[i][time])
-            self.chairs[i][time+1] = max(2,self.chairs[i][time+1])
+            self.chairs[i][time] = 2
+            self.chairs[i][time+1] = 2
 
     def populate(self):  # fills the list of chairs when a nurse is initialized
         self.chairs = [[0 for x in range(self.end)] for x in range(4)]
@@ -173,7 +172,7 @@ class Pod:
                 for j in range(3):
                     if self.nurses[i].chairs[j][time] is not 1 and self.nurses[i].chairs[j][time] is not 2 and \
                                     self.nurses[i].chairs[j][time + 1] is not 1 and self.nurses[i].chairs[j][
-                                time + 1] is not 2 and extra is -1:
+                                time + 1] is not 2 and extra is -1 and i is not nurseindex:
                         extra = [i, j]
                         break
             if extra is -1:
