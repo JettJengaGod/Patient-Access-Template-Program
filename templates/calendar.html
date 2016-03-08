@@ -6,12 +6,25 @@
     <script>
         $(document).ready(function(){
             {% for Appt in Appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}');
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }});
             {% endfor %}
 
             {% for RN in RNSet %}
                 BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}');
             {% endfor %}
+
+            $('a.appt').hover(
+                function() {
+                    $('.appt-'+this.id).addClass('active');
+                },
+                function() {
+                    $('.appt-'+this.id).removeClass('active');
+                }
+            );
+
+            $(function () {
+              $('[data-toggle="popover"]').popover()
+            })
         });
     </script>
 {% endblock %}

@@ -50,3 +50,9 @@
     cursor: pointer;
     background-color: #0084ff;
 }
+
+.active {
+    cursor: pointer;
+    background-color: #0084ff !important;
+    color: #0084ff !important;
+}

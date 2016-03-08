@@ -61,7 +61,7 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
 
 var lastEndIndex = 0;
 var lastEndPercent = 0;
-function AddAppointment(RNIndex, chairIndex, startTime, endTime) {
+function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
     var row = document.getElementById("RN-"+RNIndex+"-row-"+chairIndex);
     var offset = 8;
 
@@ -79,7 +79,7 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime) {
     if (startMinutes > 0) {
         //right shift
         if (startIndex != endIndex) {
-            AddFill(row.cells[startIndex++], 1 - startPercent, 'appt', false, color);
+            BuildApptDiv(row.cells[startIndex++], 1 - startPercent, false, color, apptID, startTime, endTime);
             totalTime -= (60 - startMinutes);
         }
         // special case middle appointment
@@ -91,26 +91,26 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime) {
             else {
                 AddFill(row.cells[startIndex], startPercent, 'filler', true);
             }
-            AddFill(row.cells[startIndex], (endPercent - startPercent), 'appt', true, color);
+            BuildApptDiv(row.cells[startIndex], (endPercent - startPercent), true, color, apptID, startTime, endTime);
             totalTime = 0;
             endMinutes = 0;
         }
     }
     // appointment doesn't end on the hour
     if (endMinutes > 0) {
-        AddFill(row.cells[endIndex], endPercent, 'appt', true, color);
+        BuildApptDiv(row.cells[endIndex], endPercent, true, color, apptID, startTime, endTime);
         totalTime -= endMinutes;
     }
     // fills out entire hour slot
     while (totalTime > 0) {
-        AddFill(row.cells[startIndex++], 1, 'appt', false, color);
+        BuildApptDiv(row.cells[startIndex++], 1, true, color, apptID, startTime, endTime);
         totalTime -= 60;
     }
     lastEndIndex = endIndex;
     lastEndPercent = endPercent;
 }
 
-function AddFill(cell, fraction, className, leftAligned, color){
+function AddFill(cell, fraction, className, leftAligned){
     if(fraction > 1 || fraction < 0)
     {
         alert("The given fraction to fill the cell by is not a valid percent!")
@@ -119,9 +119,10 @@ function AddFill(cell, fraction, className, leftAligned, color){
 
     cell.style.padding = 0;
     var div = document.createElement('div');
-    if(!leftAligned){
-        if(className == "lunch")//lunch divs can not be floated or they will refuse to overlap
-            div.style.marginLeft = (1-fraction)*100 + '%';
+
+    if (!leftAligned) {
+        if (className == "lunch")//lunch divs can not be floated or they will refuse to overlap
+            div.style.marginLeft = (1 - fraction) * 100 + '%';
         else
             div.style.float = 'right';
     }
@@ -129,7 +130,37 @@ function AddFill(cell, fraction, className, leftAligned, color){
     cell.appendChild(div);
     div.className += ' ' + className;
     div.style.width = (fraction * 100) + '%';
+}
+
+function BuildApptDiv(cell, fraction, leftAligned, color, id, startTime, endTime)
+{
+    if(fraction > 1 || fraction < 0)
+    {
+        alert("The given fraction to fill the cell by is not a valid percent!")
+        return;
+    }
+
+    cell.style.padding = 0;
+    var div = document.createElement('a');
+
+    if (!leftAligned)
+        div.style.float = 'right';
+
     div.style.backgroundColor = color;
+    div.style.color = color;
+    div.id = id;
+    div.className += ' appt-' + id;
+    div.setAttribute('role', 'button');
+    div.setAttribute('data-toggle', 'popover');
+    div.setAttribute('data-trigger', 'focus');
+    div.setAttribute('data-placement', 'top');
+    div.setAttribute('data-content', 'Start Time: '+startTime + '\nEnd Time: ' + endTime);
+    div.setAttribute('tabindex', '0');
+    div.innerHTML = '&nbsp;';
+    div.className += ' appt';
+    div.style.width = (fraction * 100) + '%';
+
+    cell.appendChild(div);
 }
 
 function rowSelect(grouping){
