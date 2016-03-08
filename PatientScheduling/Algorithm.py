@@ -114,8 +114,8 @@ class Nurse:
         return string
 
     def lunch_swap(self, time, length):
-        for i in range(2, length):
-            if self.chairs[3][time + i] > 2:
+        for i in range(0, length):
+            if self.chairs[3][time + i] > 0:
                 return False
         return True
 
@@ -164,7 +164,7 @@ class Pod:
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
         for i in range(2, length):
-            if current.chairs[chair][time + i] > 5:
+            if current.chairs[chair][time + i] > 3:
                 return False
         if current.chairs[chair][time + length - 2] > 1 or current.chairs[chair][time + length - 1] is 1:
             return False
@@ -193,7 +193,7 @@ class Pod:
     def check_other_nurses(self, time, nurse, appt_number):
         found = -1
         for i in range(len(self.nurses)):
-            if self.nurses[i].lunch_swap(time, nurse.lunchlength):
+            if self.nurses[i].lunch_swap(time, nurse.lunchlength)and self.nurses[i] is not nurse:
                 found = i
                 break
         if found is not -1:
