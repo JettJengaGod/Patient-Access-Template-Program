@@ -161,7 +161,7 @@ class Pod:
     #Need to add support for only one nurse in a pod
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
-        if time+length > 36:
+        if time+length >= 36:
             return False
         for i in range(0, length):
             if current.chairs[chair][time + i] > 2:
