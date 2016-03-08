@@ -1,9 +1,158 @@
 {% extends "Master.html" %}
 
 {% block title %}New Schedule{% endblock %}
-{% block head %}{% endblock %} {% comment %}Include any page specific css or js here{% endcomment %}
+{% block head %}
+    {% load staticfiles %}
+    <script src="{% static "js/new_schedule.js" %}" rel="script"></script>
+{% endblock %}
 
 {% block content %}
-    <h3 class="text-center">Create New Schedule</h3>
+    <h4 class="text-center">Create New Schedule</h4>
+    <form method="POST" action="/newSchedule/">
+    {% csrf_token %}
+    <div>
+        <h3>Schedule Period</h3>
+        <button id="buttonDay" type="button" class="btn btn-primary" onclick="buttonDayClick()" >Day</button>
+        <button id="buttonWeek" type="button"  class="btn btn-primary" disabled="disabled">Week</button>
+        <hr>
+    </div>
+    <div>
+        <h3>RN Schedules</h3>
+        <h4 id="pageAlert" class="label-success text-center" style="font-weight: bold"></h4>
+        <div class="row">
+            <div class="col-md-3">
+                {{ ChairsForm }}
+            </div>
+            <div class="col-md-6">
+                <div style="display: inline-block;">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal" onclick="
+                        $('#yesOverwrite').hide();
+                        $('#noOverwrite').hide();
+                        $('#save_alert').hide();"
+                    >Save Nurse Schedule</button><br><br></div>
+                <div style="display: inline-block;">
+                <button type="button" class="btn btn-primary" onclick="LoadScheduleNames()" data-toggle="modal" data-target="#loadModal">Load Nurse Schedule</button><br><br></div>
+            </div>
+        </div>
+        {{ RNFormSet.management_form }}
+        <table id="{{ RNFormSet.prefix }}Table" class='table table-striped'>
+        <tr class="table-header">
+            <th></th>
+            <th></th>
+            <th>Pod Team</th>
+            <th>Start Time</th>
+            <th>Lunch Time</th>
+            <th>Lunch Duration</th>
+            <th>End Time</th>
+        </tr>
+        {% for form in RNFormSet.forms %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ form.non_field_errors | striptags }} at Nurse {{ forloop.counter }}
+                </div>
+            {% endif %}
+            <tr id="{{ RNFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ RNFormSet.prefix }}-row">
+                <td>
+                    <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </td>
+                <td class="RNNumber">Nurse {{ forloop.counter }}</td>
+                <td>{{ form.Team }}</td>
+                <td>{{ form.StartTime }}</td>
+                <td>{{ form.LunchTime }}</td>
+                <td>{{ form.LunchDuration }}</td>
+                <td>{{ form.EndTime }}</td>
+            </tr>
+        {% endfor %}
+            <tr><td colspan="7">
+                <button type="button" aria-label="Add" onclick="AddRowClick('{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </td></tr>
+        </table>
 
+        <br>
+    <hr>
+    </div>
+    <div>
+        <h3>Needed Timeslots</h3>
+        {{ AppointmentFormSet.management_form }}
+        <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
+        <tr>
+                <th></th>
+                <th>Time Period</th>
+                <th>Total Needed</th>
+        </tr>
+        {% for form in AppointmentFormSet.forms %}
+            <tr id="{{ AppointmentFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ AppointmentFormSet.prefix }}-row">
+                <td>
+                    <button type="button" aria-label="Delete" class="delete-button" disabled="disabled" onclick="RemoveRowClick({{ forloop.counter }}, '{{ AppointmentFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                </td>
+                <td>{{ form.TimePeriod }}</td>
+                <td>{{ form.Amount }}</td>
+            </tr>
+        {% endfor %}
+        <tr><td colspan="6">
+            <button type="button" aria-label="Add" onclick="AddRowClick('{{ AppointmentFormSet.prefix }}')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+        </td></tr>
+        </table>
+        <br>
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button><br><br>
+    </div>
+    </form>
+    {#TODO Add transitions between steps#}
+    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Previous</button>
+    <button type="button" class="btn btn-default">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+    <button type="button" class="btn btn-default" style="float: right;">Cancel</button>
+
+    <div id="loadModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Load RN Schedules</h4>
+          </div>
+          <div class="modal-body">
+              <label for="savedSchedules">Select a schedule name:</label>
+              <select id="savedSchedules"></select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="LoadSchedule('{{ RNFormSet.prefix }}')" data-dismiss="modal">Load</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Save RN Schedules</h4>
+          </div>
+          <div class="modal-body">
+              <label for="id_ScheduleGroupName">Save as: </label>
+              <input id="id_ScheduleGroupName" type="text">
+              <br>
+              <label id="save_alert">This is an alert!</label>
+              <button id="yesOverwrite" type="button" class="btn btn-primary" data-dismiss="modal" onclick="
+                    if(SaveSchedule('{{ RNFormSet.prefix }}', true))
+                            $('#saveModal').modal('hide');
+                  ">Yes</button>
+              <button id="noOverwrite" type="button" class="btn btn-primary" onclick="
+                   $('#yesOverwrite').hide();
+                    $('#noOverwrite').hide();
+                    $('#save_alert').hide();
+                    $('#id_ScheduleGroupName').attr('readonly','false');
+                ">No</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="
+                    if(SaveSchedule('{{ RNFormSet.prefix }}', false))
+                        $('#saveModal').modal('hide');
+                ">Save</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}
