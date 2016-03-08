@@ -111,7 +111,7 @@ class Nurse:
         return string
 
     def lunch_swap(self, time, length):
-        for i in range(time, length):
+        for i in range(time, time + length):
             if self.chairs[3][time + i] > 0:
                 return False
         return True
@@ -129,11 +129,13 @@ class Nurse:
             self.chairs[i][time+1] = 2
 
     def populate(self):  # fills the list of chairs when a nurse is initialized
-        self.chairs = [[0 for x in range(self.end)] for x in range(4)]
+        self.chairs = [[0 for x in range(36)] for x in range(4)]
         for i in range(4):
             for j in range(self.lunch, self.lunch + self.lunchlength):  # all lunch times are 1
                 self.chairs[i][j] = 1
             for j in range(0, self.start):  # any time before starting is a 3
+                self.chairs[i][j] = 3
+            for j in range(self.end, 36):
                 self.chairs[i][j] = 3
 
 
@@ -148,9 +150,9 @@ class Pod:
         return str
 
     def single_schedule(self, length, appt_number):
-        for i in range(len(self.nurses)):
+        for k in range(0, 36):
             for j in range(3):
-                for k in range(self.nurses[i].start, self.nurses[i].end-length+1):
+                for i in range(len(self.nurses)):
                     check = self.check_time(i, j, k, length, appt_number)
                     if check:
                         return check
@@ -159,8 +161,10 @@ class Pod:
     #Need to add support for only one nurse in a pod
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
+        if time+length > 36:
+            return False
         for i in range(0, length):
-            if current.chairs[chair][time + i] > 3:
+            if current.chairs[chair][time + i] > 2:
                 return False
         if current.chairs[chair][time + length - 2] > 1 or current.chairs[chair][time + length - 1] is 1:
             return False
