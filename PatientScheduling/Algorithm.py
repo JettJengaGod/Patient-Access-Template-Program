@@ -163,7 +163,7 @@ class Pod:
     #Need to add support for only one nurse in a pod
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
-        for i in range(2, length):
+        for i in range(0, length):
             if current.chairs[chair][time + i] > 3:
                 return False
         if current.chairs[chair][time + length - 2] > 1 or current.chairs[chair][time + length - 1] is 1:
@@ -252,15 +252,16 @@ def schedule_slots(pods, appointments, final):
 # appt.extend(14 for x in range(2))
 # appt.extend(12 for x in range(12))
 # appt.extend(10 for x in range(10))
-# appt.extend(8 for x in range(9))
+# appt.extend(8 for x in range(40))
 # appt.extend(6 for x in range(29))
 # appt.extend(4 for x in range(20))
 # appt.extend(3 for x in range(8))
 # appt.extend(2 for x in range(23))
 # pods = [Pod([Nurse(10+x, 4, 0, 33, 1, x) for x in range(4)]), Pod([Nurse(14+x, 4, 4, 39, 2, x+4) for x in range(4)]), \
 #         Pod([Nurse(18+x, 4, 0, 33, 3, x+8) for x in range(4)])]
+# pods = [Pod([Nurse(1, 0, 12, 4, 32, 1), Nurse(1, 0, 16, 4, 32, 1), Nurse(1, 0, 20, 4, 32, 1), Nurse(1, 0, 24, 4, 32, 1)])]
 # end = []
 # print(schedule_slots(pods, appt, end))
-print "1"
 # for pod in pods:
 #     print pod
+#
