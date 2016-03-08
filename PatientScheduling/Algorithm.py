@@ -56,7 +56,7 @@ def clean_input(nurseSchedules, appointments):
                 break
 
         if stored is False:
-            tempPod.append(nurse)
+            tempPod.append([nurse])
     pods = []    # making the nurses into pods
     for nurseGroup in tempPod:
         pods.append(Pod(nurseGroup))
@@ -92,9 +92,6 @@ class Nurse:
         self.pod = pod
         self.id = identity
         self.populate()
-
-    def __len__(self):
-        return 1
 
     def get_pod(self):
         return self.pod
