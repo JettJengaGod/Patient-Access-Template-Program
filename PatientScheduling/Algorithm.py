@@ -112,7 +112,7 @@ class Nurse:
 
     def lunch_swap(self, time, length):
         for i in range(time, time + length):
-            if self.chairs[3][time + i] > 0:
+            if self.chairs[3][i] > 0:
                 return False
         return True
 
