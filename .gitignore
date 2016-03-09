@@ -73,3 +73,6 @@ target/
 .idea/dataSources.ids
 .idea/dataSources.xml
 .idea/workspace.xml
+.idea/dataSources.local.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml

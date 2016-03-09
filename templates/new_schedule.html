@@ -2,11 +2,18 @@
 
 {% block title %}New Schedule{% endblock %}
 {% block head %}
-    <script src="/static/js/new_schedule.js" rel="script"></script>
+    {% load static from staticfiles %}
+    <script src="{% static "js/new_schedule.js"%}" rel="script"></script>
+    <script>
+        $(document).ready(function(){
+            $('nav').show();
+            $('.nav > li').removeClass('active');
+            $('#navCreateNew').addClass('active');
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
-    <h4 class="text-center">Create New Schedule</h4>
     <form method="POST" action="/newSchedule/">
     {% csrf_token %}
     <div>
@@ -94,13 +101,10 @@
         </td></tr>
         </table>
         <br>
-        <button type="submit" class="btn btn-primary btn-lg">Submit</button><br><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="/home/" type="button" class="btn btn-default">Cancel</a>
     </div>
     </form>
-    {#TODO Add transitions between steps#}
-    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>Previous</button>
-    <button type="button" class="btn btn-default">Next<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-    <button type="button" class="btn btn-default" style="float: right;">Cancel</button>
 
     <div id="loadModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
