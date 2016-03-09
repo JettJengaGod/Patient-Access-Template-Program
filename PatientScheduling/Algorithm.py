@@ -119,14 +119,26 @@ class Nurse:
     def schedule(self, appointment, number, chair, time):  # fills the schedule with an appointment
         for i in range(time, time + appointment):
             self.chairs[chair][i] = number
-        for i in range(3):
-            self.chairs[i][time] = 2
-            self.chairs[i][time + 1] = 2
+        for i in range(4):
+            if self.chairs[i][time] > 3:
+                self.chairs[i][time] = 3
+            else:
+                self.chairs[i][time] = 2
+            if self.chairs[i][time+1] > 3:
+                self.chairs[i][time+1] = 3
+            else:
+                self.chairs[i][time+1] = 2
 
     def help_start(self, time):
         for i in range(3):
-            self.chairs[i][time] = 2
-            self.chairs[i][time+1] = 2
+            if self.chairs[i][time] > 3:
+                self.chairs[i][time] = 3
+            else:
+                self.chairs[i][time] = 2
+            if self.chairs[i][time+1] > 3:
+                self.chairs[i][time+1] = 3
+            else:
+                self.chairs[i][time+1] = 2
 
     def populate(self):  # fills the list of chairs when a nurse is initialized
         self.chairs = [[0 for x in range(36)] for x in range(4)]
@@ -134,9 +146,9 @@ class Nurse:
             for j in range(self.lunch, self.lunch + self.lunchlength):  # all lunch times are 1
                 self.chairs[i][j] = 1
             for j in range(0, self.start):  # any time before starting is a 3
-                self.chairs[i][j] = 3
+                self.chairs[i][j] = 4
             for j in range(self.end, 36):
-                self.chairs[i][j] = 3
+                self.chairs[i][j] = 4
 
 
 class Pod:
@@ -158,7 +170,6 @@ class Pod:
                         return check
         return False
 
-    #Need to add support for only one nurse in a pod
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
         if time+length >= 36:
@@ -174,9 +185,7 @@ class Pod:
         if current.chairs[chair][time] > 0 or current.chairs[chair][time+1] > 0:
             for i in range(len(self.nurses)):
                 for j in range(3):
-                    if self.nurses[i].chairs[j][time] is not 1 and self.nurses[i].chairs[j][time] is not 2 and \
-                                    self.nurses[i].chairs[j][time + 1] is not 1 and self.nurses[i].chairs[j][
-                                time + 1] is not 2 and extra is -1 and i is not nurseindex:
+                    if self.nurses[i].chairs[j][time] not in[1, 2, 3] and self.nurses[i].chairs[j][time + 1] not in[1, 2, 3] and extra is -1 and i is not nurseindex:
                         extra = [i, j]
                         break
             if extra is -1:
@@ -186,6 +195,7 @@ class Pod:
                 lunch = self.check_other_nurses(current, appt_number)
                 if not lunch:
                     return False
+                break
         appt = Alg_Appointment(length, current, chair, time, appt_number)
         if extra is not -1:
             self.nurses[extra[0]].help_start(time)
@@ -222,7 +232,7 @@ class Alg_Appointment:
 
 def schedule_slots(pods, appointments, final):
     assert len(appointments) is not 0
-    number = 4
+    number = 5
     discarded = []
     while len(appointments) is not 0:
         stuck = number + 0
