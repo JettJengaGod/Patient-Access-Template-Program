@@ -2,23 +2,46 @@
 
 {% block title %}Schedule{% endblock %}
 {% block head %}
-     <script src="/static/js/calendar.js" rel="script"></script>
+    {% load static from staticfiles %}
+    <script src="{% static "js/calendar.js"%}" rel="script"></script>
     <script>
         $(document).ready(function(){
             {% for Appt in Appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}');
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }});
             {% endfor %}
 
             {% for RN in RNSet %}
                 BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}');
             {% endfor %}
+            //enable hover event for appointment blocks
+            $('a.appt').hover(
+                function() {
+                    $('.appt-'+this.id).addClass('active');
+                },
+                function() {
+                    $('.appt-'+this.id).removeClass('active');
+                }
+            );
+            //enable popovers
+            $(function () {
+              $('[data-toggle="popover"]').popover()
+            })
+            //ensure the navbar is pointing to this page
+            $('.nav > li').removeClass('active');
+            $('#navCreateNew').addClass('active');
         });
     </script>
 {% endblock %}
 {% block content %}
+    <br>
     {% if not Appointments %}
         <p>Error: there are no scheduled appointments</p>
     {% endif %}
+
+    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Print"></span></a>
+    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Print"></span></a>
+    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span></a>
+
     <table id="calendar" class="table table-bordered table-responsive" width="100%">
         <tr style="background-color: beige">
             <th>Pod</th>
@@ -62,21 +85,4 @@
         {% endfor %}
     </table>
     <br><br>
-    <h3>INPUT GIVEN</h3>
-    <table class="table">
-        <tr>
-            <th>Nurse</th>
-            <th>Chair</th>
-            <th>StartTime</th>
-            <th>EndTime</th>
-        </tr>
-    {% for Appt in Appointments %}
-        <tr>
-            <td>{{ Appt.NurseScheduleID }}</td>
-        <td>{{ Appt.ChairID }}</td>
-        <td>{{ Appt.StartTime | time:"H:i" }}</td>
-        <td>{{ Appt.EndTime | time:"H:i" }}</td>
-        </tr>
-    {% endfor %}
-    </table>
 {% endblock %}
