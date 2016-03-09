@@ -78,7 +78,7 @@ class AppointmentForm(forms.Form):
         )
     TimePeriod = forms.ChoiceField(label='Time Period', choices=TIMESLOTS)
     Amount = forms.IntegerField(label='Amount',
-                                initial=0,
+                                initial=1,
                                 min_value=0,
                                 max_value=99
                                 )

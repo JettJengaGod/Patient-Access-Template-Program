@@ -50,3 +50,7 @@ def new_schedule(request):
 
 def generate_schedule(request):
     return render(request, 'calendar.html')
+
+
+def home(request):
+    return render(request, 'home.html')

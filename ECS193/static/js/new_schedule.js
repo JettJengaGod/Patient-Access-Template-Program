@@ -173,9 +173,7 @@
                     RemoveRowClick(index+1, prefix);
             });
 	}
-    function buttonDayClick() {
-
-    }
+    function buttonDayClick() {}
     function AddRowClick(prefix) {
         try {
             var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());

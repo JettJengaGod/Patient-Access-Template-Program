@@ -19,9 +19,10 @@ import PatientScheduling.db_scripts
 import PatientScheduling.views
 
 urlpatterns = [
-    url(r'^$', PatientScheduling.views.new_schedule),
+    url(r'^$', PatientScheduling.views.home),
     url(r'^admin/', admin.site.urls),
     url(r'^newSchedule/', PatientScheduling.views.new_schedule),
+    url(r'^home/', PatientScheduling.views.home),
     url(r'^generateSchedule/', PatientScheduling.views.generate_schedule),
     # scripts called from ajax
     url(r'^add_to_schedule_group/', PatientScheduling.db_scripts.add_to_schedule_group),
