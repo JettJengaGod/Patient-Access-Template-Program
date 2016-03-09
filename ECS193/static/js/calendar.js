@@ -48,11 +48,13 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
         var endTimeIndex = endTime.split(':')[0]-offset;
         var endTimePercent = (endTime.split(':')[1])/60;
         if(endTimePercent == 0)
-            AddFill(row.cells[++endTimeIndex],1,'unavailable',true);
+            AddFill(row.cells[endTimeIndex++],1,'unavailable',true);
         else if(endTimePercent > 0)
-            AddFill(row.cells[++endTimeIndex],1 - endTimePercent,'unavailable',false);
-        while (endTimeIndex++ < maxCellIndex)
-            AddFill(row.cells[endTimeIndex],1,'unavailable',true);
+            AddFill(row.cells[endTimeIndex++],1 - endTimePercent,'unavailable',false);
+        while (endTimeIndex <= maxCellIndex) {
+            AddFill(row.cells[endTimeIndex], 1, 'unavailable', true);
+            endTimeIndex++;
+        }
 
         i++;
         row = document.getElementById("RN-"+RNIndex+"-row-"+i);

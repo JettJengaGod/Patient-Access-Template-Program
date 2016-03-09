@@ -37,6 +37,11 @@
     {% if not Appointments %}
         <p>Error: there are no scheduled appointments</p>
     {% endif %}
+
+    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Print"></span></a>
+    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Print"></span></a>
+    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span></a>
+
     <table id="calendar" class="table table-bordered table-responsive" width="100%">
         <tr style="background-color: beige">
             <th>Pod</th>

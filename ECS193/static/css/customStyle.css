@@ -32,6 +32,14 @@
     padding: 1%;
     margin: 0px;
 }
+.glyphicon-button{
+    font-size: x-large;
+    color: #ff8000;
+}
+.glyphicon-button:hover{
+    color: #ffb366;
+    cursor: pointer;
+}
 /*------------------navigation------------------*/
 .nav-tabs > li > a{
     padding-top: 5px !important;
