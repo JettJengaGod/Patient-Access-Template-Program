@@ -69,6 +69,11 @@ def clean_input(nurseSchedules, appointments):
     # now we send it into the scheduling algorithm
     end = []
     unscheduled = schedule_slots(pods, appt, end)
+    final_unscheduled = []
+    while len(unscheduled) > 0:
+        tmp = unscheduled[0]
+        final_unscheduled.append((tmp*15, unscheduled.count(tmp)))
+        unscheduled = [x for x in unscheduled if x != tmp]
 
     # now we clean the output
     finalAppt = []
@@ -78,7 +83,7 @@ def clean_input(nurseSchedules, appointments):
                                      StartTime=convert_from_format(appointment.time),
                                      EndTime=convert_from_format(appointment.time + appointment.length)))
 
-    return finalAppt
+    return [finalAppt, final_unscheduled]
 
 
 class Nurse:
@@ -185,7 +190,7 @@ class Pod:
         if current.chairs[chair][time] > 0 or current.chairs[chair][time+1] > 0:
             for i in range(len(self.nurses)):
                 for j in range(3):
-                    if self.nurses[i].chairs[j][time] not in[1, 2, 3] and self.nurses[i].chairs[j][time + 1] not in[1, 2, 3] and extra is -1 and i is not nurseindex:
+                    if self.nurses[i].chairs[j][time] not in[1, 2, 3, 4] and self.nurses[i].chairs[j][time + 1] not in[1, 2, 3, 4] and extra is -1 and i is not nurseindex:
                         extra = [i, j]
                         break
             if extra is -1:
