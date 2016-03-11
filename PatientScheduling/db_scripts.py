@@ -7,7 +7,7 @@ from PatientScheduling.models import NurseScheduleGroups, NurseSchedule
 def check_schedule_group_name(request):
     name = request.GET['ScheduleGroupName']
     try:
-        NurseScheduleGroups.objects.get(Name=name)
+        NurseScheduleGroups.objects.get(Name=name, UserCreated=True)
     except (KeyError, NurseScheduleGroups.DoesNotExist):
         return HttpResponse('True', content_type="application/json")  # unique Schedule Name
     else:
@@ -16,7 +16,7 @@ def check_schedule_group_name(request):
 
 def load_schedule_group_names(request):
     try:
-        nameslist = NurseScheduleGroups.objects.get(UserCreated=True)
+        nameslist = NurseScheduleGroups.objects.filter(UserCreated=True)
         jsonstring = serializers.serialize('json', nameslist)
         return HttpResponse(jsonstring, content_type="application/json")
     except (KeyError, NurseScheduleGroups.DoesNotExist):
@@ -38,7 +38,7 @@ def add_to_schedule_group(request):
     try:
         group_object = NurseScheduleGroups.objects.get(Name=group_name)
     except (KeyError, NurseScheduleGroups.DoesNotExist):
-        group_object = NurseScheduleGroups(Name=group_name)
+        group_object = NurseScheduleGroups(Name=group_name, UserCreated=True)
         group_object.save()
     rn = NurseSchedule(
         Team=r['Team'],
