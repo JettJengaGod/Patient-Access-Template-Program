@@ -37,13 +37,11 @@ def new_schedule(request):
             for form in app_form:
                 cd = form.cleaned_data
                 needed_appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
-            all_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
-            scheduled_appointments = all_appointments[0]
-            unscheduled_appointments = all_appointments[1]
+            scheduled_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
             # TODO: Add to below context 'UnscheduledAppointments': UnscheduledAppointments
             # ScheduledAppointments must be sorted by nurse, by chair, and by time (earliest first)
             # assuming the following names are in the AppointmentClass: StartTime, EndTime, ChairID, NurseScheduleID
-            context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': scheduled_appointments, 'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments}
+            context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': scheduled_appointments, 'RNSize': ctemp}
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}

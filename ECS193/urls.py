@@ -17,7 +17,6 @@ from django.conf.urls import url
 from django.contrib import admin
 import PatientScheduling.db_scripts
 import PatientScheduling.views
-from ECS193 import settings
 
 urlpatterns = [
     url(r'^$', PatientScheduling.views.home),
@@ -30,6 +29,5 @@ urlpatterns = [
     url(r'^load_schedule_group/', PatientScheduling.db_scripts.load_schedule_group),
     url(r'^check_schedule_group_name/', PatientScheduling.db_scripts.check_schedule_group_name),
     url(r'^load_schedule_group_names/', PatientScheduling.db_scripts.load_schedule_group_names),
-    url(r'^delete_schedule_group/', PatientScheduling.db_scripts.delete_schedule_group),
-    url(r'^static/', 'django.views.static.serve', settings.STATIC_ROOT),
+    url(r'^delete_schedule_group/', PatientScheduling.db_scripts.delete_schedule_group)
 ]
