@@ -3,6 +3,8 @@ from PatientScheduling.models import NurseSchedule
 from PatientScheduling.models import Appointment
 import math
 from datetime import datetime
+longest_time = 40
+start_time = 1
 
 
 def convert_to_format(time):
@@ -146,13 +148,15 @@ class Nurse:
                 self.chairs[i][time+1] = 2
 
     def populate(self):  # fills the list of chairs when a nurse is initialized
-        self.chairs = [[0 for x in range(36)] for x in range(4)]
+        self.chairs = [[0 for x in range(longest_time)] for x in range(4)]
         for i in range(4):
             for j in range(self.lunch, self.lunch + self.lunchlength):  # all lunch times are 1
                 self.chairs[i][j] = 1
-            for j in range(0, self.start):  # any time before starting is a 3
+            for j in range(0, self.start):  # any time before starting is a 4
                 self.chairs[i][j] = 4
-            for j in range(self.end, 36):
+            for j in range(0, start_time):  # any time before start_time is a 4
+                self.chairs[i][j] = 4
+            for j in range(self.end, longest_time):
                 self.chairs[i][j] = 4
 
 
@@ -167,7 +171,7 @@ class Pod:
         return str
 
     def single_schedule(self, length, appt_number):
-        for k in range(0, 36):
+        for k in range(0, longest_time):
             for j in range(3):
                 for i in range(len(self.nurses)):
                     check = self.check_time(i, j, k, length, appt_number)
@@ -177,12 +181,12 @@ class Pod:
 
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
-        if time+length >= 36:
+        if time+length >= longest_time:
             return False
         for i in range(0, length):
             if current.chairs[chair][time + i] > 2:
                 return False
-        if current.chairs[chair][time + length - 2] > 1 or current.chairs[chair][time + length - 1] is 1:
+        if current.chairs[chair][time + length] is 1 or current.chairs[chair][time + length - 1] is 1:
             return False
         extra = -1
         if current.chairs[chair][time] is 1 or current.chairs[chair][time+1] is 1:
@@ -243,7 +247,7 @@ def schedule_slots(pods, appointments, final):
         stuck = number + 0
         for i in range(len(pods)):
             if len(appointments) is 0:
-                return
+                return discarded
             a = pods[i].single_schedule(appointments[0], number)
             if a:
                 print a
