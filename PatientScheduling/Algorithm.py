@@ -56,7 +56,7 @@ def clean_input(nurseSchedules, appointments):
                 break
 
         if stored is False:
-            tempPod.append(nurse)
+            tempPod.append([nurse])
     pods = []    # making the nurses into pods
     for nurseGroup in tempPod:
         pods.append(Pod(nurseGroup))
@@ -69,6 +69,11 @@ def clean_input(nurseSchedules, appointments):
     # now we send it into the scheduling algorithm
     end = []
     unscheduled = schedule_slots(pods, appt, end)
+    final_unscheduled = []
+    while len(unscheduled) > 0:
+        tmp = unscheduled[0]
+        final_unscheduled.append((tmp*15, unscheduled.count(tmp)))
+        unscheduled = [x for x in unscheduled if x != tmp]
 
     # now we clean the output
     finalAppt = []
@@ -78,7 +83,7 @@ def clean_input(nurseSchedules, appointments):
                                      StartTime=convert_from_format(appointment.time),
                                      EndTime=convert_from_format(appointment.time + appointment.length)))
 
-    return finalAppt
+    return [finalAppt, final_unscheduled]
 
 
 class Nurse:
@@ -92,9 +97,6 @@ class Nurse:
         self.pod = pod
         self.id = identity
         self.populate()
-
-    def __len__(self):
-        return 1
 
     def get_pod(self):
         return self.pod
@@ -114,31 +116,44 @@ class Nurse:
         return string
 
     def lunch_swap(self, time, length):
-        for i in range(time, length):
-            if self.chairs[3][time + i] > 0:
+        for i in range(time, time + length):
+            if self.chairs[3][i] > 0:
                 return False
         return True
 
     def schedule(self, appointment, number, chair, time):  # fills the schedule with an appointment
         for i in range(time, time + appointment):
             self.chairs[chair][i] = number
-        for i in range(3):
-            if i is not chair:
-                self.chairs[i][time] = max(2, self.chairs[i][time])
-                self.chairs[i][time + 1] = max(2, self.chairs[i][time + 1])
+        for i in range(4):
+            if self.chairs[i][time] > 3:
+                self.chairs[i][time] = 3
+            else:
+                self.chairs[i][time] = 2
+            if self.chairs[i][time+1] > 3:
+                self.chairs[i][time+1] = 3
+            else:
+                self.chairs[i][time+1] = 2
 
     def help_start(self, time):
         for i in range(3):
-            self.chairs[i][time] = max(2,self.chairs[i][time])
-            self.chairs[i][time+1] = max(2,self.chairs[i][time+1])
+            if self.chairs[i][time] > 3:
+                self.chairs[i][time] = 3
+            else:
+                self.chairs[i][time] = 2
+            if self.chairs[i][time+1] > 3:
+                self.chairs[i][time+1] = 3
+            else:
+                self.chairs[i][time+1] = 2
 
     def populate(self):  # fills the list of chairs when a nurse is initialized
-        self.chairs = [[0 for x in range(self.end)] for x in range(4)]
+        self.chairs = [[0 for x in range(36)] for x in range(4)]
         for i in range(4):
             for j in range(self.lunch, self.lunch + self.lunchlength):  # all lunch times are 1
                 self.chairs[i][j] = 1
             for j in range(0, self.start):  # any time before starting is a 3
-                self.chairs[i][j] = 3
+                self.chairs[i][j] = 4
+            for j in range(self.end, 36):
+                self.chairs[i][j] = 4
 
 
 class Pod:
@@ -152,19 +167,20 @@ class Pod:
         return str
 
     def single_schedule(self, length, appt_number):
-        for i in range(len(self.nurses)):
+        for k in range(0, 36):
             for j in range(3):
-                for k in range(self.nurses[i].start, self.nurses[i].end-length+1):
+                for i in range(len(self.nurses)):
                     check = self.check_time(i, j, k, length, appt_number)
                     if check:
                         return check
         return False
 
-    #Need to add support for only one nurse in a pod
     def check_time(self, nurseindex, chair, time, length, appt_number):
         current = self.nurses[nurseindex]
+        if time+length >= 36:
+            return False
         for i in range(0, length):
-            if current.chairs[chair][time + i] > 3:
+            if current.chairs[chair][time + i] > 2:
                 return False
         if current.chairs[chair][time + length - 2] > 1 or current.chairs[chair][time + length - 1] is 1:
             return False
@@ -174,9 +190,7 @@ class Pod:
         if current.chairs[chair][time] > 0 or current.chairs[chair][time+1] > 0:
             for i in range(len(self.nurses)):
                 for j in range(3):
-                    if self.nurses[i].chairs[j][time] is not 1 and self.nurses[i].chairs[j][time] is not 2 and \
-                                    self.nurses[i].chairs[j][time + 1] is not 1 and self.nurses[i].chairs[j][
-                                time + 1] is not 2 and extra is -1:
+                    if self.nurses[i].chairs[j][time] not in[1, 2, 3, 4] and self.nurses[i].chairs[j][time + 1] not in[1, 2, 3, 4] and extra is -1 and i is not nurseindex:
                         extra = [i, j]
                         break
             if extra is -1:
@@ -186,6 +200,7 @@ class Pod:
                 lunch = self.check_other_nurses(current, appt_number)
                 if not lunch:
                     return False
+                break
         appt = Alg_Appointment(length, current, chair, time, appt_number)
         if extra is not -1:
             self.nurses[extra[0]].help_start(time)
@@ -222,7 +237,7 @@ class Alg_Appointment:
 
 def schedule_slots(pods, appointments, final):
     assert len(appointments) is not 0
-    number = 4
+    number = 5
     discarded = []
     while len(appointments) is not 0:
         stuck = number + 0
