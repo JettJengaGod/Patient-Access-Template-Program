@@ -15,21 +15,25 @@
         <h4 class="title">Choose an Option to Begin</h4>
         <div class="row">
             <div class="col-sm-3 menu-image">
-                <a href="/newSchedule/"><img src="{% static "images/appts.png"%}"><p>Create a new Schedule</p></a>
+                <a href="/newSchedule/" class="circle"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></a>
+                <p>Create a new Schedule</p>
             </div>
             <div class="col-sm-3 menu-image">
-                <a href="#"><img src="{% static "images/saved.png"%}"><p>View Saved Schedules</p></a>
+                <a href="#" class="circle"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></a>
+                <p>View Saved Schedules</p>
             </div>
             <div class="col-sm-3 menu-image">
-                <a href="#"><img src="{% static "images/people.png"%}"><p>Add/Change User Permissions</p></a>
+                <a href="#" class="circle"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                <p>Add/Change User Permissions</p>
             </div>
             <div class="col-sm-3 menu-image">
-                <a href="#"><img src="{% static "images/email.png"%}"><p>View Documentation</p></a>
+                <a href="#" class="circle"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+                <p>View Documentation</p>
             </div>
         </div>
     </div>
-    <div style="margin-left: 13%">
-    <img src="{% static "images/banner.jpg"%}">
-    <img src="{% static "images/family.jpg"%}">
+    <div style="margin-left: 10%; margin-right: 10%;" class="text-center row">
+        <div class="col-md-6"><img src="{% static "images/banner.jpg"%}" width="100%"></div>
+        <div class="col-md-6"><img src="{% static "images/family.jpg"%}" width="100%"></div>
     </div>
 {% endblock %}

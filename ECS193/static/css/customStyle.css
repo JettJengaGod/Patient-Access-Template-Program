@@ -58,6 +58,17 @@
 .appt{
     float: left;
     display: inline-block;
+    font-family: sans-serif;
+    color:black;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+}
+a.appt:hover{
+    text-decoration: none;
+}
+a.appt:focus{
+    text-decoration: none;
 }
 .filler{
     background-color: inherit;
@@ -75,6 +86,7 @@
       lightblue 10px,
       lightblue 20px
     );
+    text-decoration: none;
 }
 .lunch-filler{
     z-index: 2;
@@ -103,11 +115,10 @@
 .active {
     cursor: pointer;
     background-color: #0084ff !important;
-    color: #0084ff !important;
+    text-decoration: none;
 }
 /*--------------used on the home page--------------*/
 .links-container{
-    font-family: 'Gotham A', 'Gotham B', Verdana, Helvetica, Arial;
     margin-bottom: 40px;
     margin-left: 10%;
     margin-right: 10%;
@@ -124,4 +135,19 @@
 }
 .menu-image:hover {
     cursor: pointer;
+}
+.circle{
+    display:inline-block;
+    vertical-align: middle;
+    border: 0;
+    width:90px;
+    height:90px;
+    border-radius:50px;
+    font-size:20px;
+    color: white;
+    line-height:100px;
+    text-align:center;
+    background-color: #eb8a00;
+    font-size: xx-large;
+    margin: 0px;
 }
