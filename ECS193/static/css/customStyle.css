@@ -20,6 +20,7 @@
     position: absolute;
     width: 100%;
     margin-top: 40px;
+    border-top: 1px solid;
 }
 .div-header{
     width: 100%;
