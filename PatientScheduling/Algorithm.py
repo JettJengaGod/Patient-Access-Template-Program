@@ -240,7 +240,8 @@ class Alg_Appointment:
 
 
 def schedule_slots(pods, appointments, final):
-    assert len(appointments) is not 0
+    appointments.sort()
+    appointments.reverse()
     number = 5
     discarded = []
     while len(appointments) is not 0:
