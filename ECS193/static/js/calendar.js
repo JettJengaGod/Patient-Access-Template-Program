@@ -74,6 +74,7 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
     var endMinutes = parseInt(endTime.split(':')[1]);
     var endPercent = endMinutes/60;
     var totalTime = (endIndex*60 + endMinutes) - (startIndex*60 + startMinutes);
+    var DurationCell = row.cells[MiddleCell(startIndex, endIndex)]; //The cell to put the duration name in
 
     var color = RandomColor();
 
@@ -81,7 +82,8 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
     if (startMinutes > 0) {
         //right shift
         if (startIndex != endIndex) {
-            BuildApptDiv(row.cells[startIndex++], 1 - startPercent, false, color, apptID, startTime, endTime);
+            var cell = row.cells[startIndex++];
+            BuildApptDiv(cell, 1 - startPercent, false, cell == DurationCell, color, apptID, startTime, endTime);
             totalTime -= (60 - startMinutes);
         }
         // special case middle appointment
@@ -93,19 +95,22 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
             else {
                 AddFill(row.cells[startIndex], startPercent, 'filler', true);
             }
-            BuildApptDiv(row.cells[startIndex], (endPercent - startPercent), true, color, apptID, startTime, endTime);
+            var cell = row.cells[startIndex];
+            BuildApptDiv(cell, (endPercent - startPercent), true, cell == DurationCell, color, apptID, startTime, endTime);
             totalTime = 0;
             endMinutes = 0;
         }
     }
     // appointment doesn't end on the hour
     if (endMinutes > 0) {
-        BuildApptDiv(row.cells[endIndex], endPercent, true, color, apptID, startTime, endTime);
+        var cell = row.cells[endIndex];
+        BuildApptDiv(cell, endPercent, true, cell == DurationCell, color, apptID, startTime, endTime);
         totalTime -= endMinutes;
     }
     // fills out entire hour slot
     while (totalTime > 0) {
-        BuildApptDiv(row.cells[startIndex++], 1, true, color, apptID, startTime, endTime);
+        var cell = row.cells[startIndex++];
+        BuildApptDiv(cell, 1, true, cell == DurationCell, color, apptID, startTime, endTime);
         totalTime -= 60;
     }
     lastEndIndex = endIndex;
@@ -134,7 +139,7 @@ function AddFill(cell, fraction, className, leftAligned){
     div.style.width = (fraction * 100) + '%';
 }
 
-function BuildApptDiv(cell, fraction, leftAligned, color, id, startTime, endTime)
+function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, startTime, endTime)
 {
     if(fraction > 1 || fraction < 0)
     {
@@ -147,7 +152,7 @@ function BuildApptDiv(cell, fraction, leftAligned, color, id, startTime, endTime
 
     if (!leftAligned)
         div.style.float = 'right';
-
+    var innertext = '&nbsp;';
     div.style.backgroundColor = color;
     div.style.color = color;
     div.id = id;
@@ -156,11 +161,33 @@ function BuildApptDiv(cell, fraction, leftAligned, color, id, startTime, endTime
     div.setAttribute('data-toggle', 'popover');
     div.setAttribute('data-trigger', 'focus');
     div.setAttribute('data-placement', 'top');
-    div.setAttribute('data-content', 'Start Time: '+startTime + '\nEnd Time: ' + endTime);
     div.setAttribute('tabindex', '0');
-    div.innerHTML = '&nbsp;';
     div.className += ' appt';
     div.style.width = (fraction * 100) + '%';
+
+    //----calculate the duration of entire appointment in hours and minutes---
+    var durationText = "";
+    var duration = (endTime.split(':')[0] - startTime.split(':')[0])*60  + (endTime.split(':')[1] - startTime.split(':')[1]);
+    if(duration/60 > 1){ //if it is longer than an hour
+        if(duration%60 > 0) //if the duration has some amount of minutes
+            durationText = Math.floor(duration/60) + '.' + duration%60 + 'h';
+        else
+            durationText = Math.floor(duration/60) + 'h';
+    }
+    else durationText = duration%60 + 'm';
+
+    //----Show the duration in the div if requested---
+    if(showDuration) {
+        div.innerHTML = durationText;
+        div.style.color = 'black';
+    }
+    else div.innerHTML = innertext;
+
+    //----Set content of the pop-up display---
+    var description = 'Start Time: '+startTime +
+        '\nEnd Time: ' + endTime +
+        '\nDuration: ' + durationText;
+    div.setAttribute('data-content', description);
 
     cell.appendChild(div);
 }
@@ -184,12 +211,22 @@ function rowSelect(grouping){
     }
 }
 
-function RandomColor()
-{
+function RandomColor(){
     var x=Math.round(0xffffff * Math.random()).toString(16);
     var y=(6-x.length);
     var z= '000000';
     var z1 = z.substring(0,y);
     var color = '#' + z1 + x;
     return(color);
+}
+
+function MiddleCell(startCellIndex, endCellIndex){
+    var difference = endCellIndex - startCellIndex;
+    if(difference == 0)
+        return startCellIndex;
+    else if(difference % 2 == 0) //even number
+        return startCellIndex + (difference/2)
+    else
+        return startCellIndex + ((difference - 1)/2)
+
 }
