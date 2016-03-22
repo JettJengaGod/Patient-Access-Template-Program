@@ -151,3 +151,9 @@ a.appt:focus{
     font-size: xx-large;
     margin: 0px;
 }
+footer.fixed{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    max-width: 500px;
+}
