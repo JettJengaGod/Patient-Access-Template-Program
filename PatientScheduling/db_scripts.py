@@ -1,8 +1,10 @@
 import json
 from django.http import HttpResponse
 from django.core import serializers
-from PatientScheduling.models import NurseScheduleGroups, NurseSchedule
+from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule
 
+
+# ------used to load/manage nurses and nurse schedules------- #
 
 def check_schedule_group_name(request):
     name = request.GET['ScheduleGroupName']
@@ -16,8 +18,10 @@ def check_schedule_group_name(request):
 
 def load_schedule_group_names(request):
     try:
-        nameslist = NurseScheduleGroups.objects.get(UserCreated=True)
-        jsonstring = serializers.serialize('json', nameslist)
+        nameslist = NurseScheduleGroups.objects.filter(UserCreated=True)
+        jsonstring = ""
+        if len(nameslist) > 0:
+            jsonstring = serializers.serialize('json', nameslist)
         return HttpResponse(jsonstring, content_type="application/json")
     except (KeyError, NurseScheduleGroups.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
@@ -59,5 +63,14 @@ def load_schedule_group(request):
         return HttpResponse(serializers.serialize('json', rnlist), content_type="application/json")
     except (KeyError, NurseScheduleGroups.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
+
+
+# ------used to load/manage full schedules------- #
+def save_schedule(request):
+    r = request.GET
+    save_name = r['SaveName']
+
+    return HttpResponse('The schedule ' + save_name + 'has been saved', content_type="application/json")
+
 
 

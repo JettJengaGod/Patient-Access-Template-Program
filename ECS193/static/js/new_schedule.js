@@ -1,11 +1,13 @@
 
 
+    //removes all listed options in dropdown list
     function removeOptions(selectbox) {
         var i;
         for(i=selectbox.options.length-1;i>=0;i--)
             selectbox.remove(i);
     }
 
+    //Actions for nurse schedule groups
     function SaveSchedule(prefix, overwrite){
         var ScheduleGroup = $('#id_ScheduleGroupName').val();
         var alert = document.getElementById("save_alert");
@@ -80,7 +82,7 @@
                 },
                 success: function(result) {
                     var objectList = JSON.parse(result);
-                    fillRNSchedule(objectList, prefix)
+                    fillRNSchedule(objectList, prefix);
                 }
             });
         }
@@ -135,6 +137,7 @@
         });
     }
     function fillRNSchedule(objectList, prefix){
+        objectList = objectList.sort(compareRNSchedules);
         var count = objectList.length;
         var table = document.getElementById(prefix + 'Table');
         var tableRows = table.rows.length - 2; //one row is header and one is add button
@@ -161,7 +164,22 @@
             row.cells[6].firstChild.value = obj.EndTime;
         }
     }
-
+    //used when sorting. returns negative if s1 < s2, 0 if s1=s2, and positive if s1 > s2
+    //compares team, then StartTime
+    function compareRNSchedules(s1, s2){
+        if(s1.fields.Team == s2.fields.Team)
+        {
+            if(s1.fields.StartTime == s2.fields.StartTime)
+                return 0;
+            else if(s1.fields.StartTime > s2.fields.StartTime)
+                return 1;
+            else return -1;
+        }
+        else if(s1.fields.Team > s2.fields.Team)
+            return 1;
+        else return -1;
+    }
+    //maintains tables with dynamic # of rows
     function updateElementIndex(object, prefix, index) {
 		var id_regex = new RegExp('(' + prefix + '-\\d+)');
 		var replacement = prefix + '-' + index;

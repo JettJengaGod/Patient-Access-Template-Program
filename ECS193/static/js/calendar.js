@@ -1,5 +1,5 @@
 
-
+//Colors when nurses are available and are gone
 function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
     var table = document.getElementById("calendar");
     var maxCellIndex = 9;
@@ -139,8 +139,8 @@ function AddFill(cell, fraction, className, leftAligned){
     div.style.width = (fraction * 100) + '%';
 }
 
-function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, startTime, endTime)
-{
+//similar to function AddFill except with appointment only attributes
+function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, startTime, endTime) {
     if(fraction > 1 || fraction < 0)
     {
         alert("The given fraction to fill the cell by is not a valid percent!")
@@ -192,6 +192,7 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, star
     cell.appendChild(div);
 }
 
+//Collapse/expand a pod
 function rowSelect(grouping){
     var groupRow = $('#collapse-row-'+grouping);
     var arrow = document.getElementById('arrow-'+grouping);
@@ -220,6 +221,7 @@ function RandomColor(){
     return(color);
 }
 
+//returns index of cell between the given indices.
 function MiddleCell(startCellIndex, endCellIndex){
     var difference = endCellIndex - startCellIndex;
     if(difference == 0)
@@ -230,3 +232,5 @@ function MiddleCell(startCellIndex, endCellIndex){
         return startCellIndex + ((difference - 1)/2)
 
 }
+
+//-----load/save operations of entire schedule-----//

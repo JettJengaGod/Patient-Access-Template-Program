@@ -40,9 +40,6 @@ def new_schedule(request):
             all_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
             scheduled_appointments = all_appointments[0]
             unscheduled_appointments = all_appointments[1]
-            # TODO: Add to below context 'UnscheduledAppointments': UnscheduledAppointments
-            # ScheduledAppointments must be sorted by nurse, by chair, and by time (earliest first)
-            # assuming the following names are in the AppointmentClass: StartTime, EndTime, ChairID, NurseScheduleID
             context = {'RNSet': sorted(nurses, key=lambda x: x.Team), 'Chairs': chairs, 'Appointments': scheduled_appointments, 'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments}
             return render(request, 'calendar.html', context)
         else:
