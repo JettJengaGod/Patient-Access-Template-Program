@@ -29,13 +29,13 @@ def convert_from_format(num):
     minutes -= hours*60
     hours += 8
     finalString = str(int(hours))
-    finalString = finalString + ":"
+    finalString = finalString + "."
 
     if minutes == 0:
-        finalString += "0:0"
+        finalString += "0.0"
     else:
-        finalString += str(int(minutes)) +":00"
-    finalString = time.strptime(finalString, "%H:%M:%S")
+        finalString += str(int(minutes)) +".00"
+    finalString = time.strptime(finalString, "%H.%M.%S")
     return finalString
 
 
