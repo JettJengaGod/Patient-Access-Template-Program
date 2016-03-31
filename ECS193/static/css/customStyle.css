@@ -11,13 +11,15 @@
     padding-bottom: 20px;
 }
 
-.footer {
+#footer {
     background-color: #f4f4f4;
     color: #666666;
     font-size: 10px;
     min-width: 320px;
     padding-top: 20px;
     position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     margin-top: 40px;
 }
@@ -27,6 +29,7 @@
     color: white;
     text-align: center;
     font-family: 'Gotham A', 'Gotham B', Helvetica, Arial, sans-serif;
+
 }
 .div-header h3{
     padding: 1%;
@@ -151,9 +154,8 @@ a.appt:focus{
     font-size: xx-large;
     margin: 0px;
 }
-footer.fixed{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    max-width: 500px;
+#wrapper{
+    min-height:100%;
+    position: relative;
+
 }
