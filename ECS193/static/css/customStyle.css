@@ -11,17 +11,14 @@
     padding-bottom: 20px;
 }
 
-#footer {
+.footer {
     background-color: #f4f4f4;
     color: #666666;
     font-size: 10px;
-    /*min-width: 320px;*/
-    padding-top: 20px;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 50%;
-    margin-top: 40px;
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px 0 5px 0;
+    height: 10%;
 }
 .div-header{
     width: 100%;
@@ -153,9 +150,4 @@ a.appt:focus{
     background-color: #eb8a00;
     font-size: xx-large;
     margin: 0px;
-}
-#wrapper{
-    min-height:100%;
-    position: relative;
-
 }

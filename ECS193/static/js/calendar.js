@@ -167,7 +167,11 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, star
 
     //----calculate the duration of entire appointment in hours and minutes---
     var durationText = "";
-    var duration = (endTime.split(':')[0] - startTime.split(':')[0])*60  + (endTime.split(':')[1] - startTime.split(':')[1]);
+    var EndHour = endTime.split(':')[0];
+    var EndMinutes = endTime.split(':')[1];
+    var StartHour = startTime.split(':')[0];
+    var StartMinutes = startTime.split(':')[1];
+    var duration = (EndHour - StartHour)*60  + (EndMinutes - StartMinutes);
     if(duration/60 > 1){ //if it is longer than an hour
         if(duration%60 > 0) //if the duration has some amount of minutes
             durationText = Math.floor(duration/60) + '.' + duration%60 + 'h';
@@ -184,8 +188,8 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, star
     else div.innerHTML = innertext;
 
     //----Set content of the pop-up display---
-    var description = 'Start Time: '+startTime +
-        '\nEnd Time: ' + endTime +
+    var description = 'Start Time: '+ StartHour + ':' + StartMinutes +
+        '\nEnd Time: ' + EndHour + ':' + EndMinutes +
         '\nDuration: ' + durationText;
     div.setAttribute('data-content', description);
 

@@ -23,7 +23,7 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-    <div id = "wrapper">
+    <div style="max-height: 10%;">
         <div class="div-header">
             <h3>PATIENT SCHEDULING APPLICATION</h3>
         </div>
@@ -34,14 +34,14 @@
                 <li id="navViewOld" role="presentation"><a href="#">View Saved Schedules</a></li>
             </ul>
         </nav>
-        <div id="content" class="pageWrapper">
-            {% block content %}{% endblock %}
-        </div>
-        <div id="footer">
-            <p>Authors: Rachel Church, Jett Lewis, Alex Peng, Carl Glahn. Kaiser Permanente Project Head: James Thum<br>
-                Source code available at <a href="https://github.com/JettJengaGod/Patient-Access-Template-Program">Patient-Access-Template-Program</a>
-            </p>
-        </div>
+    </div>
+    <div id="content" class="pageWrapper" style="min-height: 80%;">
+        {% block content %}{% endblock %}
+    </div>
+    <div id="footer" class="footer">
+        <p>Authors: Rachel Church, Jett Lewis, Alex Peng, Carl Glahn. Kaiser Permanente Project Head: James Thum<br>
+            Source code available at <a href="https://github.com/JettJengaGod/Patient-Access-Template-Program">Patient-Access-Template-Program</a>
+        </p>
     </div>
 </body>
 </html>

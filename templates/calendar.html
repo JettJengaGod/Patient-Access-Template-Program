@@ -7,7 +7,7 @@
     <script>
         $(document).ready(function(){
             {% for Appt in Appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }});
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime}}', '{{ Appt.EndTime}}', {{ forloop.counter }});
             {% endfor %}
 
             {% for RN in RNSet %}
