@@ -3,6 +3,7 @@ from PatientScheduling.models import NurseSchedule
 from PatientScheduling.models import Appointment
 import math
 from datetime import datetime
+import time
 longest_time = 40
 start_time = 1
 
@@ -34,7 +35,7 @@ def convert_from_format(num):
         finalString += "0:0"
     else:
         finalString += str(int(minutes)) +":00"
-    finalString = datetime.strptime(finalString, "%H:%M:%S")
+   # finalString = time.strptime(finalString, "%H:%M:%S")
     return finalString
 
 
