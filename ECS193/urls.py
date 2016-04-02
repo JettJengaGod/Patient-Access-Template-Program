@@ -24,10 +24,12 @@ urlpatterns = [
     url(r'^newSchedule/', PatientScheduling.views.new_schedule),
     url(r'^home/', PatientScheduling.views.home),
     url(r'^generateSchedule/', PatientScheduling.views.generate_schedule),
-    # scripts called from ajax
+    # scripts called from ajax on newSchedule page
     url(r'^add_to_schedule_group/', PatientScheduling.db_scripts.add_to_schedule_group),
     url(r'^load_schedule_group/', PatientScheduling.db_scripts.load_schedule_group),
     url(r'^check_schedule_group_name/', PatientScheduling.db_scripts.check_schedule_group_name),
     url(r'^load_schedule_group_names/', PatientScheduling.db_scripts.load_schedule_group_names),
-    url(r'^delete_schedule_group/', PatientScheduling.db_scripts.delete_schedule_group)
+    url(r'^delete_schedule_group/', PatientScheduling.db_scripts.delete_schedule_group),
+    # scripts called from ajax on calendar page
+    url(r'^save_schedule/', PatientScheduling.db_scripts.save_schedule),
 ]

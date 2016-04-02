@@ -1,8 +1,15 @@
 import json
+import string, random
+
+from django.db import transaction
 from django.http import HttpResponse
 from django.core import serializers
-from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule
+from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule, Appointment
 
+
+def generate_key(size):
+    chars=string.ascii_uppercase + string.digits
+    return ''.join(random.choice(chars) for x in range(size))
 
 # ------used to load/manage nurses and nurse schedules------- #
 
@@ -19,7 +26,7 @@ def check_schedule_group_name(request):
 def load_schedule_group_names(request):
     try:
         nameslist = NurseScheduleGroups.objects.filter(UserCreated=True)
-        jsonstring = ""
+        jsonstring = "[]"
         if len(nameslist) > 0:
             jsonstring = serializers.serialize('json', nameslist)
         return HttpResponse(jsonstring, content_type="application/json")
@@ -39,10 +46,11 @@ def delete_schedule_group(request):
 def add_to_schedule_group(request):
     r = request.GET
     group_name = r['ScheduleGroupName']
-    try:
-        group_object = NurseScheduleGroups.objects.get(Name=group_name)
+    try:  # check if the name has already been used
+        group_object = NurseScheduleGroups.objects.get(Name=group_name, UserCreated=True)
     except (KeyError, NurseScheduleGroups.DoesNotExist):
-        group_object = NurseScheduleGroups(Name=group_name)
+        # if the name has already been used add the nurse to the group
+        group_object = NurseScheduleGroups(Name=group_name, UserCreated=True)
         group_object.save()
     rn = NurseSchedule(
         Team=r['Team'],
@@ -66,11 +74,60 @@ def load_schedule_group(request):
 
 
 # ------used to load/manage full schedules------- #
-def save_schedule(request):
-    r = request.GET
-    save_name = r['SaveName']
 
+@transaction.atomic  # ensures that either all of the DB changes are saved or none
+def save_schedule(request):
+    save_name = request.GET['SaveName']
+    # Save the nurse schedules
+    nurse_group = NurseScheduleGroups(Name=generate_key(20), UserCreated=False)
+    nurse_group.save()
+    for wrapper in serializers.deserialize('json', request.session.get('nurseSchedules')):
+        wrapper.object.ScheduleGroupName = nurse_group
+        wrapper.object.save()
+    # Save the schedule object that links nurses and appointments
+    schedule = SavedSchedule(Name=save_name, NurseSchedule=nurse_group)
+    schedule.save()
+    # Save the appointments
+    for wrapper in serializers.deserialize('json', request.session.get('appointments')):
+        wrapper.object.SavedSchedule = schedule
+        wrapper.object.save()
     return HttpResponse('The schedule ' + save_name + 'has been saved', content_type="application/json")
+
+
+def delete_schedule(request):
+    save_name = request.GET['SaveName']
+    try:
+        schedule = SavedSchedule.objects.get(Name=save_name)
+        nurse_group = schedule.NurseSchedule
+        nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
+        appointments = Appointment.objects.filter(SavedSchedule=schedule)
+        save_name.delete()
+        nurse_group.delete()
+        nurses.delete()
+        appointments.delete()
+    except():
+        return HttpResponse('An error has occurred', content_type="application/json")
+    return HttpResponse('Deleted ' + save_name, content_type="application/json")
+
+
+def load_schedule(request):
+    save_name = request.GET['SaveName']
+    try:
+        schedule = SavedSchedule.objects.get(Name=save_name)
+        nurse_group = schedule.NurseSchedule
+        nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
+        appointments = Appointment.objects.filter(SavedSchedule=schedule)
+        return HttpResponse(serializers.serialize('json', [nurses, appointments]), content_type="application/json")
+    except():
+        return HttpResponse(serializers.serialize('json', []), content_type="application/json")
+
+
+def load_schedule_names(request):
+    names = SavedSchedule.objects.all()
+    if names.count() > 0:
+        return HttpResponse(serializers.serialize('json', names), content_type="application/json")
+    else:
+        return HttpResponse(serializers.serialize('json', []), content_type="application/json")
 
 
 

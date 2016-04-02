@@ -82,7 +82,7 @@ def clean_input(nurseSchedules, appointments):
     for appointment in end:
         finalAppt.append(Appointment(NurseScheduleID=appointment.nurse.id,
                                      ChairID=appointment.chair,
-                                     StartTime=convert_from_format(appointment.time),
+                                     StartTime=convert_from_format(appointment.time),  # H.M
                                      EndTime=convert_from_format(appointment.time + appointment.length)))
 
     return [finalAppt, final_unscheduled]

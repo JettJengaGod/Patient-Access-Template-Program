@@ -234,3 +234,47 @@ function MiddleCell(startCellIndex, endCellIndex){
 }
 
 //-----load/save operations of entire schedule-----//
+function SaveSchedule(overwrite){
+    var name = $('#SaveName').val();
+    var alert = document.getElementById("save_alert");
+    $('#yesOverwrite').hide();
+    $('#noOverwrite').hide();
+    $('#save_alert').hide();
+    $('#SaveName').attr('readonly','readonly');
+    var alreadyExists = false;
+
+    if(alreadyExists && overwrite == false) //ask the user if they want to overwrite
+    {
+        $('#save_alert').show();
+        alert.innerHTML = 'That name is already used. Would you like to overwrite it?';
+        $('#yesOverwrite').show();
+        $('#noOverwrite').show();
+        return false;
+    }
+    else if(alreadyExists && overwrite == true)  //delete so we can overwrite
+    {
+
+    }
+    //Save to DB
+    var label = $("#pageAlert");
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: '/save_schedule/',
+        contentType: "application/json",
+        data: {'SaveName': name},
+        success: function(result) {
+            label.alert.text(result);
+            label.css("display", "block");
+            label.addClass("alert-success").removeClass("alert-danger");
+        },
+        complete: function(response, textStatus) {
+            if(textStatus != 'success') {
+                label.text(name + ' could not be saved');
+                label.css("display", "block");
+                label.addClass("alert-danger").removeClass("alert-success");
+            }
+        }
+    });
+
+}

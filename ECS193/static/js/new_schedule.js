@@ -56,17 +56,22 @@
                     data: nurse
                 });
             }
-            document.getElementById("pageAlert").innerHTML = ScheduleGroup + ' has been saved';
+            var label = $("#pageAlert");
+            label.text(ScheduleGroup + ' has been saved');
+            label.css("display", "block");
+            label.addClass("alert-success").removeClass("alert-danger");
             return true;
         }
         else {
             $('#id_ScheduleGroupName').attr('readonly','false');
             alert.show();
-            alert.innerHTML = ScheduleGroup + ' is not a valid ScheduleName';
+            alert.text(ScheduleGroup + ' is not a valid ScheduleName');
             return false;
         }
     }
     function LoadSchedule(prefix){
+        var label = $("#pageAlert"); //hide any possible existing notifications
+        label.css("display", "none");
         var ScheduleGroup = $("#savedSchedules option:selected").html();
         document.getElementById("pageAlert").innerHTML = ''; //clear any previous alerts
         if(ScheduleGroup.match(/[\w+\.\_]+/)) {

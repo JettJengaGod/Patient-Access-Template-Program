@@ -38,9 +38,20 @@
         <p>Error: there are no scheduled appointments</p>
     {% endif %}
 
-    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Print"></span></a>
-    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Print"></span></a>
-    <a href="#" style="float: right; margin: 4px"><span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span></a>
+    <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
+
+    <a style="float: right; margin: 4px" data-toggle="modal" data-target="#saveModal" onclick="
+        $('#yesOverwrite').hide();
+        $('#noOverwrite').hide();
+        $('#save_alert').hide();">
+        <span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Print"></span>
+    </a>
+    <a style="float: right; margin: 4px">
+        <span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Print"></span>
+    </a>
+    <a style="float: right; margin: 4px">
+        <span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span>
+    </a>
 
     <table id="calendar" class="table table-bordered table-responsive" width="100%">
         <tr style="background-color: beige">
@@ -85,4 +96,39 @@
         {% endfor %}
     </table>
     <br><br>
+
+    <div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Save</h4>
+          </div>
+          <div class="modal-body">
+              <label for="SaveName">Save as: </label>
+              <input id="SaveName" type="text">
+              <br>
+              <label id="save_alert">This is an alert!</label>
+              <button id="yesOverwrite" type="button" class="btn btn-primary" data-dismiss="modal" onclick="
+                    if(SaveSchedule(true))
+                            $('#saveModal').modal('hide');
+                  ">Yes</button>
+              <button id="noOverwrite" type="button" class="btn btn-primary" onclick="
+                   $('#yesOverwrite').hide();
+                    $('#noOverwrite').hide();
+                    $('#save_alert').hide();
+                    $('#SaveName').attr('readonly','false');
+                ">No</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="
+                    if(SaveSchedule(false))
+                        $('#saveModal').modal('hide');
+                ">Save</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 {% endblock %}
