@@ -96,7 +96,14 @@
         {% endfor %}
     </table>
     <br><br>
-
+    {% if UnschAppts %}
+        {% for minutes, number in UnschAppts %}
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ number }} {{ minutes }} minute slots could not make it.
+            </div>
+        {% endfor %}
+    {% endif %}
     <div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
