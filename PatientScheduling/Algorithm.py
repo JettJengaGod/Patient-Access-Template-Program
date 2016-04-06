@@ -3,13 +3,12 @@ from PatientScheduling.models import NurseSchedule
 from PatientScheduling.models import Appointment
 import math
 from datetime import datetime
-import time
+from datetime import time
 longest_time = 40
 start_time = 1
 
 
 def convert_to_format(time):
-
     if len(time) is 8:
         hour = int(time[0:2])
         hour -= 8
@@ -25,18 +24,10 @@ def convert_to_format(time):
 
 def convert_from_format(num):
     minutes = num * 15
-    hours = math.floor(minutes/int(60))
+    hours = int(minutes/60)
     minutes -= hours*60
     hours += 8
-    finalString = str(int(hours))
-    finalString = finalString + ":"
-
-    if minutes == 0:
-        finalString += "0:0"
-    else:
-        finalString += str(int(minutes)) +":00"
-   # finalString = time.strptime(finalString, "%H:%M:%S")
-    return finalString
+    return time(hours,minutes)
 
 
 def clean_input(nurseSchedules, appointments):
@@ -83,7 +74,7 @@ def clean_input(nurseSchedules, appointments):
     for appointment in end:
         finalAppt.append(Appointment(NurseScheduleID=appointment.nurse.id,
                                      ChairID=appointment.chair,
-                                     StartTime=convert_from_format(appointment.time),  # H.M
+                                     StartTime=convert_from_format(appointment.time),
                                      EndTime=convert_from_format(appointment.time + appointment.length)))
 
     return [finalAppt, final_unscheduled]

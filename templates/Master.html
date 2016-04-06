@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" style="height: 100%;">
+<head style="height: 100%;">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,25 +23,27 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-    <div style="max-height: 10%;">
-        <div class="div-header">
-            <h3>PATIENT SCHEDULING APPLICATION</h3>
+    <div id="container">
+        <div id="header">
+            <div class="header-title">
+                <h3>PATIENT SCHEDULING APPLICATION</h3>
+            </div>
+            <nav>
+                <ul class="nav nav-tabs nav-justified">
+                    <li id="navHome" role="presentation" class="active"><a href="/home/">Home</a></li>
+                    <li id="navCreateNew" role="presentation"><a href="/newSchedule/">Create New Schedule</a></li>
+                    <li id="navViewOld" role="presentation"><a href="/savedschedules/">View Saved Schedules</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul class="nav nav-tabs nav-justified">
-                <li id="navHome" role="presentation" class="active"><a href="/home/">Home</a></li>
-                <li id="navCreateNew" role="presentation"><a href="/newSchedule/">Create New Schedule</a></li>
-                <li id="navViewOld" role="presentation"><a href="#">View Saved Schedules</a></li>
-            </ul>
-        </nav>
-    </div>
-    <div id="content" class="pageWrapper" style="min-height: 80%;">
-        {% block content %}{% endblock %}
-    </div>
-    <div id="footer" class="footer">
-        <p>Authors: Rachel Church, Jett Lewis, Alex Peng, Carl Glahn. Kaiser Permanente Project Head: James Thum<br>
-            Source code available at <a href="https://github.com/JettJengaGod/Patient-Access-Template-Program">Patient-Access-Template-Program</a>
-        </p>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+        <div id="footer">
+            <p>Authors: Rachel Church, Jett Lewis, Alex Peng, Carl Glahn. Kaiser Permanente Project Head: James Thum<br>
+                Source code available at <a href="https://github.com/JettJengaGod/Patient-Access-Template-Program">Patient-Access-Template-Program</a>
+            </p>
+        </div>
     </div>
 </body>
 </html>

@@ -1,0 +1,40 @@
+{% extends "Master.html" %}
+
+{% block title %}Schedule{% endblock %}
+{% block head %}
+     {% load static from staticfiles %}
+    <script src="{% static "js/view_saved_schedule.js"%}" rel="script"></script>
+    <script src="{% static "js/calendar.js"%}" rel="script"></script>
+    <script>
+        $(document).ready(function(){
+            $('nav').show();
+            $('.nav > li').removeClass('active');
+            $('#navViewOld').addClass('active');
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
+    {% if saved_list %}
+        <div style="width: 50%">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-4"><h4>Schedule Name</h4></div>
+                <div class="col-sm-4"><h4>Saved Date</h4></div>
+            </div>
+            {% for Schedule in saved_list %}
+                <div id="row-{{ Schedule.Name }}" class="row">
+                    <div class="col-sm-1">
+                        <button type="button" aria-label="Delete" class="delete-button" onclick="button_delete_click('{{ Schedule.Name }}')">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    </div>
+                    <div class="col-sm-4"><a href="/viewschedule/{{ Schedule.pk }}/">{{ Schedule.Name }}</a></div>
+                    <div class="col-sm-4">{{ Schedule.SavedDate }}</div>
+                </div>
+                <br>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No saved schedules are available.</p>
+    {% endif %}
+{% endblock %}

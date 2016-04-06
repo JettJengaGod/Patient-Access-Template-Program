@@ -7,7 +7,7 @@
     <script>
         $(document).ready(function(){
             {% for Appt in Appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime}}', '{{ Appt.EndTime}}', {{ forloop.counter }});
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }});
             {% endfor %}
 
             {% for RN in RNSet %}
@@ -28,26 +28,35 @@
             })
             //ensure the navbar is pointing to this page
             $('.nav > li').removeClass('active');
-            $('#navCreateNew').addClass('active');
+            {% if Schedule %}
+                $('#navViewOld').addClass('active');
+            {% else %}
+                $('#navCreateNew').addClass('active');
+            {% endif %}
         });
     </script>
 {% endblock %}
 {% block content %}
-    <br>
+    {% if Schedule %}
+        <h2 class="title text-center" style="padding-bottom: 0px; margin-bottom: 0px;">{{ Schedule.Name }}</h2>
+        <h5 class="text-center">Created {{ Schedule.SavedDate }}</h5>
+    {% endif %}
     {% if not Appointments %}
         <p>Error: there are no scheduled appointments</p>
     {% endif %}
 
     <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
 
-    <a style="float: right; margin: 4px" data-toggle="modal" data-target="#saveModal" onclick="
+    {% if not Schedule %}
+    <a id="saveSchd" style="float: right; margin: 4px" data-toggle="modal" data-target="#saveModal" onclick="
         $('#yesOverwrite').hide();
         $('#noOverwrite').hide();
         $('#save_alert').hide();">
-        <span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Print"></span>
+        <span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Save"></span>
     </a>
+    {% endif %}
     <a style="float: right; margin: 4px">
-        <span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Print"></span>
+        <span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Download"></span>
     </a>
     <a style="float: right; margin: 4px">
         <span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span>
@@ -79,7 +88,7 @@
             <tr id="RN-{{ forloop.counter }}" style="background-color: beige">
                 <td rowspan={{ RNSize }}>{{ forloop.counter }}-{{ RN.Team }}</td>
             </tr>
-            {% for i in Chairs %} {# 123 represents the three chars#}
+            {% for i in Chairs %}
                 <tr id="RN-{{ forloop.parentloop.counter }}-row-{{ i }}">
                     <td></td>
                     <td></td>
