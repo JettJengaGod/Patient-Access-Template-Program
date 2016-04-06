@@ -99,12 +99,12 @@ a.appt:focus{
       transparent 10px,
       lightblue 10px,
       lightblue 20px
-    );
+    ) !important;
     text-decoration: none;
 }
 .lunch-filler{
     z-index: 2;
-    background-color: transparent;
+    background-color: transparent  !important;
 }
 
 .unavailable{
@@ -116,10 +116,10 @@ a.appt:focus{
       #ffffff 10px,
       #d6d6c2 10px,
       #d6d6c2 20px
-    );
+    ) !important;
 }
 .table-grouper{
-    background-color: grey;
+    background-color: grey !important;
     color: white;
 }
 .table-grouper:hover{
