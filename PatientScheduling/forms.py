@@ -3,7 +3,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.validators import RegexValidator
 from django.forms import formset_factory, ModelForm
 
-from PatientScheduling.models import NurseSchedule
+from PatientScheduling.models import NurseSchedule, MinMaxTime
 
 
 class ChairsForm(forms.Form):
@@ -15,6 +15,24 @@ class ChairsForm(forms.Form):
             max_value=99
     )
 
+
+class StartEndForm(forms.Form):
+    workStart = forms.TimeField(
+        label='Work Start Time',
+        required=True,
+        initial='8:00'
+    )
+    workEnd = forms.TimeField(
+        label='Work End Time ',
+        required=True,
+        initial='17:00'
+    )
+
+class CompanyForm(ModelForm):
+
+    class Meta:
+        model = MinMaxTime
+        fields = ['MinTime', 'MaxTime']
 
 class RNForm(ModelForm):
 

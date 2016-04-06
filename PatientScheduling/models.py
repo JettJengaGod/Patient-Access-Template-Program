@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.contrib.auth.models import User
 
 
 def model_one_letter(value):
@@ -9,6 +10,20 @@ def model_one_letter(value):
             _('%(value) is not an upper case letter'),
             params={'value': value},
         )
+
+# Company Start and End work hours
+class MinMaxTime(models.Model):
+    MinTime = models.TimeField(auto_now=False)
+    MaxTime = models.TimeField(auto_now=False)
+
+    def __unicode__(self):
+        # return u"start {0} and end {1}".format(self.MinTime, self.MaxTime)
+        return u'%s %s' % (self.MinTime, self.MaxTime)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    # CompanyHours = models.OneToOneField(MinMaxTime)
 
 
 class NurseScheduleGroups(models.Model):

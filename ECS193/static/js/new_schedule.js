@@ -9,6 +9,7 @@
 
     //Actions for nurse schedule groups
     function SaveSchedule(prefix, overwrite){
+        //SaveTimeSLots('APP');
         var ScheduleGroup = $('#id_ScheduleGroupName').val();
         var alert = document.getElementById("save_alert");
         $('#yesOverwrite').hide();
@@ -68,6 +69,18 @@
             alert.text(ScheduleGroup + ' is not a valid ScheduleName');
             return false;
         }
+    }
+    function SaveTimeSLots(prefix){
+        var table = document.getElementById((prefix + 'Table')); //APPTable
+        for (var i = 1; i < table.rows.length - 1; i++) {
+            var row = table.rows[i];
+            var time = {
+                'TimePeriod': row.cells[1].firstChild.value,
+                'TotalNeeded': row.cells[2].firstChild.value
+            };
+        }
+
+
     }
     function LoadSchedule(prefix){
         var label = $("#pageAlert"); //hide any possible existing notifications

@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^newSchedule/', PatientScheduling.views.new_schedule),
     url(r'^home/', PatientScheduling.views.home),
     url(r'^generateSchedule/', PatientScheduling.views.generate_schedule),
+    url(r'^my_admin_only_view', PatientScheduling.views.my_admin_only_view),
     # scripts called from ajax on newSchedule page
     url(r'^add_to_schedule_group/', PatientScheduling.db_scripts.add_to_schedule_group),
     url(r'^load_schedule_group/', PatientScheduling.db_scripts.load_schedule_group),
