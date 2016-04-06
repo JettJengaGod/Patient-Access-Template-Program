@@ -1,11 +1,13 @@
 
 
+    //removes all listed options in dropdown list
     function removeOptions(selectbox) {
         var i;
         for(i=selectbox.options.length-1;i>=0;i--)
             selectbox.remove(i);
     }
 
+    //Actions for nurse schedule groups
     function SaveSchedule(prefix, overwrite){
         var ScheduleGroup = $('#id_ScheduleGroupName').val();
         var alert = document.getElementById("save_alert");
@@ -54,17 +56,22 @@
                     data: nurse
                 });
             }
-            document.getElementById("pageAlert").innerHTML = ScheduleGroup + ' has been saved';
+            var label = $("#pageAlert");
+            label.text(ScheduleGroup + ' has been saved');
+            label.css("display", "block");
+            label.addClass("alert-success").removeClass("alert-danger");
             return true;
         }
         else {
             $('#id_ScheduleGroupName').attr('readonly','false');
             alert.show();
-            alert.innerHTML = ScheduleGroup + ' is not a valid ScheduleName';
+            alert.text(ScheduleGroup + ' is not a valid ScheduleName');
             return false;
         }
     }
     function LoadSchedule(prefix){
+        var label = $("#pageAlert"); //hide any possible existing notifications
+        label.css("display", "none");
         var ScheduleGroup = $("#savedSchedules option:selected").html();
         document.getElementById("pageAlert").innerHTML = ''; //clear any previous alerts
         if(ScheduleGroup.match(/[\w+\.\_]+/)) {
@@ -80,7 +87,7 @@
                 },
                 success: function(result) {
                     var objectList = JSON.parse(result);
-                    fillRNSchedule(objectList, prefix)
+                    fillRNSchedule(objectList, prefix);
                 }
             });
         }
@@ -135,6 +142,7 @@
         });
     }
     function fillRNSchedule(objectList, prefix){
+        objectList = objectList.sort(compareRNSchedules);
         var count = objectList.length;
         var table = document.getElementById(prefix + 'Table');
         var tableRows = table.rows.length - 2; //one row is header and one is add button
@@ -161,7 +169,22 @@
             row.cells[6].firstChild.value = obj.EndTime;
         }
     }
-
+    //used when sorting. returns negative if s1 < s2, 0 if s1=s2, and positive if s1 > s2
+    //compares team, then StartTime
+    function compareRNSchedules(s1, s2){
+        if(s1.fields.Team == s2.fields.Team)
+        {
+            if(s1.fields.StartTime == s2.fields.StartTime)
+                return 0;
+            else if(s1.fields.StartTime > s2.fields.StartTime)
+                return 1;
+            else return -1;
+        }
+        else if(s1.fields.Team > s2.fields.Team)
+            return 1;
+        else return -1;
+    }
+    //maintains tables with dynamic # of rows
     function updateElementIndex(object, prefix, index) {
 		var id_regex = new RegExp('(' + prefix + '-\\d+)');
 		var replacement = prefix + '-' + index;
@@ -225,4 +248,37 @@
             var lastDeleteButton = table.rows[1].cells[0].children[0];
             lastDeleteButton.disabled = true;
         }
+    }
+
+    function GetTotalAppointmentMinutes(AppPrefix){
+        var table = document.getElementById(AppPrefix + 'Table');
+        if(table == null) return 0;
+        var totalminutes = 0;
+        for(var i=1; i < table.rows.length-1; i++){
+            var dropdown = table.rows[i].cells[1].children[0];
+            var count = table.rows[i].cells[2].children[0];
+            if (dropdown.selectedIndex < 0 || count.valueAsNumber < 1)
+                continue;
+            var mins = parseInt(dropdown.options[dropdown.selectedIndex].value);
+            totalminutes += mins  * count.valueAsNumber;
+        }
+        return totalminutes;
+    }
+    function GetTotalRNMinutes(RNPrefix){
+        var table = document.getElementById(RNPrefix + 'Table');
+        if(table == null) return 0;
+        var chairs = document.getElementById('id_NumberOfChairs').valueAsNumber;
+        var totalminutes = 0;
+        for(var i=1; i < table.rows.length-2; i++){
+            var StartTime = table.rows[i].cells[3].children[0].value;
+            var LunchDuration = table.rows[i].cells[5].children[0].value;
+            var EndTime = table.rows[i].cells[6].children[0].value;
+            try {
+                var StartMinutes = parseInt(StartTime.split(':')[0] * 60) + parseInt(StartTime.split(':')[1]);
+                var EndMinutes = parseInt(EndTime.split(':')[0] * 60) + parseInt(EndTime.split(':')[1]);
+            }
+            catch(err) {continue;}
+            totalminutes += EndMinutes - StartMinutes - parseInt(LunchDuration);
+        }
+        return totalminutes * chairs;
     }

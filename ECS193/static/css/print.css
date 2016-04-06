@@ -1,0 +1,37 @@
+html {
+    width: 100%;
+    -webkit-print-color-adjust: exact;
+}
+.page {
+    background-color: white !important;
+}
+@media print and (orientation: portrait) {
+    body {width: 7in;}
+}
+@media print and (orientation: landscape) {
+    body {width: 11.5in;}
+}
+body {
+    margin:0;
+    padding:0;
+}
+#header, #footer {
+    display: none;
+}
+
+.appt {
+    background-color: darkseagreen !important;
+}
+
+tr.table-grouper > td{
+    background-color: inherit !important;
+    font-weight: bold;
+}
+
+th{
+    background-color: beige !important;
+}
+
+td > .glyphicon {
+    display: none;
+}

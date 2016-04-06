@@ -1,5 +1,5 @@
 
-
+//Color when nurses are available and are gone
 function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
     var table = document.getElementById("calendar");
     var maxCellIndex = 9;
@@ -139,8 +139,8 @@ function AddFill(cell, fraction, className, leftAligned){
     div.style.width = (fraction * 100) + '%';
 }
 
-function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, startTime, endTime)
-{
+//similar to function AddFill except with appointment only attributes
+function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, startTime, endTime) {
     if(fraction > 1 || fraction < 0)
     {
         alert("The given fraction to fill the cell by is not a valid percent!")
@@ -167,7 +167,11 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, star
 
     //----calculate the duration of entire appointment in hours and minutes---
     var durationText = "";
-    var duration = (endTime.split(':')[0] - startTime.split(':')[0])*60  + (endTime.split(':')[1] - startTime.split(':')[1]);
+    var EndHour = endTime.split(':')[0];
+    var EndMinutes = endTime.split(':')[1];
+    var StartHour = startTime.split(':')[0];
+    var StartMinutes = startTime.split(':')[1];
+    var duration = (EndHour - StartHour)*60  + (EndMinutes - StartMinutes);
     if(duration/60 > 1){ //if it is longer than an hour
         if(duration%60 > 0) //if the duration has some amount of minutes
             durationText = Math.floor(duration/60) + '.' + duration%60 + 'h';
@@ -184,14 +188,15 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, star
     else div.innerHTML = innertext;
 
     //----Set content of the pop-up display---
-    var description = 'Start Time: '+startTime +
-        '\nEnd Time: ' + endTime +
+    var description = 'Start Time: '+ StartHour + ':' + StartMinutes +
+        '\nEnd Time: ' + EndHour + ':' + EndMinutes +
         '\nDuration: ' + durationText;
     div.setAttribute('data-content', description);
 
     cell.appendChild(div);
 }
 
+//Collapse/expand a pod
 function rowSelect(grouping){
     var groupRow = $('#collapse-row-'+grouping);
     var arrow = document.getElementById('arrow-'+grouping);
@@ -220,6 +225,7 @@ function RandomColor(){
     return(color);
 }
 
+//returns index of cell between the given indices.
 function MiddleCell(startCellIndex, endCellIndex){
     var difference = endCellIndex - startCellIndex;
     if(difference == 0)
@@ -229,4 +235,92 @@ function MiddleCell(startCellIndex, endCellIndex){
     else
         return startCellIndex + ((difference - 1)/2)
 
+}
+
+//-----load/save operations of entire schedule-----//
+function SaveSchedule(overwrite){
+    var name = $('#SaveName').val();
+    var alert = document.getElementById("save_alert");
+    $('#yesOverwrite').hide();
+    $('#noOverwrite').hide();
+    $('#save_alert').hide();
+    $('#SaveName').attr('readonly','readonly');
+    var alreadyExists = CheckSaveName(name);
+
+    if(alreadyExists && overwrite == false) //ask the user if they want to overwrite
+    {
+        $('#save_alert').show();
+        alert.innerHTML = 'That name is already used. Would you like to overwrite it?';
+        $('#yesOverwrite').show();
+        $('#noOverwrite').show();
+        return false;
+    }
+    else if(alreadyExists && overwrite == true)  //delete so we can overwrite
+    {
+        DeleteSchedule(name);
+    }
+    //Save to DB
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: '/save_schedule/',
+        contentType: "application/json",
+        data: {'SaveName': name},
+        success: function(result) {
+            var label = $("#pageAlert");
+            label.text(result);
+            label.css("display", "block");
+            label.addClass("alert-success").removeClass("alert-danger");
+            $('#saveSchedule').disable();
+        },
+        complete: function(response, textStatus) {
+            if(textStatus != 'success') {
+                var label = $("#pageAlert");
+                label.text(name + ' could not be saved');
+                label.css("display", "block");
+                label.addClass("alert-danger").removeClass("alert-success");
+            }
+        }
+    });
+    $('#saveModal').modal('hide');
+}
+
+function CheckSaveName(name){
+    var returnValue = false;
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: '/check_schedule_name/',
+        contentType: "application/json",
+        data: {'SaveName': name},
+        async: false,
+        complete: function(response, textStatus) {
+            if(textStatus != 'success')
+                return alert(textStatus + ': ' + response.responseText);
+        },
+        success: function(result) {
+            if(result == 'True')
+                returnValue = false; //unique
+            else
+                returnValue = true; //already used
+        }
+    });
+    return returnValue;
+}
+
+function DeleteSchedule(name){
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: '/remove_schedule/',
+        contentType: "application/json",
+        data: {'SaveName': name},
+        complete: function(response, textStatus) {
+            if(textStatus != 'success')
+                return false;
+        },
+        success: function() {
+            return true;
+        }
+    });
 }

@@ -18,14 +18,15 @@ class NurseScheduleGroups(models.Model):
 
 
 class SavedSchedule(models.Model):
-    Name = models.CharField(max_length=20, primary_key=True)
+    # models.AutoField(primary_key=True) is a default field
+    Name = models.CharField(max_length=20, unique=True)
     SavedDate = models.DateTimeField(auto_now=True)
     NurseSchedule = models.ForeignKey(NurseScheduleGroups)
 
 
 class NurseSchedule(models.Model):
     # models.AutoField(primary_key=True) is a default field
-    NurseID = models.PositiveIntegerField(unique=True, null=True)
+    NurseID = models.PositiveIntegerField(null=True)
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
     ScheduleGroupName = models.ForeignKey(NurseScheduleGroups)
     StartTime = models.TimeField(auto_now=False, default='8:00')
@@ -36,6 +37,7 @@ class NurseSchedule(models.Model):
 
 class Appointment(models.Model):
     # models.AutoField(primary_key=True) is a default field
+    SavedSchedule = models.ForeignKey(SavedSchedule)
     NurseScheduleID = models.PositiveIntegerField(default=0)
     ChairID = models.PositiveIntegerField(default=0)
     StartTime = models.TimeField(auto_now=False)
