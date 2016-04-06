@@ -249,3 +249,36 @@
             lastDeleteButton.disabled = true;
         }
     }
+
+    function GetTotalAppointmentMinutes(AppPrefix){
+        var table = document.getElementById(AppPrefix + 'Table');
+        if(table == null) return 0;
+        var totalminutes = 0;
+        for(var i=1; i < table.rows.length-1; i++){
+            var dropdown = table.rows[i].cells[1].children[0];
+            var count = table.rows[i].cells[2].children[0];
+            if (dropdown.selectedIndex < 0 || count.valueAsNumber < 1)
+                continue;
+            var mins = parseInt(dropdown.options[dropdown.selectedIndex].value);
+            totalminutes += mins  * count.valueAsNumber;
+        }
+        return totalminutes;
+    }
+    function GetTotalRNMinutes(RNPrefix){
+        var table = document.getElementById(RNPrefix + 'Table');
+        if(table == null) return 0;
+        var chairs = document.getElementById('id_NumberOfChairs').valueAsNumber;
+        var totalminutes = 0;
+        for(var i=1; i < table.rows.length-2; i++){
+            var StartTime = table.rows[i].cells[3].children[0].value;
+            var LunchDuration = table.rows[i].cells[5].children[0].value;
+            var EndTime = table.rows[i].cells[6].children[0].value;
+            try {
+                var StartMinutes = parseInt(StartTime.split(':')[0] * 60) + parseInt(StartTime.split(':')[1]);
+                var EndMinutes = parseInt(EndTime.split(':')[0] * 60) + parseInt(EndTime.split(':')[1]);
+            }
+            catch(err) {continue;}
+            totalminutes += EndMinutes - StartMinutes - parseInt(LunchDuration);
+        }
+        return totalminutes * chairs;
+    }

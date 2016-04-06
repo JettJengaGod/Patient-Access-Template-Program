@@ -9,7 +9,25 @@
             $('nav').show();
             $('.nav > li').removeClass('active');
             $('#navCreateNew').addClass('active');
+
+            $('table input').each(function() {
+              this.onchange = function(){CheckHoursUsed();};
+            });
+            $('table select').each(function() {
+              this.onchange = function(){CheckHoursUsed();}
+            });
         });
+        function CheckHoursUsed(){
+            var appMins = GetTotalAppointmentMinutes('{{ AppointmentFormSet.prefix }}');
+            var RNMins = GetTotalRNMinutes('{{ RNFormSet.prefix }}');
+            var alert = document.getElementById("appointment_alert");
+            if(appMins > RNMins)
+            {
+                $(alert).show();
+                alert.innerText = "The appointments exceed the number of hours RNs are available!";
+            }
+            else $(alert).hide();
+        }
     </script>
 {% endblock %}
 
@@ -24,7 +42,7 @@
     </div>
     <div>
         <h3>RN Schedules</h3>
-        <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
+        <div id="pageAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
             <div class="col-md-3">
                 {{ ChairsForm }}
@@ -60,7 +78,10 @@
             {% endif %}
             <tr id="{{ RNFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ RNFormSet.prefix }}-row">
                 <td>
-                    <button type="button" aria-label="Delete" class="delete-button" onclick="RemoveRowClick({{ forloop.counter }}, '{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    <button type="button" aria-label="Delete" class="delete-button"
+                            onclick="RemoveRowClick({{ forloop.counter }}, '{{ RNFormSet.prefix }}'); CheckHoursUsed();">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                    </button>
                 </td>
                 <td class="RNNumber">Nurse {{ forloop.counter }}</td>
                 <td>{{ form.Team }}</td>
@@ -80,6 +101,7 @@
     </div>
     <div>
         <h3>Needed Timeslots</h3>
+        <div id="appointment_alert" class="alert alert-danger" role="alert" style="display: none;"></div>
         {{ AppointmentFormSet.management_form }}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>
@@ -90,7 +112,10 @@
         {% for form in AppointmentFormSet.forms %}
             <tr id="{{ AppointmentFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ AppointmentFormSet.prefix }}-row">
                 <td>
-                    <button type="button" aria-label="Delete" class="delete-button" disabled="disabled" onclick="RemoveRowClick({{ forloop.counter }}, '{{ AppointmentFormSet.prefix }}')"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                    <button type="button" aria-label="Delete" class="delete-button" disabled="disabled"
+                            onclick="RemoveRowClick({{ forloop.counter }}, '{{ AppointmentFormSet.prefix }}'); CheckHoursUsed();">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                    </button>
                 </td>
                 <td>{{ form.TimePeriod }}</td>
                 <td>{{ form.Amount }}</td>
