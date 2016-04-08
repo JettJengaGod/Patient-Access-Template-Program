@@ -87,7 +87,6 @@ class Nurse:
         self.start = start
         self.end = end
         self.chairs = [[]]
-        self.populate()
         self.pod = pod
         self.id = identity
         self.populate()
@@ -119,22 +118,22 @@ class Nurse:
         for i in range(time, time + appointment):
             self.chairs[chair][i] = number
         for i in range(4):
-            if self.chairs[i][time] > 3:
+            if self.chairs[i][time] >= 3:
                 self.chairs[i][time] = 3
             else:
                 self.chairs[i][time] = 2
-            if self.chairs[i][time+1] > 3:
+            if self.chairs[i][time+1] >= 3:
                 self.chairs[i][time+1] = 3
             else:
                 self.chairs[i][time+1] = 2
 
     def help_start(self, time):
         for i in range(3):
-            if self.chairs[i][time] > 3:
+            if self.chairs[i][time] >= 3:
                 self.chairs[i][time] = 3
             else:
                 self.chairs[i][time] = 2
-            if self.chairs[i][time+1] > 3:
+            if self.chairs[i][time+1] >= 3:
                 self.chairs[i][time+1] = 3
             else:
                 self.chairs[i][time+1] = 2
