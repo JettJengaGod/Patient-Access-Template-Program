@@ -91,17 +91,18 @@ def save_schedule(request):
     for wrapper in serializers.deserialize('json', request.session.get('appointments')):
         wrapper.object.SavedSchedule = schedule
         wrapper.object.save()
-    return HttpResponse('The schedule ' + save_name + 'has been saved', content_type="application/json")
+    return HttpResponse('The schedule ' + save_name + ' has been saved', content_type="application/json")
 
 
-def delete_schedule(request):
+@transaction.atomic  # ensures that either all of the DB changes are saved or none
+def remove_schedule(request):
     save_name = request.GET['SaveName']
     try:
         schedule = SavedSchedule.objects.get(Name=save_name)
         nurse_group = schedule.NurseSchedule
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
         appointments = Appointment.objects.filter(SavedSchedule=schedule)
-        save_name.delete()
+        schedule.delete()
         nurse_group.delete()
         nurses.delete()
         appointments.delete()
@@ -122,12 +123,12 @@ def load_schedule(request):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
 
 
-def load_schedule_names(request):
-    names = SavedSchedule.objects.all()
-    if names.count() > 0:
-        return HttpResponse(serializers.serialize('json', names), content_type="application/json")
+def check_schedule_name(request):
+    name = request.GET['SaveName']
+    try:
+        SavedSchedule.objects.get(Name=name)
+    except (KeyError, SavedSchedule.DoesNotExist):
+        return HttpResponse('True', content_type="application/json")  # unique Schedule Name
     else:
-        return HttpResponse(serializers.serialize('json', []), content_type="application/json")
-
-
+        return HttpResponse('False', content_type="application/json")  # unique Schedule Name
 

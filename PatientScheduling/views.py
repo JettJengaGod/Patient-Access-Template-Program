@@ -1,8 +1,8 @@
 from django.core import serializers
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render, get_object_or_404
 from PatientScheduling.forms import RNFormSet, AppointmentFormSet, ChairsForm
-from PatientScheduling.models import NurseSchedule
+from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment
 from PatientScheduling.Algorithm import clean_input
 
 
@@ -58,3 +58,24 @@ def generate_schedule(request):
 
 def home(request):
     return render(request, 'home.html')
+
+
+def saved_schedules(request):
+    saved = SavedSchedule.objects.order_by('-SavedDate')
+    context = {'saved_list': saved}
+    return render(request, 'viewsavedschedule.html', context)
+
+
+def view_schedule(request, schedule_id):
+    schedule = get_object_or_404(SavedSchedule, pk=schedule_id)
+    try:
+        nurse_group = schedule.NurseSchedule
+        nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
+        appointments = Appointment.objects.filter(SavedSchedule=schedule)
+        chairs = range(4)
+        # ToDo: change the way we ask the user for the number of chairs per nurse and have it be accessible here
+        ctemp = 4 + 1
+        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': chairs, 'Appointments': appointments, 'RNSize': ctemp}
+        return render(request, 'calendar.html', context)
+    except:
+        raise Http404("Unable to load schedule '" + schedule.Name + "'")

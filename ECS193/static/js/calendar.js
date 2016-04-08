@@ -1,5 +1,5 @@
 
-//Colors when nurses are available and are gone
+//Color when nurses are available and are gone
 function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
     var table = document.getElementById("calendar");
     var maxCellIndex = 9;
@@ -245,7 +245,7 @@ function SaveSchedule(overwrite){
     $('#noOverwrite').hide();
     $('#save_alert').hide();
     $('#SaveName').attr('readonly','readonly');
-    var alreadyExists = false;
+    var alreadyExists = CheckSaveName(name);
 
     if(alreadyExists && overwrite == false) //ask the user if they want to overwrite
     {
@@ -257,10 +257,9 @@ function SaveSchedule(overwrite){
     }
     else if(alreadyExists && overwrite == true)  //delete so we can overwrite
     {
-
+        DeleteSchedule(name);
     }
     //Save to DB
-    var label = $("#pageAlert");
     $.ajax({
         type: 'GET',
         dataType: 'html',
@@ -268,17 +267,60 @@ function SaveSchedule(overwrite){
         contentType: "application/json",
         data: {'SaveName': name},
         success: function(result) {
-            label.alert.text(result);
+            var label = $("#pageAlert");
+            label.text(result);
             label.css("display", "block");
             label.addClass("alert-success").removeClass("alert-danger");
+            $('#saveSchedule').disable();
         },
         complete: function(response, textStatus) {
             if(textStatus != 'success') {
+                var label = $("#pageAlert");
                 label.text(name + ' could not be saved');
                 label.css("display", "block");
                 label.addClass("alert-danger").removeClass("alert-success");
             }
         }
     });
+    $('#saveModal').modal('hide');
+}
 
+function CheckSaveName(name){
+    var returnValue = false;
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: '/check_schedule_name/',
+        contentType: "application/json",
+        data: {'SaveName': name},
+        async: false,
+        complete: function(response, textStatus) {
+            if(textStatus != 'success')
+                return alert(textStatus + ': ' + response.responseText);
+        },
+        success: function(result) {
+            if(result == 'True')
+                returnValue = false; //unique
+            else
+                returnValue = true; //already used
+        }
+    });
+    return returnValue;
+}
+
+function DeleteSchedule(name){
+    $.ajax({
+        type: 'GET',
+        dataType: 'html',
+        url: '/remove_schedule/',
+        contentType: "application/json",
+        data: {'SaveName': name},
+        complete: function(response, textStatus) {
+            if(textStatus != 'success')
+                return false;
+        },
+        success: function() {
+            return true;
+        }
+    });
 }

@@ -18,7 +18,8 @@ class NurseScheduleGroups(models.Model):
 
 
 class SavedSchedule(models.Model):
-    Name = models.CharField(max_length=20, primary_key=True)
+    # models.AutoField(primary_key=True) is a default field
+    Name = models.CharField(max_length=20, unique=True)
     SavedDate = models.DateTimeField(auto_now=True)
     NurseSchedule = models.ForeignKey(NurseScheduleGroups)
 
