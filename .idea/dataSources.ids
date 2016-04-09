@@ -10,9 +10,9 @@
       <column name="ChairID" sqlType="INTEGER UNSIGNED" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="StartTime" sqlType="TIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="EndTime" sqlType="TIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <column name="SavedSchedule_id" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="SavedSchedule_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_PatientScheduling_appointment_1" columns="SavedSchedule_id" ref-table="PatientScheduling_savedschedule" ref-schema="" ref-catalog="" ref-columns="Name" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_PatientScheduling_appointment_1" columns="SavedSchedule_id" ref-table="PatientScheduling_savedschedule" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="PatientScheduling_appointment_f9f59d06" unique="true" columns="SavedSchedule_id"/>
     </table>
     <table name="PatientScheduling_nurseschedule" schema="" catalog="" type="TABLE">
@@ -35,10 +35,11 @@
       <primary-key columns="name"/>
     </table>
     <table name="PatientScheduling_savedschedule" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="Name" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="SavedDate" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="NurseSchedule_id" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <primary-key columns="name"/>
+      <primary-key columns="id"/>
       <foreign-key name="#FAKE_PatientScheduling_savedschedule_1" columns="NurseSchedule_id" ref-table="PatientScheduling_nurseschedulegroups" ref-schema="" ref-catalog="" ref-columns="Name" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="PatientScheduling_savedschedule_9a8c30bb" unique="true" columns="NurseSchedule_id"/>
     </table>

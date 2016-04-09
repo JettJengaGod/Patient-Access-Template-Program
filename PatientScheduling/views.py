@@ -44,8 +44,8 @@ def new_schedule(request):
             nurses = sorted(nurses, key=lambda x: x.Team)  # sort by team for easier viewing
             context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': scheduled_appointments, 'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments}
             # save to the session in case user saves calendar later
-            request.session['nurseSchedules'] = serializers.serialize('json', nurses)
-            request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
+            # request.session['nurseSchedules'] = serializers.serialize('json', nurses)
+            # request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}

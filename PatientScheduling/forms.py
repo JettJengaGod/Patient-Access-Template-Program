@@ -32,13 +32,14 @@ class RNForm(ModelForm):
         error_messages = []
         # try:
         cleaned_data = super(RNForm, self).clean()
+        Team = cleaned_data.get("Team")
         StartTime = cleaned_data.get("StartTime")
         LunchTime = cleaned_data.get("LunchTime")
         LunchDuration = cleaned_data.get("LunchDuration")
         EndTime = cleaned_data.get("EndTime")
 
         # does not conform to DRY principle?
-        if not StartTime or not LunchTime or not LunchDuration or not EndTime:
+        if not Team or not StartTime or not LunchTime or not LunchDuration or not EndTime:
             raise forms.ValidationError('Please fill out all of the fields')
         if StartTime >= EndTime:
             error_messages.append('RNs cannot start after EndTime')

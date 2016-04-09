@@ -22,12 +22,24 @@ def convert_to_format(time):
     return newTime
 
 
-def convert_from_format(num):
-    minutes = num * 15
+def convert_to_time(slots):
+    minutes = slots * 15
     hours = int(minutes/60)
     minutes -= hours*60
     hours += 8
     return time(hours,minutes)
+
+
+def convert_to_duration(slots):
+    minutes = slots * 15
+    hours = int(minutes/60)
+    minutes -= hours*60
+    if hours == 0:
+        return minutes
+    if minutes == 0:
+        return hours
+    else:
+        return str(hours) + ':' + str(minutes)
 
 
 def clean_input(nurseSchedules, appointments):
@@ -66,7 +78,7 @@ def clean_input(nurseSchedules, appointments):
     final_unscheduled = []
     while len(unscheduled) > 0:
         tmp = unscheduled[0]
-        final_unscheduled.append((tmp*15, unscheduled.count(tmp)))
+        final_unscheduled.append((convert_to_duration(tmp), unscheduled.count(tmp)))
         unscheduled = [x for x in unscheduled if x != tmp]
 
     # now we clean the output
@@ -74,8 +86,8 @@ def clean_input(nurseSchedules, appointments):
     for appointment in end:
         finalAppt.append(Appointment(NurseScheduleID=appointment.nurse.id,
                                      ChairID=appointment.chair,
-                                     StartTime=convert_from_format(appointment.time),
-                                     EndTime=convert_from_format(appointment.time + appointment.length)))
+                                     StartTime=convert_to_time(appointment.time),
+                                     EndTime=convert_to_time(appointment.time + appointment.length)))
 
     return [finalAppt, final_unscheduled]
 
@@ -87,7 +99,6 @@ class Nurse:
         self.start = start
         self.end = end
         self.chairs = [[]]
-        self.populate()
         self.pod = pod
         self.id = identity
         self.populate()
@@ -119,22 +130,22 @@ class Nurse:
         for i in range(time, time + appointment):
             self.chairs[chair][i] = number
         for i in range(4):
-            if self.chairs[i][time] > 3:
+            if self.chairs[i][time] >= 3:
                 self.chairs[i][time] = 3
             else:
                 self.chairs[i][time] = 2
-            if self.chairs[i][time+1] > 3:
+            if self.chairs[i][time+1] >= 3:
                 self.chairs[i][time+1] = 3
             else:
                 self.chairs[i][time+1] = 2
 
     def help_start(self, time):
         for i in range(3):
-            if self.chairs[i][time] > 3:
+            if self.chairs[i][time] >= 3:
                 self.chairs[i][time] = 3
             else:
                 self.chairs[i][time] = 2
-            if self.chairs[i][time+1] > 3:
+            if self.chairs[i][time+1] >= 3:
                 self.chairs[i][time+1] = 3
             else:
                 self.chairs[i][time+1] = 2

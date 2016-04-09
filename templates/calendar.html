@@ -44,7 +44,22 @@
     {% if not Appointments %}
         <p>Error: there are no scheduled appointments</p>
     {% endif %}
-
+    {% if UnschAppts %}
+        <div class="alert alert-danger">
+            <h4>Could Not Schedule:</h4>
+            <ul>
+                {% for minutes, number in UnschAppts %}
+                    <li>
+                    {% if ':' not in minutes %}
+                        {{ number }} of the {{ minutes }} minute appointments
+                    {% else %}
+                        {{ number }} of the {{ minutes }} hour appointments
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
     <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
 
     {% if not Schedule %}
@@ -105,7 +120,6 @@
         {% endfor %}
     </table>
     <br><br>
-
     <div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
