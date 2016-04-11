@@ -350,6 +350,7 @@ function DeleteSchedule(name){
         url: '/remove_schedule/',
         contentType: "application/json",
         data: {'SaveName': name},
+        async: false,
         complete: function(response, textStatus) {
             if(textStatus != 'success')
                 return false;
@@ -358,4 +359,5 @@ function DeleteSchedule(name){
             return true;
         }
     });
+    return true;
 }
