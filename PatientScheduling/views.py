@@ -7,8 +7,6 @@ from PatientScheduling.Algorithm import clean_input
 
 
 def new_schedule(request):
-    global idNumber
-    idNumber = 0
     chairs_form = ChairsForm()
     rn_form = RNFormSet(prefix='RN')
     app_form = AppointmentFormSet(prefix='APP')
@@ -22,22 +20,23 @@ def new_schedule(request):
             chairs = range(chairs_form.cleaned_data.get('NumberOfChairs'))
             ctemp = chairs_form.cleaned_data.get('NumberOfChairs') + 1
             nurses = []
-            NurseNumber = 1
             for form in rn_form:
                 cd = form.cleaned_data
                 nurses.append(NurseSchedule(
-                    NurseID=NurseNumber,
+                    NurseID=0,
                     Team=cd.get('Team'),
                     StartTime=cd.get('StartTime'),
                     LunchTime=cd.get('LunchTime'),
                     LunchDuration=cd.get('LunchDuration'),
                     EndTime=cd.get('EndTime'),
                 ))
-                NurseNumber += 1
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data
                 needed_appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
+            nurses = sorted(nurses, key=lambda x: x.Team)  # sort by team for easier viewing
+            for i in range(1, len(nurses)+1):
+                nurses[i-1].NurseID = i
             all_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
             scheduled_appointments = all_appointments[0]
             unscheduled_appointments = all_appointments[1]
