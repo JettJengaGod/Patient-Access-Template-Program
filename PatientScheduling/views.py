@@ -1,3 +1,5 @@
+from operator import attrgetter
+
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
@@ -38,13 +40,13 @@ def new_schedule(request):
             for i in range(1, len(nurses)+1):
                 nurses[i-1].NurseID = i
             all_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
-            scheduled_appointments = all_appointments[0]
+            scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
             unscheduled_appointments = all_appointments[1]
             nurses = sorted(nurses, key=lambda x: x.Team)  # sort by team for easier viewing
             context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': scheduled_appointments, 'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments}
             # save to the session in case user saves calendar later
-            # request.session['nurseSchedules'] = serializers.serialize('json', nurses)
-            # request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
+            request.session['nurseSchedules'] = serializers.serialize('json', nurses)
+            request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}
