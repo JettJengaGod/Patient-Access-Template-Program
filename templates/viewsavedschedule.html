@@ -14,7 +14,9 @@
     </script>
 {% endblock %}
 {% block content %}
-    <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
+    <div id="pageAlert" class="alert alert-success alert-dismissible" role="alert" style="display: none;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    </div>
     {% if saved_list %}
         <div style="width: 50%">
             <div class="row">
@@ -35,6 +37,6 @@
             {% endfor %}
         </div>
     {% else %}
-        <p>No saved schedules are available.</p>
+        <h4>No saved schedules are available.</h4>
     {% endif %}
 {% endblock %}

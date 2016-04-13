@@ -32,6 +32,6 @@ th{
     background-color: beige !important;
 }
 
-td > .glyphicon {
+.glyphicon, .alert{
     display: none;
 }

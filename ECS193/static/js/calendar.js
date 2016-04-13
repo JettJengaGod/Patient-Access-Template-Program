@@ -63,9 +63,15 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
 
 var lastEndIndex = 0;
 var lastEndPercent = 0;
+var lastRNIndex = 1;
 function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
     var row = document.getElementById("RN-"+RNIndex+"-row-"+chairIndex);
     var offset = 8;
+    if(lastRNIndex != RNIndex){
+        lastEndIndex = 0;
+        lastEndPercent = 0;
+        lastRNIndex = RNIndex;
+    }
 
     var startIndex = startTime.split(':')[0] - offset;
     var startMinutes = parseInt(startTime.split(':')[1]);
@@ -75,15 +81,15 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
     var endPercent = endMinutes/60;
     var totalTime = (endIndex*60 + endMinutes) - (startIndex*60 + startMinutes);
     var DurationCell = row.cells[MiddleCell(startIndex, endIndex)]; //The cell to put the duration name in
-
-    var color = RandomColor();
-
+    var startdiv, enddiv;
+    var startPlaced = false;
     // appointment doesn't start on the hour
     if (startMinutes > 0) {
         //right shift
         if (startIndex != endIndex) {
             var cell = row.cells[startIndex++];
-            BuildApptDiv(cell, 1 - startPercent, false, cell == DurationCell, color, apptID, startTime, endTime);
+            startdiv = BuildApptDiv(cell, 1 - startPercent, false, cell == DurationCell, apptID, startTime, endTime);
+            startPlaced = true;
             totalTime -= (60 - startMinutes);
         }
         // special case middle appointment
@@ -96,25 +102,47 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
                 AddFill(row.cells[startIndex], startPercent, 'filler', true);
             }
             var cell = row.cells[startIndex];
-            BuildApptDiv(cell, (endPercent - startPercent), true, cell == DurationCell, color, apptID, startTime, endTime);
+            startdiv = BuildApptDiv(cell, (endPercent - startPercent), true, cell == DurationCell, apptID, startTime, endTime);
+            startPlaced = true;
             totalTime = 0;
             endMinutes = 0;
         }
     }
     // appointment doesn't end on the hour
+    var endPlaced = false;
     if (endMinutes > 0) {
         var cell = row.cells[endIndex];
-        BuildApptDiv(cell, endPercent, true, cell == DurationCell, color, apptID, startTime, endTime);
+        enddiv = BuildApptDiv(cell, endPercent, true, cell == DurationCell, apptID, startTime, endTime);
         totalTime -= endMinutes;
+        if(!startPlaced) {
+            startdiv = enddiv;
+            startPlaced = true;
+        }
+        endPlaced = true;
+        enddiv.style.borderRight = 'black solid 1px';
     }
     // fills out entire hour slot
     while (totalTime > 0) {
         var cell = row.cells[startIndex++];
-        BuildApptDiv(cell, 1, true, cell == DurationCell, color, apptID, startTime, endTime);
+        enddiv = BuildApptDiv(cell, 1, true, cell == DurationCell, apptID, startTime, endTime);
+        if(!startPlaced) {
+            startdiv = enddiv;
+            startPlaced = true;
+        }
         totalTime -= 60;
     }
     lastEndIndex = endIndex;
     lastEndPercent = endPercent;
+
+    //add borders to divs
+    if(startTime.split(':')[0] - offset == endIndex || (endMinutes == 0 && startTime.split(':')[0] - offset == endIndex - 1)){
+        startdiv.style.borderLeft = 'black solid 1px';
+        startdiv.style.borderRight = 'black solid 1px';
+    }
+    else {
+        startdiv.style.borderLeft = 'black solid 1px';
+        if (!endPlaced) enddiv.style.borderRight = 'black solid 1px';
+    }
 }
 
 function AddFill(cell, fraction, className, leftAligned){
@@ -134,22 +162,38 @@ function AddFill(cell, fraction, className, leftAligned){
             div.style.float = 'right';
     }
     div.innerHTML = '&nbsp;';
-    cell.appendChild(div);
     div.className += ' ' + className;
     div.style.width = (fraction * 100) + '%';
+    cell.appendChild(div);
+    return div;
 }
 
 //similar to function AddFill except with appointment only attributes
-function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, startTime, endTime) {
+function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, endTime, border) {
     if(fraction > 1 || fraction < 0)
     {
-        alert("The given fraction to fill the cell by is not a valid percent!")
+        alert("The given fraction to fill the cell by is not a valid percent!");
         return;
     }
 
     cell.style.padding = 0;
     var div = document.createElement('a');
 
+    var EndHour = endTime.split(':')[0];
+    var EndMinutes = endTime.split(':')[1];
+    var StartHour = startTime.split(':')[0];
+    var StartMinutes = startTime.split(':')[1];
+    var minutes = (EndHour - StartHour)*60  + (EndMinutes - StartMinutes);
+    var color = GetColor(minutes);
+    var durationText = getStringDuration(minutes);
+
+    if(border != null && border != "")
+    {
+        if(border == "left")
+            div.style.borderLeft = 'black solid 1px';
+        else if(border == "right")
+            div.style.borderRight = 'black solid 1px';
+    }
     if (!leftAligned)
         div.style.float = 'right';
     var innertext = '&nbsp;';
@@ -165,21 +209,6 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, star
     div.className += ' appt';
     div.style.width = (fraction * 100) + '%';
 
-    //----calculate the duration of entire appointment in hours and minutes---
-    var durationText = "";
-    var EndHour = endTime.split(':')[0];
-    var EndMinutes = endTime.split(':')[1];
-    var StartHour = startTime.split(':')[0];
-    var StartMinutes = startTime.split(':')[1];
-    var duration = (EndHour - StartHour)*60  + (EndMinutes - StartMinutes);
-    if(duration/60 > 1){ //if it is longer than an hour
-        if(duration%60 > 0) //if the duration has some amount of minutes
-            durationText = Math.floor(duration/60) + '.' + duration%60 + 'h';
-        else
-            durationText = Math.floor(duration/60) + 'h';
-    }
-    else durationText = duration%60 + 'm';
-
     //----Show the duration in the div if requested---
     if(showDuration) {
         div.innerHTML = durationText;
@@ -194,6 +223,7 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, color, id, star
     div.setAttribute('data-content', description);
 
     cell.appendChild(div);
+    return div;
 }
 
 //Collapse/expand a pod
@@ -216,13 +246,57 @@ function rowSelect(grouping){
     }
 }
 
-function RandomColor(){
-    var x=Math.round(0xffffff * Math.random()).toString(16);
-    var y=(6-x.length);
-    var z= '000000';
-    var z1 = z.substring(0,y);
-    var color = '#' + z1 + x;
-    return(color);
+function GetColor(duration){
+    switch(duration){
+        case 30:
+            return "#ff8080";
+        case 45:
+            return "#ff80ff";
+        case 60:
+            return "#bf80ff";
+        case 90:
+            return "#9f80ff";
+        case 120:
+            return "#809fff";
+        case 150:
+            return "#80dfff";
+        case 180:
+            return "#80ffdf";
+        case 210:
+            return "#80ff9f";
+        case 240:
+            return "#80ff80";
+        case 270:
+            return "#9fff80";
+        case 300:
+            return "#bfff80";
+        case 330:
+            return "#dfff80";
+        case 360:
+            return "#ffff80";
+        case 390:
+            return "#ffdf80";
+        case 420:
+            return "#ffbf80";
+        case 450:
+            return "#ff9f80";
+        case 480:
+            return "#ff8080";
+        default:
+            return "#dcb6a3";
+    }
+}
+
+function getStringDuration(duration){
+    var durationText = "";
+    if(duration/60 >= 1){ //if it is longer than an hour
+        if(duration%60 > 0) //if the duration has some amount of minutes
+            durationText = Math.floor(duration/60) + ':' + duration%60 + 'h';
+        else
+            durationText = Math.floor(duration/60) + 'h';
+    }
+    else durationText = duration%60 + 'm';
+    return durationText;
 }
 
 //returns index of cell between the given indices.
@@ -315,6 +389,7 @@ function DeleteSchedule(name){
         url: '/remove_schedule/',
         contentType: "application/json",
         data: {'SaveName': name},
+        async: false,
         complete: function(response, textStatus) {
             if(textStatus != 'success')
                 return false;
@@ -323,4 +398,5 @@ function DeleteSchedule(name){
             return true;
         }
     });
+    return true;
 }
