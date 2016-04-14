@@ -44,16 +44,17 @@ def new_schedule(request):
                 reserved_appointments.append(Appointment(
                     StartTime=cd.get('StartTime'),
                     EndTime=cd.get('EndTime'),
-                    NurseScheduleID=cd.get('RNNumber')
+                    NurseScheduleID=cd.get('RNNumber'),
+                    ChairID=cd.get('ChairNumber')
                 ))
             # -----Run Algorithm and build the context----- #
-            # ToDo: JETT: have clean_input() take reserved_appointments as an argument
-            all_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
+            all_appointments = clean_input(nurses, needed_appointments, reserved_appointments)  # this starts the algorithm
             scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
             unscheduled_appointments = all_appointments[1]
+            reserved_appointments = all_appointments[2]
             # ToDo: JETT: replace reserved_appointments below in the context with your cleaned version from clean_input()
             context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': scheduled_appointments,
-                       'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments, 'reserved_appointments': reserved_appointments}
+                       'RNSize': ctemp, 'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments}
             # -----save to the session in case user saves calendar later----- #
             request.session['nurseSchedules'] = serializers.serialize('json', nurses)
             request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
@@ -65,7 +66,7 @@ def new_schedule(request):
         app_form = AppointmentFormSet(prefix='APP')
         reserved_form = ReservedFormSet(prefix='RESERVED')
         context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form, 'ReservedFormSet': reserved_form}
-        return render(request, 'new_schedule.html', context) # not post
+        return render(request, 'new_schedule.html', context)  # not post
 
 
 def generate_schedule(request):
