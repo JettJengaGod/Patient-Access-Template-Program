@@ -14,7 +14,7 @@ def new_schedule(request):
         rn_form = RNFormSet(request.POST, prefix='RN')
         app_form = AppointmentFormSet(request.POST, prefix='APP')
         reserved_form = ReservedFormSet(request.POST, prefix='RESERVED')
-        if rn_form.is_valid() & app_form.is_valid() & chairs_form.is_valid():
+        if rn_form.is_valid() & app_form.is_valid() & chairs_form.is_valid() & reserved_form.is_valid():
             chairs = range(chairs_form.cleaned_data.get('NumberOfChairs'))
             ctemp = chairs_form.cleaned_data.get('NumberOfChairs') + 1
             # -----Build nurse objects---- #
@@ -47,10 +47,13 @@ def new_schedule(request):
                     NurseScheduleID=cd.get('RNNumber')
                 ))
             # -----Run Algorithm and build the context----- #
+            # ToDo: JETT: have clean_input() take reserved_appointments as an argument
             all_appointments = clean_input(nurses, needed_appointments)  # this starts the algorithm
             scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
             unscheduled_appointments = all_appointments[1]
-            context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': scheduled_appointments, 'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments}
+            # ToDo: JETT: replace reserved_appointments below in the context with your cleaned version from clean_input()
+            context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': scheduled_appointments,
+                       'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments, 'reserved_appointments': reserved_appointments}
             # -----save to the session in case user saves calendar later----- #
             request.session['nurseSchedules'] = serializers.serialize('json', nurses)
             request.session['appointments'] = serializers.serialize('json', scheduled_appointments)

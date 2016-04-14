@@ -145,6 +145,15 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
     }
 }
 
+function Reserve(apptID){
+    $('.appt-'+apptID).each(function () {
+        var x = $(this);
+        x.addClass("appt-reserved");
+        var str = "<br><span style='color: orange'>USER RESERVED</span>";
+        x.attr('data-content', x.attr('data-content')+str);
+    });
+}
+
 function AddFill(cell, fraction, className, leftAligned){
     if(fraction > 1 || fraction < 0)
     {
@@ -199,7 +208,6 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     var innertext = '&nbsp;';
     div.style.backgroundColor = color;
     div.style.color = color;
-    div.id = id;
     div.className += ' appt-' + id;
     div.setAttribute('role', 'button');
     div.setAttribute('data-toggle', 'popover');
@@ -221,6 +229,7 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
         '\nEnd Time: ' + EndHour + ':' + EndMinutes +
         '\nDuration: ' + durationText;
     div.setAttribute('data-content', description);
+    div.setAttribute('data-html','true');
 
     cell.appendChild(div);
     return div;

@@ -13,6 +13,12 @@
             {% for RN in RNSet %}
                 BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}');
             {% endfor %}
+
+            {% for Appt in reserved_appointments %}
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', "reserved{{ forloop.counter }}");
+                Reserve("reserved{{ forloop.counter }}");
+            {% endfor %}
+
             //enable hover event for appointment blocks
             $('a.appt').hover(
                 function() {
