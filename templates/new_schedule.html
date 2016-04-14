@@ -16,6 +16,10 @@
             $('table select').each(function() {
               this.onchange = function(){CheckHoursUsed();}
             });
+
+            $('.time_input > input').each(function(){
+               this.type = "time";
+            });
         });
         function CheckHoursUsed(){
             var appMins = GetTotalAppointmentMinutes('{{ AppointmentFormSet.prefix }}');
@@ -34,12 +38,6 @@
 {% block content %}
     <form method="POST" action="/newSchedule/">
     {% csrf_token %}
-    <div>
-        <h3>Schedule Period</h3>
-        <button id="buttonDay" type="button" class="btn btn-primary" onclick="buttonDayClick()" >Day</button>
-        <button id="buttonWeek" type="button"  class="btn btn-primary" disabled="disabled">Week</button>
-        <hr>
-    </div>
     <div>
         <h3>RN Schedules</h3>
         <div id="pageAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
@@ -85,20 +83,56 @@
                 </td>
                 <td class="RNNumber">Nurse {{ forloop.counter }}</td>
                 <td>{{ form.Team }}</td>
-                <td>{{ form.StartTime }}</td>
-                <td>{{ form.LunchTime }}</td>
+                <td class="time_input">{{ form.StartTime }}</td>
+                <td class="time_input">{{ form.LunchTime }}</td>
                 <td>{{ form.LunchDuration }}</td>
-                <td>{{ form.EndTime }}</td>
+                <td class="time_input">{{ form.EndTime }}</td>
             </tr>
         {% endfor %}
             <tr><td colspan="7">
                 <button type="button" aria-label="Add" onclick="AddRowClick('{{ RNFormSet.prefix }}')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
             </td></tr>
         </table>
-
         <br>
     <hr>
     </div>
+
+    <div>
+        <h3>Pre-Reserved Time Periods</h3>
+        {{ ReservedFormSet.management_form }}
+        <table id="{{ ReservedFormSet.prefix }}Table" class='table table-striped'>
+        <tr class="table-header">
+            <th></th>
+            <th>RN Number</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+        {% for form in ReservedFormSet.forms %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{ form.non_field_errors | striptags }}
+                </div>
+            {% endif %}
+            <tr id="{{ ReservedFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ ReservedFormSet.prefix }}-row">
+                <td>
+                    <button type="button" aria-label="Delete" class="delete-button"
+                            onclick="RemoveRowClick({{ forloop.counter }}, '{{ ReservedFormSet.prefix }}');">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>{{ form.RNNumber }}</td>
+                <td class="time_input">{{ form.StartTime }}</td>
+                <td class="time_input">{{ form.EndTime }}</td>
+            </tr>
+        {% endfor %}
+            <tr><td colspan="7">
+                <button type="button" aria-label="Add" onclick="AddRowClick('{{ ReservedFormSet.prefix }}')"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </td></tr>
+        </table>
+        <br>
+    <hr>
+    </div>
+
     <div>
         <h3>Needed Timeslots</h3>
         <div id="appointment_alert" class="alert alert-danger" role="alert" style="display: none;"></div>

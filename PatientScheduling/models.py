@@ -29,7 +29,7 @@ class NurseSchedule(models.Model):
     NurseID = models.PositiveIntegerField(null=True)
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
     ScheduleGroupName = models.ForeignKey(NurseScheduleGroups)
-    StartTime = models.TimeField(auto_now=False, default='8:00')
+    StartTime = models.TimeField(auto_now=False, default='08:00')
     LunchTime = models.TimeField(auto_now=False, default='12:00')
     LunchDuration = models.PositiveIntegerField(default=60)
     EndTime = models.TimeField(auto_now=False, default='16:00')
