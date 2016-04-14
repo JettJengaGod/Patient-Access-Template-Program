@@ -60,8 +60,7 @@ def clean_input(nurseSchedules, appointments, scheduled_appointments):
                 appointment.EndTime = convert_to_time(nurses[appointment.NurseScheduleID].end)
             if convert_to_format(str(appointment.StartTime)) > nurses[appointment.NurseScheduleID].end:
                 scheduled_appointments.remove(appointment)
-            else:
-                nurses[appointment.NurseScheduleID].schedule(apptTime, 5, appointment.ChairID,convert_to_format(str(appointment.StartTime)))
+            nurses[appointment.NurseScheduleID].schedule(apptTime, 5, appointment.ChairID,convert_to_format(str(appointment.StartTime)))
         reserved_appointments = scheduled_appointments
     else:
         reserved_appointments = []
