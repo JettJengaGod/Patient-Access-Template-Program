@@ -42,7 +42,7 @@ def convert_to_duration(slots):
         return str(hours) + ':' + str(minutes)
 
 
-def clean_input(nurseSchedules, appointments):
+def clean_input(nurseSchedules, appointments, scheduled_appointments):
     # first we convert them to nurses
     nurses = []
     for nurse in nurseSchedules:
@@ -51,7 +51,19 @@ def clean_input(nurseSchedules, appointments):
                             convert_to_format(str(nurse.EndTime)), nurse.NurseID))
 
     # then we deal with the pods
+    nurses = sorted(nurses, key=lambda x: x.id)
     tempPod = [[nurses[0]]] #first we seperate the nurses into pods
+
+    for appointment in scheduled_appointments:
+        apptTime = convert_to_format(str(appointment.EndTime)) - convert_to_format(str(appointment.StartTime))
+        if nurses[appointment.NurseScheduleID].end < convert_to_format(str(appointment.EndTime)):
+            appointment.EndTime = convert_to_time(nurses[appointment.NurseScheduleID].end)
+        if convert_to_format(str(appointment.StartTime)) > nurses[appointment.NurseScheduleID].end:
+            scheduled_appointments.remove(appointment)
+        else:
+            nurses[appointment.NurseScheduleID].schedule(apptTime, 5, appointment.ChairID,convert_to_format(str(appointment.StartTime)))
+    reserved_appointments = scheduled_appointments
+
     for nurse in nurses:
         stored = False
 
@@ -89,7 +101,7 @@ def clean_input(nurseSchedules, appointments):
                                      StartTime=convert_to_time(appointment.time),
                                      EndTime=convert_to_time(appointment.time + appointment.length)))
 
-    return [finalAppt, final_unscheduled]
+    return [finalAppt, final_unscheduled, reserved_appointments]
 
 
 class Nurse:
