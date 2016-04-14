@@ -78,6 +78,9 @@ body {
     text-align: center;
     font-weight: bold;
 }
+.appt-reserved{
+    opacity: .5;
+}
 a.appt:hover{
     text-decoration: none;
 }

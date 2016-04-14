@@ -87,3 +87,11 @@ class AppointmentForm(forms.Form):
 
 AppointmentFormSet = formset_factory(AppointmentForm, can_delete=True)
 
+
+class ReservedForm(forms.Form):
+    StartTime = forms.TimeField(label='Start Time')
+    EndTime = forms.TimeField(label='End Time')
+    RNNumber = forms.IntegerField(label='RN Number', min_value=0)
+    ChairNumber = forms.IntegerField(label='Chair Number', min_value=0)
+
+ReservedFormSet = formset_factory(ReservedForm, can_delete=True)
