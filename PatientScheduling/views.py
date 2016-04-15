@@ -1,8 +1,8 @@
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
-from PatientScheduling.forms import RNFormSet, AppointmentFormSet, ChairsForm
-from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment
+from PatientScheduling.forms import RNFormSet, AppointmentFormSet, ChairsForm, CompanyForm
+from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, CompanyInformation
 from PatientScheduling.Algorithm import clean_input
 
 
@@ -44,8 +44,8 @@ def new_schedule(request):
             nurses = sorted(nurses, key=lambda x: x.Team)  # sort by team for easier viewing
             context = {'RNSet': nurses, 'Chairs': chairs, 'Appointments': scheduled_appointments, 'RNSize': ctemp, 'UnschAppts' : unscheduled_appointments}
             # save to the session in case user saves calendar later
-            # request.session['nurseSchedules'] = serializers.serialize('json', nurses)
-            # request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
+            request.session['nurseSchedules'] = serializers.serialize('json', nurses)
+            request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
             return render(request, 'calendar.html', context)
         else:
             context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ChairsForm': chairs_form}
@@ -79,3 +79,21 @@ def view_schedule(request, schedule_id):
         return render(request, 'calendar.html', context)
     except:
         raise Http404("Unable to load schedule '" + schedule.Name + "'")
+
+
+def admin_page(request):
+    company_form = CompanyForm()
+    if request.method == 'POST':
+        # number_of_records = CompanyInformation.objects.count()
+        # test = CompanyInformation.objects.get(singleton_enforce=1)
+        # print test.CompanyStartHours
+        # print number_of_records
+        company_form = CompanyForm(request.POST)
+        # print company_form
+        if company_form.is_valid():
+            CompanyInformation.objects.get(singleton_enforce=1).delete()
+            company_form.save()
+            return render(request, 'home.html')
+
+    context = {'CompanyForm': company_form}
+    return render(request, 'admin_page.html', context)

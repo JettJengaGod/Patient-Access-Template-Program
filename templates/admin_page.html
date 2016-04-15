@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "Master.html" %}
+{% block title %}Admin Page{% endblock%}
+{% block content %}
+    <form method="POST" action="/admin_page/">
+    {% csrf_token %}
+    <div>
+        <h1>Additional Settings</h1>
+        <hr>
+        {% if CompanyForm.non_field_errors %}
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ CompanyForm.non_field_errors }}
+            </div>
+        {% endif %}
+        {% for field in CompanyForm %}
+            {{ field.label_tag }} {{ field }}
+            {{ field.errors }}
+        {% endfor %}
+        <hr>
+        <br>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/home/" type="button" class="btn btn-default">Cancel</a>
+    </div>
+{% endblock %}

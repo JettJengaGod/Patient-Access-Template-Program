@@ -42,3 +42,8 @@ class Appointment(models.Model):
     ChairID = models.PositiveIntegerField(default=0)
     StartTime = models.TimeField(auto_now=False)
     EndTime = models.TimeField(auto_now=False)
+
+class CompanyInformation(models.Model):
+    CompanyStartHours = models.TimeField(auto_now=False)
+    CompanyEndHours = models.TimeField(auto_now=False)
+    singleton_enforce = models.IntegerField(default=1, unique=True)

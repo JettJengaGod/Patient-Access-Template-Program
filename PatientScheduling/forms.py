@@ -3,7 +3,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.validators import RegexValidator
 from django.forms import formset_factory, ModelForm
 
-from PatientScheduling.models import NurseSchedule
+from PatientScheduling.models import NurseSchedule, CompanyInformation
 
 
 class ChairsForm(forms.Form):
@@ -14,6 +14,20 @@ class ChairsForm(forms.Form):
             min_value=1,
             max_value=99
     )
+
+class CompanyForm(ModelForm):
+    class Meta:
+        model = CompanyInformation
+        fields = ['CompanyStartHours', 'CompanyEndHours']
+
+    def clean(self):
+        # error_messages = []
+        cleaned_data = super(CompanyForm, self).clean()
+        CompanyStartHours = cleaned_data.get("CompanyStartHours")
+        CompanyEndHours = cleaned_data.get("CompanyEndHours")
+
+        if CompanyStartHours > CompanyEndHours:
+            raise forms.ValidationError('Companies cannot start after it ends')
 
 
 class RNForm(ModelForm):
