@@ -3,8 +3,8 @@ from operator import attrgetter
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
-from PatientScheduling.forms import RNFormSet, AppointmentFormSet, ChairsForm, ReservedFormSet
-from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment
+from PatientScheduling.forms import RNFormSet, AppointmentFormSet, ChairsForm, CompanyForm, ReservedFormSet
+from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, CompanyInformation
 from PatientScheduling.Algorithm import clean_input
 
 
@@ -96,3 +96,21 @@ def view_schedule(request, schedule_id):
         return render(request, 'calendar.html', context)
     except:
         raise Http404("Unable to load schedule '" + schedule.Name + "'")
+
+
+def admin_page(request):
+    company_form = CompanyForm()
+    if request.method == 'POST':
+        # number_of_records = CompanyInformation.objects.count()
+        # test = CompanyInformation.objects.get(singleton_enforce=1)
+        # print test.CompanyStartHours
+        # print number_of_records
+        company_form = CompanyForm(request.POST)
+        # print company_form
+        if company_form.is_valid():
+            CompanyInformation.objects.get(singleton_enforce=1).delete()
+            company_form.save()
+            return render(request, 'home.html')
+
+    context = {'CompanyForm': company_form}
+    return render(request, 'admin_page.html', context)
