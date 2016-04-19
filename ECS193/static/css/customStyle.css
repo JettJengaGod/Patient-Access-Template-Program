@@ -54,6 +54,11 @@ body {
     color: #ffb366;
     cursor: pointer;
 }
+.glyphicon-button-bright:hover{
+    color: #5bc0de !important;
+    cursor: pointer;
+    font-size: xx-large;
+}
 /*------------------navigation------------------*/
 .nav-tabs > li > a{
     padding-top: 5px !important;
