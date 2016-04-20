@@ -98,9 +98,9 @@
             $.ajax({
                 type: 'GET',
                 dataType: 'html',
-                url: '/check_schedule_group_name/',
+                url: '/check_schedule_group_name/', //url from url.py
                 contentType: "application/json",
-                data: {'ScheduleGroupName': ScheduleGroup},
+                data: {'ScheduleGroupName': ScheduleGroup}, //our var names
                 async: false,
                 complete: function(response, textStatus) {
                     if(textStatus != 'success')
@@ -282,3 +282,184 @@
         }
         return totalminutes * chairs;
     }
+    //------------------------------------------------------------------------------------------------------------
+
+    function GetTotalAppointmentMinutes(AppPrefix){
+        var table = document.getElementById(AppPrefix + 'Table');
+        if(table == null) return 0;
+        var totalminutes = 0;
+        for(var i=1; i < table.rows.length-1; i++){
+            var dropdown = table.rows[i].cells[1].children[0];
+            var count = table.rows[i].cells[2].children[0];
+            if (dropdown.selectedIndex < 0 || count.valueAsNumber < 1)
+                continue;
+            var mins = parseInt(dropdown.options[dropdown.selectedIndex].value);
+            totalminutes += mins  * count.valueAsNumber;
+        }
+        return totalminutes;
+    }
+    function TimeSlotNameUsed(TimeSlotGroup){
+        if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
+            var returnValue = false;
+            $.ajax({
+                type: 'GET',
+                dataType: 'html',
+                url: '/check_time_slot_group_name/', //url from url.py
+                contentType: "application/json",
+                data: {'SaveName': TimeSlotGroup}, //our var names
+                async: false,
+                complete: function(response, textStatus) {
+                    if(textStatus != 'success')
+                        return alert(textStatus + ': ' + response.responseText);
+                },
+                success: function(result) {
+                    if(result == 'True')
+                        returnValue = false; //unique
+                    else
+                        returnValue = true; //already used
+                }
+            });
+            return returnValue;
+        }
+    }
+    //for saving the time slots
+    function SaveTimeSlots(prefix, overwrite){
+        var TimeSlotGroup = $('#id_TimeSlotGroupName').val(); //grab save name from input box
+        var alert = document.getElementById("save_time_slot_alert");
+        $('#yesOverwrite').hide();
+        $('#noOverwrite').hide();
+        $('#save_alert').hide();
+        $('#id_TimeSlotGroupName').attr('readonly','readonly');
+
+        if(TimeSlotGroup.match(/[\w+\.\_]+/)) { //defining regex (stuff we accept)
+            var alreadyExists = TimeSlotNameUsed(TimeSlotGroup);
+            if(alreadyExists && overwrite == false)     //ask the user if they want to overwrite
+            {
+                $('#save_alert').show();
+                alert.innerHTML = 'That name is already used. Would you like to overwrite it?';
+                $('#yesOverwrite').show();
+                $('#noOverwrite').show();
+                return false;
+            }
+            else if(alreadyExists && overwrite == true)  //delete so we can overwrite
+            {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'html',
+                    url: '/delete_time_slot/',  //changed and is now defined in urls.py
+                    contentType: "application/json",
+                    data: {'SaveName': TimeSlotGroup} //overwrite name
+                });
+            }
+            //if we overwrite or we are successful, loop through and save values
+            var table = document.getElementById(prefix + 'Table');
+            for (var i = 1; i < table.rows.length - 1; i++) { //loop through each row and grab value in the input box
+                var row = table.rows[i];
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'html',
+                    url: '/save_time_slot/', //saved schedule*****************************
+                    contentType: "application/json",
+                    data: {'SaveName': TimeSlotGroup, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value}
+                });
+            }
+            var label = $("#pageAlert");
+            label.text(TimeSlotGroup + ' has been saved');
+            label.css("display", "block");
+            label.addClass("alert-success").removeClass("alert-danger");
+            return true;
+        }
+        else {
+            $('#id_TimeSlotGroupName').attr('readonly','false'); //if we dont accept it throw an error
+            alert.show();
+            alert.text(TimeSlotGroup + ' is not a valid ScheduleName');
+            return false;
+        }
+    }
+    function LoadTimeSlots(prefix){
+        var label = $("#pageAlert"); //hide any possible existing notifications
+        label.css("display", "none");
+        var TimeSlotGroup = $("#savedTimeSlots option:selected").html();
+        document.getElementById("pageAlert").innerHTML = ''; //clear any previous alerts
+        if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
+            $.ajax({
+                type: 'GET',
+                dataType: 'html',
+                url: '/load_time_slot_group/',
+                contentType: "application/json",
+                data: {'SaveName': TimeSlotGroup},
+                complete: function(response, textStatus) {
+                    if(textStatus != 'success')
+                        return alert(textStatus + ': ' + response.responseText);
+                },
+                success: function(result) {
+                    var objectList = JSON.parse(result);
+                    fillTimeSlots(objectList, prefix);   // need to update this funtion*************************
+                }
+            });
+        }
+    }
+    function fillTimeSlots(objectList, prefix){       //currently working on this*************
+        objectList = objectList.sort(compareTimeSlots);
+        var count = objectList.length;
+        var table = document.getElementById(prefix + 'Table');
+        var tableRows = table.rows.length - 2; //one row is header and one is add button
+
+        if(tableRows < count) //need to add rows
+            while(tableRows != count) {
+                AddRowClick(prefix);                    // may have to make my own version of this
+                tableRows++;
+            }
+        else if(tableRows > count) //need to remove extra rows
+            while(tableRows != count) {
+                RemoveRowClick(tableRows,prefix);       //// may have to make my own version of this
+                tableRows--;
+            }
+
+        for(var i = 0; i < count; i++)
+        {
+            var row = table.rows[i+1];
+            var obj = objectList[i].fields;
+            row.cells[1].firstChild.value = obj.Duration;
+            row.cells[2].firstChild.value = obj.Count;
+        }
+    }
+    //used when sorting. returns negative if s1 < s2, 0 if s1=s2, and positive if s1 > s2
+    //compares team, then StartTime
+    function compareTimeSlots(s1, s2){
+        if(s1.fields.Duration == s2.fields.Duration)
+        {
+                return 0;
+
+        }
+        else if(s1.fields.Duration > s2.fields.Duration)
+            return 1;
+        else return -1;
+    }
+
+    function LoadTimeSlotNames(){
+        $.ajax({
+            type: 'GET',
+            url: '/load_time_slot_group_names/',
+            contentType: "application/json",
+            complete: function(response, textStatus) {
+                if(textStatus != 'success')
+                    return alert(textStatus + ': ' + response.responseText);
+            },
+            success: function(result) {
+                var count = result.length;
+                var select = $('#savedTimeSlots');              // what do I put here *********************************
+
+                //clear current options
+                removeOptions(document.getElementById("savedTimeSlots"));
+
+                //add the loaded options
+                for(var i = 0; i < count; i++)
+                {
+                    var name = result[i].pk;
+                    select.append(new Option(name, name));
+                }
+            }
+        });
+    }
+

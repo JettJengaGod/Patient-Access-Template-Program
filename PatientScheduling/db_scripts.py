@@ -4,7 +4,7 @@ import string, random
 from django.db import transaction
 from django.http import HttpResponse
 from django.core import serializers
-from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule, Appointment
+from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule, Appointment, SavedTimeSlot
 
 
 def generate_key(size):
@@ -12,6 +12,7 @@ def generate_key(size):
     return ''.join(random.choice(chars) for x in range(size))
 
 # ------used to load/manage nurses and nurse schedules------- #
+
 
 def check_schedule_group_name(request):
     name = request.GET['ScheduleGroupName']
@@ -71,6 +72,63 @@ def load_schedule_group(request):
         return HttpResponse(serializers.serialize('json', rnlist), content_type="application/json")
     except (KeyError, NurseScheduleGroups.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
+
+# -------used to load/manage appointment duratoin input------ #
+
+
+def load_time_slot_group_names(request):
+    try:
+        nameslist = SavedTimeSlot.objects.filter()      # what do I put for a parameter here****************
+        jsonstring = "[]"
+        if len(nameslist) > 0:
+            jsonstring = serializers.serialize('json', nameslist)
+        return HttpResponse(jsonstring, content_type="application/json")
+    except (KeyError, SavedTimeSlot.DoesNotExist):
+        return HttpResponse(serializers.serialize('json', []), content_type="application/json")
+
+
+
+def load_time_slot_group(request):
+    name = request.GET['SaveName']
+    try:
+        time_slot_list = SavedTimeSlot.objects.filter(Name=name)
+        return HttpResponse(serializers.serialize('json', time_slot_list), content_type="application/json")
+    except (KeyError, SavedTimeSlot.DoesNotExist):
+        return HttpResponse(serializers.serialize('json', []), content_type="application/json")
+
+
+def save_time_slot(request):
+    save_name = request.GET['SaveName']
+    duration = request.GET['Duration']
+    count = request.GET['Count']
+    time_slot = SavedTimeSlot(Name=save_name, Duration=duration, Count=count)
+    time_slot.save()
+    return HttpResponse('The duration and number of the time slots: ' + save_name + 'has been saved', content_type="application/json")
+
+
+def delete_time_slot(request):
+    name = request.GET['SaveName']
+    #duration = request.GET['Duration']
+    #count = request.GET['NumTimeSlots']
+    try:
+        SavedTimeSlot.objects.get(Name=name).delete()
+    except (KeyError, SavedTimeSlot.DoesNotExist):
+        return HttpResponse('failed to delete ' + name, content_type="application/json")
+    return HttpResponse('removed all ' + name + ' schedules', content_type="application/json")
+
+
+def check_time_slot_group_name(request):
+    name = request.GET['SaveName']
+
+
+    # ---- duration = request.GET['Duration']
+    #count = request.GET['NumTimeSlots']
+    try:
+        SavedTimeSlot.objects.filter(Name=name)
+    except (KeyError, SavedTimeSlot.DoesNotExist):
+        return HttpResponse('True', content_type="application/json")  # unique Time Slot Name
+    else:
+        return HttpResponse('False', content_type="application/json")  # unique Time Slot Name
 
 
 # ------used to load/manage full schedules------- #
