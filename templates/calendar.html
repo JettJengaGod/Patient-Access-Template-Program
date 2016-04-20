@@ -68,6 +68,14 @@
     {% endif %}
     <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
 
+    {% if Drugs %}
+        <select id="drug" title="chemotherapy">
+            {% for D in Drugs %}
+                <option value="{{ D.pk }}">{{ D.Name }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
+
     {% if not Schedule %}
     <a id="saveSchd" style="float: right; margin: 4px" data-toggle="modal" data-target="#saveModal" onclick="
         $('#yesOverwrite').hide();

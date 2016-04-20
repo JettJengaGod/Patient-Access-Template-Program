@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404
 
 from PatientScheduling import UserSettings
 from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet
-from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment
+from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, ChemotherapyDrug
 from PatientScheduling.Algorithm import clean_input
 
 
@@ -55,7 +55,8 @@ def new_schedule(request):
             reserved_appointments = all_appointments[2]
             chairs = UserSettings.get("MaxChairs")
             context = {'RNSet': nurses, 'Chairs': range(0, chairs), 'Appointments': scheduled_appointments,
-                       'RNSize': chairs+1, 'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments}
+                       'RNSize': chairs+1, 'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
+                       'Drugs': ChemotherapyDrug.objects.all()}
             # -----save to the session in case user saves calendar later----- #
             request.session['nurseSchedules'] = serializers.serialize('json', nurses)
             request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
@@ -87,10 +88,8 @@ def view_schedule(request, schedule_id):
         nurse_group = schedule.NurseSchedule
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
         appointments = Appointment.objects.filter(SavedSchedule=schedule)
-        chairs = range(4)
-        # ToDo: change the way we ask the user for the number of chairs per nurse and have it be accessible here
-        ctemp = 4 + 1
-        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': chairs, 'Appointments': appointments, 'RNSize': ctemp}
+        chairs = nurse_group.Chairs
+        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments, 'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all()}
         return render(request, 'calendar.html', context)
     except:
         raise Http404("Unable to load schedule '" + schedule.Name + "'")
