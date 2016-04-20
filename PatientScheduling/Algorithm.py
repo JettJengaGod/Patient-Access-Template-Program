@@ -55,6 +55,8 @@ def clean_input(nurseSchedules, appointments, scheduled_appointments):
     tempPod = [[nurses[0]]] #first we seperate the nurses into pods
 
     for appointment in scheduled_appointments:
+        if appointment.StartTime == None or appointment.EndTime == None:
+            continue
         apptTime = convert_to_format(str(appointment.EndTime)) - convert_to_format(str(appointment.StartTime))
         if nurses[appointment.NurseScheduleID].end < convert_to_format(str(appointment.EndTime)):
             appointment.EndTime = convert_to_time(nurses[appointment.NurseScheduleID].end)

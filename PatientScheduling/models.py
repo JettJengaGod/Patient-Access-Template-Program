@@ -43,7 +43,9 @@ class Appointment(models.Model):
     StartTime = models.TimeField(auto_now=False)
     EndTime = models.TimeField(auto_now=False)
 
-class CompanyInformation(models.Model):
-    CompanyStartHours = models.TimeField(auto_now=False)
-    CompanyEndHours = models.TimeField(auto_now=False)
-    singleton_enforce = models.IntegerField(default=1, unique=True)
+
+class ChemotherapyDrug(models.Model):
+    # models.AutoField(primary_key=True) is a default field
+    Name = models.CharField(unique=True, max_length=60)
+    EarliestTime = models.TimeField(auto_now=False)
+    LatestTime = models.TimeField(auto_now=False)

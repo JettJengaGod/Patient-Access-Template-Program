@@ -2,32 +2,24 @@ from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.validators import RegexValidator
 from django.forms import formset_factory, ModelForm
+from django.utils.datetime_safe import datetime
 
-from PatientScheduling.models import NurseSchedule, CompanyInformation
+from PatientScheduling import UserSettings
+from PatientScheduling.models import NurseSchedule
 
-
-class ChairsForm(forms.Form):
-    NumberOfChairs = forms.IntegerField(
-            label='Max Number of Chairs per RN',
-            required=True,
-            initial=4,
-            min_value=1,
-            max_value=99
-    )
-
-class CompanyForm(ModelForm):
-    class Meta:
-        model = CompanyInformation
-        fields = ['CompanyStartHours', 'CompanyEndHours']
+class CompanyForm(forms.Form):
+    MaxChairs=forms.IntegerField(label="Chairs per RN", min_value=1, max_value=10, required=True)
+    OpenTime=forms.TimeField(label="Open Time", required=True)
+    CloseTime=forms.TimeField(label="Close Time", required=True)
+    DayStartDelay=forms.IntegerField(label="Start Delay", min_value=0, required=True)
+    AppointmentStagger=forms.IntegerField(label="Appointment Stagger", min_value=0, required=True)
 
     def clean(self):
-        # error_messages = []
         cleaned_data = super(CompanyForm, self).clean()
-        CompanyStartHours = cleaned_data.get("CompanyStartHours")
-        CompanyEndHours = cleaned_data.get("CompanyEndHours")
-
-        if CompanyStartHours > CompanyEndHours:
-            raise forms.ValidationError('Companies cannot start after it ends')
+        OpenTime = cleaned_data.get("OpenTime")
+        CloseTime = cleaned_data.get("CloseTime")
+        if OpenTime > CloseTime:
+            raise forms.ValidationError('The open time must be before the close time')
 
 
 class RNForm(ModelForm):
@@ -52,14 +44,19 @@ class RNForm(ModelForm):
         LunchDuration = cleaned_data.get("LunchDuration")
         EndTime = cleaned_data.get("EndTime")
 
+        OpenTime = datetime.time(datetime.strptime(UserSettings.get("OpenTime"),"%H:%M"))
+        CloseTime = datetime.time(datetime.strptime(UserSettings.get("CloseTime"),"%H:%M"))
+
         # does not conform to DRY principle?
-        if not Team or not StartTime or not LunchTime or not LunchDuration or not EndTime:
+        if not Team or not StartTime or not EndTime:
             raise forms.ValidationError('Please fill out all of the fields')
         if StartTime >= EndTime:
             error_messages.append('RNs cannot start after EndTime')
-        if LunchDuration == 0:
-            error_messages.append('RNs need a lunch break')
-        if LunchTime < StartTime or LunchTime > EndTime:
+        if StartTime < OpenTime:
+            error_messages.append('A RN can not start before the company opens at ' + OpenTime.strftime("%I:%M"))
+        if EndTime > CloseTime:
+            error_messages.append('A RN must leave before the company closes at ' + CloseTime.strftime("%I:%M"))
+        if not LunchTime or (LunchTime and (LunchTime < StartTime or LunchTime > EndTime)):
             error_messages.append('RNs need a valid lunch start time')
         if len(error_messages):
             raise forms.ValidationError(' & '.join(error_messages))

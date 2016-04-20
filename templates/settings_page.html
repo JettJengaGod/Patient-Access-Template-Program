@@ -1,7 +1,7 @@
 {% extends "Master.html" %}
-{% block title %}Admin Page{% endblock%}
+{% block title %}Settings{% endblock%}
 {% block content %}
-    <form method="POST" action="/admin_page/">
+    <form method="POST" action="/settings/">
     {% csrf_token %}
     <div>
         <h1>Additional Settings</h1>
@@ -15,10 +15,12 @@
         {% for field in CompanyForm %}
             {{ field.label }} {{ field }}
             {{ field.errors }}
+            <br><br>
         {% endfor %}
         <hr>
         <br>
         <button type="submit" class="btn btn-primary">Save</button>
         <a href="/home/" type="button" class="btn btn-default">Cancel</a>
     </div>
+    </form>
 {% endblock %}

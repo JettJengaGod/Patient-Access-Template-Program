@@ -21,10 +21,9 @@ import PatientScheduling.views
 urlpatterns = [
     url(r'^$', PatientScheduling.views.home),
     url(r'^admin/', admin.site.urls),
-    url(r'^settings/', PatientScheduling.views.admin_page),
+    url(r'^settings/', PatientScheduling.views.settings_page),
     url(r'^newSchedule/', PatientScheduling.views.new_schedule),
     url(r'^home/', PatientScheduling.views.home),
-    url(r'^generateSchedule/', PatientScheduling.views.generate_schedule),
     url(r'^savedschedules/', PatientScheduling.views.saved_schedules),
     url(r'^viewschedule/(?P<schedule_id>\d+)', PatientScheduling.views.view_schedule),
     # scripts called from ajax on newSchedule page
