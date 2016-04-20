@@ -44,13 +44,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div style="display: inline-block;">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal" onclick="
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveRNmodal" onclick="
                         $('#yesOverwrite').hide();
                         $('#noOverwrite').hide();
                         $('#save_alert').hide();"
                     >Save Nurse Schedule</button><br><br></div>
                 <div style="display: inline-block;">
-                <button type="button" class="btn btn-primary" onclick="LoadScheduleNames()" data-toggle="modal" data-target="#loadModal">Load Nurse Schedule</button><br><br></div>
+                <button type="button" class="btn btn-primary" onclick="LoadScheduleNames()" data-toggle="modal" data-target="#loadRNModal">Load Nurse Schedule</button><br><br></div>
             </div>
         </div>
         {{ RNFormSet.management_form }}
@@ -165,7 +165,7 @@
     </div>
     </form>
 
-    <div id="loadModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="loadRNModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -184,7 +184,7 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="saveRNModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -198,7 +198,7 @@
               <label id="save_alert">This is an alert!</label>
               <button id="yesOverwrite" type="button" class="btn btn-primary" data-dismiss="modal" onclick="
                     if(SaveSchedule('{{ RNFormSet.prefix }}', true))
-                            $('#saveModal').modal('hide');
+                            $('#saveRNModal').modal('hide');
                   ">Yes</button>
               <button id="noOverwrite" type="button" class="btn btn-primary" onclick="
                    $('#yesOverwrite').hide();
@@ -211,7 +211,60 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" onclick="
                     if(SaveSchedule('{{ RNFormSet.prefix }}', false))
-                        $('#saveModal').modal('hide');
+                        $('#saveRNModal').modal('hide');
+                ">Save</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="loadTimeSlotModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Load Time Slots</h4>
+          </div>
+          <div class="modal-body">
+              <label for="savedTimeSlots">Select a time slot group name:</label>
+              <select id="savedTimeSlots"></select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="LoadTimeSlots('{{ AppointmentFormSet.prefix }}')" data-dismiss="modal">Load</button> //what do i do for this  line??
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="saveTimeSlotModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Save Time Slots</h4>
+          </div>
+          <div class="modal-body">
+              <label for="id_TimeSlotGroupName">Save as: </label>
+              <input id="id_TimeSlotGroupName" type="text">
+              <br>
+              <label id="save_time_slot_alert">This is an alert!</label>
+              <button id="yesOverwrite" type="button" class="btn btn-primary" data-dismiss="modal" onclick="
+                    if(SaveTimeSlots('{{ AppointmentFormSet.prefix }}', true))                //what do i do for this line??
+                            $('#saveTimeSlotModal').modal('hide');
+                  ">Yes</button>
+              <button id="noOverwrite" type="button" class="btn btn-primary" onclick="
+                   $('#yesOverwrite').hide();
+                    $('#noOverwrite').hide();
+                    $('#save_alert').hide();
+                    $('#id_TimeSlotGroupName').attr('readonly','false');
+                ">No</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="
+                    if(SaveTimeSlots('{{ AppointmentFormSet.prefix }}', false))               ////what do i do for this line???
+                        $('#saveTimeSlotModal').modal('hide');
                 ">Save</button>
           </div>
         </div><!-- /.modal-content -->
