@@ -1,0 +1,26 @@
+{% extends "Master.html" %}
+{% block title %}Settings{% endblock%}
+{% block content %}
+    <form method="POST" action="/settings/">
+    {% csrf_token %}
+    <div>
+        <h1>Additional Settings</h1>
+        <hr>
+        {% if CompanyForm.non_field_errors %}
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ CompanyForm.non_field_errors }}
+            </div>
+        {% endif %}
+        {% for field in CompanyForm %}
+            {{ field.label }} {{ field }}
+            {{ field.errors }}
+            <br><br>
+        {% endfor %}
+        <hr>
+        <br>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/home/" type="button" class="btn btn-default">Cancel</a>
+    </div>
+    </form>
+{% endblock %}

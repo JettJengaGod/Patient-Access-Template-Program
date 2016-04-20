@@ -42,9 +42,6 @@
         <h3>RN Schedules</h3>
         <div id="pageAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
-            <div class="col-md-3">
-                {{ ChairsForm }}
-            </div>
             <div class="col-md-6">
                 <div style="display: inline-block;">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal" onclick="
@@ -71,7 +68,7 @@
             {% if form.errors %}
                 <div class="alert alert-danger">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {{ form.non_field_errors | striptags }} at Nurse {{ forloop.counter }}
+                    Nurse {{ forloop.counter }}: {{ form.non_field_errors | striptags }}
                 </div>
             {% endif %}
             <tr id="{{ RNFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ RNFormSet.prefix }}-row">
@@ -98,7 +95,7 @@
     </div>
 
     <div>
-        <h3>Pre-Reserved Time Periods</h3>
+        <h3>Reserved Time Periods</h3>
         {{ ReservedFormSet.management_form }}
         <table id="{{ ReservedFormSet.prefix }}Table" class='table table-striped'>
         <tr class="table-header">

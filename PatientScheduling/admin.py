@@ -1,3 +1,7 @@
 from django.contrib import admin
+from PatientScheduling.models import ChemotherapyDrug
 
-# Register your models here.
+
+class ChemotherapyDrugAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(ChemotherapyDrug, ChemotherapyDrugAdmin)

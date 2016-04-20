@@ -13,6 +13,7 @@ def model_one_letter(value):
 
 class NurseScheduleGroups(models.Model):
     Name = models.CharField(max_length=20, primary_key=True)
+    Chairs = models.IntegerField(null=False)
     UserCreated = models.BooleanField(default=True)
     SavedDate = models.DateTimeField(auto_now=True)
 
@@ -42,3 +43,10 @@ class Appointment(models.Model):
     ChairID = models.PositiveIntegerField(default=0)
     StartTime = models.TimeField(auto_now=False)
     EndTime = models.TimeField(auto_now=False)
+
+
+class ChemotherapyDrug(models.Model):
+    # models.AutoField(primary_key=True) is a default field
+    Name = models.CharField(unique=True, max_length=60, null=False)
+    EarliestTime = models.TimeField(auto_now=False, null=True)
+    LatestTime = models.TimeField(auto_now=False, null=True)

@@ -4,6 +4,8 @@ import string, random
 from django.db import transaction
 from django.http import HttpResponse
 from django.core import serializers
+
+from PatientScheduling import UserSettings
 from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule, Appointment
 
 
@@ -50,7 +52,7 @@ def add_to_schedule_group(request):
         group_object = NurseScheduleGroups.objects.get(Name=group_name, UserCreated=True)
     except (KeyError, NurseScheduleGroups.DoesNotExist):
         # if the name has already been used add the nurse to the group
-        group_object = NurseScheduleGroups(Name=group_name, UserCreated=True)
+        group_object = NurseScheduleGroups(Name=group_name, UserCreated=True, Chairs=UserSettings.get("MaxChairs"))
         group_object.save()
     rn = NurseSchedule(
         Team=r['Team'],
@@ -79,7 +81,7 @@ def load_schedule_group(request):
 def save_schedule(request):
     save_name = request.GET['SaveName']
     # Save the nurse schedules
-    nurse_group = NurseScheduleGroups(Name=generate_key(20), UserCreated=False)
+    nurse_group = NurseScheduleGroups(Name=generate_key(20), UserCreated=False, Chairs=UserSettings.get("MaxChairs"))
     nurse_group.save()
     for wrapper in serializers.deserialize('json', request.session.get('nurseSchedules')):
         wrapper.object.ScheduleGroupName = nurse_group
