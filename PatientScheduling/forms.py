@@ -7,6 +7,7 @@ from django.utils.datetime_safe import datetime
 from PatientScheduling import UserSettings
 from PatientScheduling.models import NurseSchedule
 
+
 class CompanyForm(forms.Form):
     MaxChairs=forms.IntegerField(label="Chairs per RN", min_value=1, max_value=10, required=True)
     OpenTime=forms.TimeField(label="Open Time", required=True)
@@ -18,8 +19,11 @@ class CompanyForm(forms.Form):
         cleaned_data = super(CompanyForm, self).clean()
         OpenTime = cleaned_data.get("OpenTime")
         CloseTime = cleaned_data.get("CloseTime")
-        if OpenTime > CloseTime:
-            raise forms.ValidationError('The open time must be before the close time')
+        try:
+            if OpenTime > CloseTime:
+                raise forms.ValidationError('The open time must be before the close time')
+        except:
+            return # allow the django alert to pop up
 
 
 class RNForm(ModelForm):

@@ -1,5 +1,16 @@
 {% extends "Master.html" %}
 {% block title %}Settings{% endblock%}
+{% block head %}
+    <script>
+        $(document).ready(function () {
+           //convert all time input to time type
+            $('input').each(function(){
+                if(this.type != 'hidden' && this.name.toUpperCase().indexOf('TIME') > 0)
+                    this.type = "time";
+            });
+        });
+    </script>
+{% endblock %}
 {% block content %}
     <form method="POST" action="/settings/">
     {% csrf_token %}
@@ -13,9 +24,11 @@
             </div>
         {% endif %}
         {% for field in CompanyForm %}
-            {{ field.label }} {{ field }}
-            {{ field.errors }}
-            <br><br>
+            <div class="form-group" style="padding-bottom: 10px; max-width: 250px;">
+                <span style="font-weight: bold">{{ field.label }}:</span><br>
+                <div class="input-wrapper">{{ field }}</div>
+                <div style="color: red;">{{ field.errors }}</div>
+              </div>
         {% endfor %}
         <hr>
         <br>
