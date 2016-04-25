@@ -108,8 +108,6 @@ def save_time_slot(request):
 
 def delete_time_slot(request):
     name = request.GET['SaveName']
-    #duration = request.GET['Duration']
-    #count = request.GET['NumTimeSlots']
     try:
         SavedTimeSlot.objects.get(Name=name).delete()
     except (KeyError, SavedTimeSlot.DoesNotExist):

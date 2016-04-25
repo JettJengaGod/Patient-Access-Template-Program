@@ -23,7 +23,7 @@
         });
         function CheckHoursUsed(){
             var appMins = GetTotalAppointmentMinutes('{{ AppointmentFormSet.prefix }}');
-            var RNMins = GetTotalRNMinutes('{{ RNFormSet.prefix }}');
+            var RNMins = GetTotalRNMinutes('{{ RNFormSet.prefix }}', Math.max({{Chairs}})+1);
             var alert = document.getElementById("appointment_alert");
             if(appMins > RNMins)
             {
@@ -132,10 +132,23 @@
     <hr>
     </div>
 
-
     <div>
         <h3>Needed Timeslots</h3>
         <div id="appointment_alert" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <div class="row">
+            <div class="col-md-6">
+                <div style="display: inline-block;">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveTimeSlotModal"
+                    onclick="$('#yesOverwrite_app').hide();
+                        $('#noOverwrite_app').hide();
+                        $('#save_app_alert').hide();
+                    ">Save Time Slots Input</button>
+                    <br><br>
+                </div>
+                <div style="display: inline-block;">
+                <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button><br><br></div>
+            </div>
+        </div>
         {{ AppointmentFormSet.management_form }}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>
@@ -226,12 +239,12 @@
             <h4 class="modal-title">Load Time Slots</h4>
           </div>
           <div class="modal-body">
-              <label for="savedTimeSlots">Select a time slot group name:</label>
+              <label for="savedTimeSlots">Select saved timeslot input:</label>
               <select id="savedTimeSlots"></select>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="LoadTimeSlots('{{ AppointmentFormSet.prefix }}')" data-dismiss="modal">Load</button> //what do i do for this  line??
+            <button type="button" class="btn btn-primary" onclick="LoadTimeSlots('{{ AppointmentFormSet.prefix }}')" data-dismiss="modal">Load</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -245,25 +258,25 @@
             <h4 class="modal-title">Save Time Slots</h4>
           </div>
           <div class="modal-body">
-              <label for="id_TimeSlotGroupName">Save as: </label>
-              <input id="id_TimeSlotGroupName" type="text">
+              <label for="TimeSlotSaveName">Save as: </label>
+              <input id="TimeSlotSaveName" type="text">
               <br>
-              <label id="save_time_slot_alert">This is an alert!</label>
-              <button id="yesOverwrite" type="button" class="btn btn-primary" data-dismiss="modal" onclick="
-                    if(SaveTimeSlots('{{ AppointmentFormSet.prefix }}', true))                //what do i do for this line??
+              <label id="save_app_alert">This is an alert!</label>
+              <button id="yesOverwrite_app" type="button" class="btn btn-primary" data-dismiss="modal" onclick="
+                    if(SaveTimeSlots('{{ AppointmentFormSet.prefix }}', true))
                             $('#saveTimeSlotModal').modal('hide');
                   ">Yes</button>
-              <button id="noOverwrite" type="button" class="btn btn-primary" onclick="
-                   $('#yesOverwrite').hide();
-                    $('#noOverwrite').hide();
-                    $('#save_alert').hide();
-                    $('#id_TimeSlotGroupName').attr('readonly','false');
+              <button id="noOverwrite_app" type="button" class="btn btn-primary" onclick="
+                    $('#yesOverwrite_app').hide();
+                    $('#noOverwrite_app').hide();
+                    $('#save_app_alert').hide();
+                    $('#TimeSlotSaveName').attr('readonly','false');
                 ">No</button>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" onclick="
-                    if(SaveTimeSlots('{{ AppointmentFormSet.prefix }}', false))               ////what do i do for this line???
+                    if(SaveTimeSlots('{{ AppointmentFormSet.prefix }}', false))
                         $('#saveTimeSlotModal').modal('hide');
                 ">Save</button>
           </div>

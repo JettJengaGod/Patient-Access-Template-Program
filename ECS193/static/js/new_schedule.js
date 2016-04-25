@@ -264,10 +264,10 @@
         }
         return totalminutes;
     }
-    function GetTotalRNMinutes(RNPrefix){
+
+    function GetTotalRNMinutes(RNPrefix, chairs){
         var table = document.getElementById(RNPrefix + 'Table');
         if(table == null) return 0;
-        var chairs = document.getElementById('id_NumberOfChairs').valueAsNumber;
         var totalminutes = 0;
         for(var i=1; i < table.rows.length-2; i++){
             var StartTime = table.rows[i].cells[3].children[0].value;
@@ -282,22 +282,9 @@
         }
         return totalminutes * chairs;
     }
+
     //------------------------------------------------------------------------------------------------------------
 
-    function GetTotalAppointmentMinutes(AppPrefix){
-        var table = document.getElementById(AppPrefix + 'Table');
-        if(table == null) return 0;
-        var totalminutes = 0;
-        for(var i=1; i < table.rows.length-1; i++){
-            var dropdown = table.rows[i].cells[1].children[0];
-            var count = table.rows[i].cells[2].children[0];
-            if (dropdown.selectedIndex < 0 || count.valueAsNumber < 1)
-                continue;
-            var mins = parseInt(dropdown.options[dropdown.selectedIndex].value);
-            totalminutes += mins  * count.valueAsNumber;
-        }
-        return totalminutes;
-    }
     function TimeSlotNameUsed(TimeSlotGroup){
         if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
             var returnValue = false;
@@ -322,23 +309,22 @@
             return returnValue;
         }
     }
-    //for saving the time slots
     function SaveTimeSlots(prefix, overwrite){
-        var TimeSlotGroup = $('#id_TimeSlotGroupName').val(); //grab save name from input box
-        var alert = document.getElementById("save_time_slot_alert");
-        $('#yesOverwrite').hide();
-        $('#noOverwrite').hide();
-        $('#save_alert').hide();
-        $('#id_TimeSlotGroupName').attr('readonly','readonly');
+        var SaveName = $('#TimeSlotSaveName').val(); //grab save name from input box
+        var alert = document.getElementById("save_app_alert");
+        $('#yesOverwrite_app').hide();
+        $('#noOverwrite_app').hide();
+        $('#save_app_alert').hide();
+        $('#TimeSlotSaveName').attr('readonly','readonly');
 
-        if(TimeSlotGroup.match(/[\w+\.\_]+/)) { //defining regex (stuff we accept)
-            var alreadyExists = TimeSlotNameUsed(TimeSlotGroup);
+        if(SaveName.match(/[\w+\.\_]+/)) { //defining regex (stuff we accept)
+            var alreadyExists = TimeSlotNameUsed(SaveName);
             if(alreadyExists && overwrite == false)     //ask the user if they want to overwrite
             {
-                $('#save_alert').show();
+                 $('#yesOverwrite_app').show();
+                $('#noOverwrite_app').show();
+                $('#save_app_alert').show();
                 alert.innerHTML = 'That name is already used. Would you like to overwrite it?';
-                $('#yesOverwrite').show();
-                $('#noOverwrite').show();
                 return false;
             }
             else if(alreadyExists && overwrite == true)  //delete so we can overwrite
@@ -348,7 +334,7 @@
                     dataType: 'html',
                     url: '/delete_time_slot/',  //changed and is now defined in urls.py
                     contentType: "application/json",
-                    data: {'SaveName': TimeSlotGroup} //overwrite name
+                    data: {'SaveName': SaveName} //overwrite name
                 });
             }
             //if we overwrite or we are successful, loop through and save values
@@ -360,27 +346,27 @@
                     dataType: 'html',
                     url: '/save_time_slot/', //saved schedule*****************************
                     contentType: "application/json",
-                    data: {'SaveName': TimeSlotGroup, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value}
+                    data: {'SaveName': SaveName, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value}
                 });
             }
-            var label = $("#pageAlert");
-            label.text(TimeSlotGroup + ' has been saved');
+            var label = $("#appointment_alert");
+            label.text(SaveName + ' has been saved');
             label.css("display", "block");
             label.addClass("alert-success").removeClass("alert-danger");
             return true;
         }
         else {
-            $('#id_TimeSlotGroupName').attr('readonly','false'); //if we dont accept it throw an error
+            $('#TimeSlotSaveName').attr('readonly','false'); //if we dont accept it throw an error
             alert.show();
-            alert.text(TimeSlotGroup + ' is not a valid ScheduleName');
+            alert.text(SaveName + ' is not a valid ScheduleName');
             return false;
         }
     }
     function LoadTimeSlots(prefix){
-        var label = $("#pageAlert"); //hide any possible existing notifications
-        label.css("display", "none");
+        var alert = document.getElementById("appointment_alert");
+        alert.innerHTML = ''; //clear any previous alerts
+        $(alert).css("display", "none");//hide any possible existing notifications
         var TimeSlotGroup = $("#savedTimeSlots option:selected").html();
-        document.getElementById("pageAlert").innerHTML = ''; //clear any previous alerts
         if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
             $.ajax({
                 type: 'GET',
@@ -390,16 +376,20 @@
                 data: {'SaveName': TimeSlotGroup},
                 complete: function(response, textStatus) {
                     if(textStatus != 'success')
-                        return alert(textStatus + ': ' + response.responseText);
+                        alert(textStatus + ': ' + response.responseText);
                 },
                 success: function(result) {
                     var objectList = JSON.parse(result);
-                    fillTimeSlots(objectList, prefix);   // need to update this funtion*************************
+                    fillTimeSlots(objectList, prefix);
                 }
             });
         }
+        else{
+            alert.innerHTML = "Not a valid save name";
+            $(alert).css("display", "block");
+        }
     }
-    function fillTimeSlots(objectList, prefix){       //currently working on this*************
+    function fillTimeSlots(objectList, prefix){
         objectList = objectList.sort(compareTimeSlots);
         var count = objectList.length;
         var table = document.getElementById(prefix + 'Table');
@@ -448,17 +438,12 @@
             },
             success: function(result) {
                 var count = result.length;
-                var select = $('#savedTimeSlots');              // what do I put here *********************************
-
+                var select = $('#savedTimeSlots');
                 //clear current options
                 removeOptions(document.getElementById("savedTimeSlots"));
-
                 //add the loaded options
                 for(var i = 0; i < count; i++)
-                {
-                    var name = result[i].pk;
-                    select.append(new Option(name, name));
-                }
+                    select.append(new Option(result[i].fields.Name, result[i].pk));
             }
         });
     }
