@@ -23,7 +23,7 @@
         });
         function CheckHoursUsed(){
             var appMins = GetTotalAppointmentMinutes('{{ AppointmentFormSet.prefix }}');
-            var RNMins = GetTotalRNMinutes('{{ RNFormSet.prefix }}', Math.max({{Chairs}})+1);
+            var RNMins = GetTotalRNMinutes('{{ RNFormSet.prefix }}', {{Chairs}}[{{Chairs}}.length -1]+1); //very dirty but it works
             var alert = document.getElementById("appointment_alert");
             if(appMins > RNMins)
             {
@@ -119,7 +119,7 @@
                     </button>
                 </td>
                 <td>{{ form.RNNumber }}</td>
-                <td>{{ form.ChairNumber }}</td>
+                <td class="input-fill-cell">{{ form.ChairNumber }}</td>
                 <td class="time_input">{{ form.StartTime }}</td>
                 <td class="time_input">{{ form.EndTime }}</td>
             </tr>

@@ -103,6 +103,8 @@ class ReservedForm(forms.Form):
     StartTime = forms.TimeField(label='Start Time')
     EndTime = forms.TimeField(label='End Time')
     RNNumber = forms.IntegerField(label='RN Number', min_value=0)
-    ChairNumber = forms.IntegerField(label='Chair Number', min_value=0)
+    ChairNumber = forms.ChoiceField(label='Chair Number',
+                                    choices=[(str(n),n) for n in range(1, UserSettings.get("MaxChairs")+1)])
+
 
 ReservedFormSet = formset_factory(ReservedForm, can_delete=True)

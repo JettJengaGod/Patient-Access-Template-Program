@@ -59,6 +59,10 @@ body {
     cursor: pointer;
     font-size: xx-large;
 }
+/*------------------new_schedule page------------------*/
+.input-fill-cell > input, .input-fill-cell > select{ /*ensures that input within a cell spans full cell*/
+    width: 100%;
+}
 /*------------------navigation------------------*/
 .nav-tabs > li > a{
     padding-top: 5px !important;

@@ -13,6 +13,7 @@ from PatientScheduling.Algorithm import clean_input
 
 
 def new_schedule(request):
+    chairs = UserSettings.get("MaxChairs")
     if request.method == 'POST':  # if this is a POST request we need to process the form data
         rn_form = RNFormSet(request.POST, prefix='RN')
         app_form = AppointmentFormSet(request.POST, prefix='APP')
@@ -53,8 +54,7 @@ def new_schedule(request):
             scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
             unscheduled_appointments = all_appointments[1]
             reserved_appointments = all_appointments[2]
-            chairs = UserSettings.get("MaxChairs")
-            context = {'RNSet': nurses, 'Chairs': range(0, chairs), 'Appointments': scheduled_appointments,
+            context = {'RNSet': nurses, 'RNSize': chairs+1, 'Appointments': scheduled_appointments,
                        'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
                        'Drugs': ChemotherapyDrug.objects.all()}
             # -----save to the session in case user saves calendar later----- #
@@ -62,13 +62,13 @@ def new_schedule(request):
             request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
             return render(request, 'calendar.html', context)
         # end if form is valid
-        context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
+        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
         return render(request, 'new_schedule.html', context)
     else:  # not post
         rn_form = RNFormSet(prefix='RN')
         app_form = AppointmentFormSet(prefix='APP')
         reserved_form = ReservedFormSet(prefix='RESERVED')
-        context = {'RNFormSet': rn_form, 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
+        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
         return render(request, 'new_schedule.html', context)
 
 
