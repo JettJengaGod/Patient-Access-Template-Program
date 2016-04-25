@@ -55,7 +55,7 @@ def new_schedule(request):
             reserved_appointments = all_appointments[2]
             chairs = UserSettings.get("MaxChairs")
             context = {'RNSet': nurses, 'Chairs': range(0, chairs), 'Appointments': scheduled_appointments,
-                       'RNSize': chairs+1, 'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
+                       'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
                        'Drugs': ChemotherapyDrug.objects.all()}
             # -----save to the session in case user saves calendar later----- #
             request.session['nurseSchedules'] = serializers.serialize('json', nurses)
