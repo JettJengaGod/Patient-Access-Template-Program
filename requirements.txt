@@ -6,3 +6,4 @@ simplejson==3.8.2
 virtualenv==15.0.0
 whitenoise==2.0.6
 psycopg2==2.5.3
+PyYAML==3.11
