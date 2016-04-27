@@ -57,5 +57,5 @@ class Appointment(models.Model):
 class ChemotherapyDrug(models.Model):
     # models.AutoField(primary_key=True) is a default field
     Name = models.CharField(unique=True, max_length=60, null=False)
-    EarliestTime = models.TimeField(auto_now=False, null=True)
-    LatestTime = models.TimeField(auto_now=False, null=True)
+    EarliestTime = models.TimeField(auto_now=False, null=True, blank=True)
+    LatestTime = models.TimeField(auto_now=False, null=True, blank=True)
