@@ -29,6 +29,15 @@
             <div class="header-title">
                 <h3>PATIENT SCHEDULING APPLICATION</h3>
                 <div ></div>
+                {% if user.is_authenticated %}
+                <a type="button" class="btn glyphicon-button-bright" aria-label="Left Align" href="{% url 'logout' %}"
+                    style="background-color: transparent; font-size: x-large; color:white;">
+                    Logout</a>
+                {% else %}
+                <a type="button" class="btn glyphicon-button-bright" aria-label="Left Align" href="{% url 'login' %}"
+                    style="background-color: transparent; font-size: x-large; color:white;">
+                    Login</a>
+                {% endif %}
                 <a type="button" class="btn glyphicon-button-bright" target="_blank" aria-label="Left Align" href="/settings/"
                         style="background-color: transparent; font-size: x-large; position: absolute; top:0; right:0; color:white;">
                   <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
