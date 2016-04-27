@@ -98,9 +98,9 @@
             $.ajax({
                 type: 'GET',
                 dataType: 'html',
-                url: '/check_schedule_group_name/',
+                url: '/check_schedule_group_name/', //url from url.py
                 contentType: "application/json",
-                data: {'ScheduleGroupName': ScheduleGroup},
+                data: {'ScheduleGroupName': ScheduleGroup}, //our var names
                 async: false,
                 complete: function(response, textStatus) {
                     if(textStatus != 'success')
@@ -264,10 +264,10 @@
         }
         return totalminutes;
     }
-    function GetTotalRNMinutes(RNPrefix){
+
+    function GetTotalRNMinutes(RNPrefix, chairs){
         var table = document.getElementById(RNPrefix + 'Table');
         if(table == null) return 0;
-        var chairs = document.getElementById('id_NumberOfChairs').valueAsNumber;
         var totalminutes = 0;
         for(var i=1; i < table.rows.length-2; i++){
             var StartTime = table.rows[i].cells[3].children[0].value;
@@ -282,3 +282,169 @@
         }
         return totalminutes * chairs;
     }
+
+    //------------------------------------------------------------------------------------------------------------
+
+    function TimeSlotNameUsed(TimeSlotGroup){
+        if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
+            var returnValue = false;
+            $.ajax({
+                type: 'GET',
+                dataType: 'html',
+                url: '/check_time_slot_group_name/', //url from url.py
+                contentType: "application/json",
+                data: {'SaveName': TimeSlotGroup}, //our var names
+                async: false,
+                complete: function(response, textStatus) {
+                    if(textStatus != 'success')
+                        return alert(textStatus + ': ' + response.responseText);
+                },
+                success: function(result) {
+                    if(result == 'True')
+                        returnValue = false; //unique
+                    else
+                        returnValue = true; //already used
+                }
+            });
+            return returnValue;
+        }
+    }
+    function SaveTimeSlots(prefix, overwrite){
+        var SaveName = $('#TimeSlotSaveName').val(); //grab save name from input box
+        var alert = document.getElementById("save_app_alert");
+        $('#yesOverwrite_app').hide();
+        $('#noOverwrite_app').hide();
+        $('#save_app_alert').hide();
+        $('#TimeSlotSaveName').attr('readonly','readonly');
+
+        if(SaveName.match(/[\w+\.\_]+/)) { //defining regex (stuff we accept)
+            var alreadyExists = TimeSlotNameUsed(SaveName);
+            if(alreadyExists && overwrite == false)     //ask the user if they want to overwrite
+            {
+                 $('#yesOverwrite_app').show();
+                $('#noOverwrite_app').show();
+                $('#save_app_alert').show();
+                alert.innerHTML = 'That name is already used. Would you like to overwrite it?';
+                return false;
+            }
+            else if(alreadyExists && overwrite == true)  //delete so we can overwrite
+            {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'html',
+                    url: '/delete_time_slot/',  //changed and is now defined in urls.py
+                    contentType: "application/json",
+                    data: {'SaveName': SaveName} //overwrite name
+                });
+            }
+            //if we overwrite or we are successful, loop through and save values
+            var table = document.getElementById(prefix + 'Table');
+            for (var i = 1; i < table.rows.length - 1; i++) { //loop through each row and grab value in the input box
+                var row = table.rows[i];
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'html',
+                    url: '/save_time_slot/', //saved schedule*****************************
+                    contentType: "application/json",
+                    data: {'SaveName': SaveName, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value}
+                });
+            }
+            var label = $("#appointment_alert");
+            label.text(SaveName + ' has been saved');
+            label.css("display", "block");
+            label.addClass("alert-success").removeClass("alert-danger");
+            return true;
+        }
+        else {
+            $('#TimeSlotSaveName').attr('readonly','false'); //if we dont accept it throw an error
+            alert.show();
+            alert.text(SaveName + ' is not a valid ScheduleName');
+            return false;
+        }
+    }
+    function LoadTimeSlots(prefix){
+        var alert = document.getElementById("appointment_alert");
+        alert.innerHTML = ''; //clear any previous alerts
+        $(alert).css("display", "none");//hide any possible existing notifications
+        var TimeSlotGroup = $("#savedTimeSlots option:selected").html();
+        if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
+            $.ajax({
+                type: 'GET',
+                dataType: 'html',
+                url: '/load_time_slot_group/',
+                contentType: "application/json",
+                data: {'SaveName': TimeSlotGroup},
+                complete: function(response, textStatus) {
+                    if(textStatus != 'success')
+                        alert(textStatus + ': ' + response.responseText);
+                },
+                success: function(result) {
+                    var objectList = JSON.parse(result);
+                    fillTimeSlots(objectList, prefix);
+                }
+            });
+        }
+        else{
+            alert.innerHTML = "Not a valid save name";
+            $(alert).css("display", "block");
+        }
+    }
+    function fillTimeSlots(objectList, prefix){
+        objectList = objectList.sort(compareTimeSlots);
+        var count = objectList.length;
+        var table = document.getElementById(prefix + 'Table');
+        var tableRows = table.rows.length - 2; //one row is header and one is add button
+
+        if(tableRows < count) //need to add rows
+            while(tableRows != count) {
+                AddRowClick(prefix);                    // may have to make my own version of this
+                tableRows++;
+            }
+        else if(tableRows > count) //need to remove extra rows
+            while(tableRows != count) {
+                RemoveRowClick(tableRows,prefix);       //// may have to make my own version of this
+                tableRows--;
+            }
+
+        for(var i = 0; i < count; i++)
+        {
+            var row = table.rows[i+1];
+            var obj = objectList[i].fields;
+            row.cells[1].firstChild.value = obj.Duration;
+            row.cells[2].firstChild.value = obj.Count;
+        }
+    }
+    //used when sorting. returns negative if s1 < s2, 0 if s1=s2, and positive if s1 > s2
+    //compares team, then StartTime
+    function compareTimeSlots(s1, s2){
+        if(s1.fields.Duration == s2.fields.Duration)
+        {
+                return 0;
+
+        }
+        else if(s1.fields.Duration > s2.fields.Duration)
+            return 1;
+        else return -1;
+    }
+
+    function LoadTimeSlotNames(){
+        $.ajax({
+            type: 'GET',
+            url: '/load_time_slot_group_names/',
+            contentType: "application/json",
+            complete: function(response, textStatus) {
+                if(textStatus != 'success')
+                    return alert(textStatus + ': ' + response.responseText);
+            },
+            success: function(result) {
+                var count = result.length;
+                var select = $('#savedTimeSlots');
+                //clear current options
+                removeOptions(document.getElementById("savedTimeSlots"));
+                //add the loaded options
+                for(var i = 0; i < count; i++)
+                    select.append(new Option(result[i].fields.Name, result[i].pk));
+            }
+        });
+    }
+

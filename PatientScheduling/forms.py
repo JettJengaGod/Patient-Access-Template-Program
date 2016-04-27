@@ -7,6 +7,7 @@ from django.utils.datetime_safe import datetime
 from PatientScheduling import UserSettings
 from PatientScheduling.models import NurseSchedule
 
+
 class CompanyForm(forms.Form):
     MaxChairs=forms.IntegerField(label="Chairs per RN", min_value=1, max_value=10, required=True)
     OpenTime=forms.TimeField(label="Open Time", required=True)
@@ -18,8 +19,11 @@ class CompanyForm(forms.Form):
         cleaned_data = super(CompanyForm, self).clean()
         OpenTime = cleaned_data.get("OpenTime")
         CloseTime = cleaned_data.get("CloseTime")
-        if OpenTime > CloseTime:
-            raise forms.ValidationError('The open time must be before the close time')
+        try:
+            if OpenTime > CloseTime:
+                raise forms.ValidationError('The open time must be before the close time')
+        except:
+            return # allow the django alert to pop up
 
 
 class RNForm(ModelForm):
@@ -100,9 +104,23 @@ AppointmentFormSet = formset_factory(AppointmentForm, can_delete=True)
 
 
 class ReservedForm(forms.Form):
-    StartTime = forms.TimeField(label='Start Time')
-    EndTime = forms.TimeField(label='End Time')
-    RNNumber = forms.IntegerField(label='RN Number', min_value=0)
-    ChairNumber = forms.IntegerField(label='Chair Number', min_value=0)
+    StartTime = forms.TimeField(label='Start Time', required=False)
+    EndTime = forms.TimeField(label='End Time', required=False)
+    RNNumber = forms.IntegerField(label='RN Number', min_value=0, required=False)
+    ChairNumber = forms.ChoiceField(label='Chair Number', required=False,
+                                    choices=[(str(n),int(n)) for n in range(1, UserSettings.get("MaxChairs")+1)])
+    def clean(self):
+        cleaned_data = super(ReservedForm, self).clean()
+        StartTime = cleaned_data.get("StartTime")
+        EndTime = cleaned_data.get("EndTime")
+        RNNumber = cleaned_data.get("EndTime")
+        try:
+            if StartTime > EndTime:
+                raise forms.ValidationError('The start time must be before the end time')
+            if RNNumber != None and (StartTime == None or EndTime == None):
+                raise forms.ValidationError('Please complete all fields')
+        except:
+            return # allow the django alert to pop up
+
 
 ReservedFormSet = formset_factory(ReservedForm, can_delete=True)

@@ -59,6 +59,14 @@ body {
     cursor: pointer;
     font-size: xx-large;
 }
+/*------------------new_schedule page & settings_page------------------*/
+input, select{
+    width: 100%;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc
+}
+
 /*------------------navigation------------------*/
 .nav-tabs > li > a{
     padding-top: 5px !important;

@@ -31,9 +31,17 @@ class NurseSchedule(models.Model):
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
     ScheduleGroupName = models.ForeignKey(NurseScheduleGroups)
     StartTime = models.TimeField(auto_now=False, default='08:00')
-    LunchTime = models.TimeField(auto_now=False, default='12:00')
-    LunchDuration = models.PositiveIntegerField(default=60)
+    LunchTime = models.TimeField(auto_now=False, default='12:00', null=True)
+    LunchDuration = models.PositiveIntegerField(default=60, null=True)
     EndTime = models.TimeField(auto_now=False, default='16:00')
+
+
+class SavedTimeSlot(models.Model):
+    # models.AutoField(primary_key=True) is a default field
+    Name = models.CharField(max_length=20, unique=False)
+    SavedDate = models.DateTimeField(auto_now=True)
+    Duration = models.IntegerField(default=0)
+    Count = models.IntegerField(default=0)
 
 
 class Appointment(models.Model):
@@ -43,6 +51,7 @@ class Appointment(models.Model):
     ChairID = models.PositiveIntegerField(default=0)
     StartTime = models.TimeField(auto_now=False)
     EndTime = models.TimeField(auto_now=False)
+    SaveName = models.CharField(max_length=20, primary_key=True)
 
 
 class ChemotherapyDrug(models.Model):
