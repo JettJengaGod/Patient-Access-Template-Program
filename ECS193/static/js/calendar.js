@@ -52,7 +52,7 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime, closeTime)
         //Mark times after RN leaves as unavailable
         var endTimeIndex = endTime.split(':')[0]-offset;
         var endTimePercent = (endTime.split(':')[1])/60;
-        if(endTimePercent == 0)
+        if(endTimePercent == 0 && endTimeIndex <= maxCellIndex)
             AddFill(row.cells[endTimeIndex++],1,'unavailable',true);
         else if(endTimePercent > 0)
             AddFill(row.cells[endTimeIndex++],1 - endTimePercent,'unavailable',false);
