@@ -1,6 +1,8 @@
 from operator import attrgetter
 
 import time
+
+from datetime import datetime
 import yaml
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -54,9 +56,16 @@ def new_schedule(request):
             scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
             unscheduled_appointments = all_appointments[1]
             reserved_appointments = all_appointments[2]
+            maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
+            if maxtime.minute == 0:
+                maxhour = maxtime.hour - 1
+            else:
+                maxhour = maxtime.hour
+            mintime = min(nurses, key=attrgetter('StartTime')).StartTime
             context = {'RNSet': nurses, 'RNSize': chairs+1, 'Appointments': scheduled_appointments, 'Chairs': range(0, chairs),
                        'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
-                       'Drugs': ChemotherapyDrug.objects.all()}
+                       'Drugs': ChemotherapyDrug.objects.all(),
+                       'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
             # -----save to the session in case user saves calendar later----- #
             request.session['nurseSchedules'] = serializers.serialize('json', nurses)
             request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
@@ -89,7 +98,15 @@ def view_schedule(request, schedule_id):
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
         appointments = Appointment.objects.filter(SavedSchedule=schedule)
         chairs = nurse_group.Chairs
-        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments, 'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all()}
+        maxtime = max(nurses, key=attrgetter('EndTime'))
+        if maxtime.minute == 0:
+            maxhour = maxtime.hour - 1
+        else:
+            maxhour = maxtime.hour
+        mintime = min(nurses, key=attrgetter('StartTime'))
+        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments,
+                   'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all(),
+                   'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
         return render(request, 'calendar.html', context)
     except:
         raise Http404("Unable to load schedule '" + schedule.Name + "'")
@@ -125,3 +142,22 @@ def settings_page(request):
                 return render(request, 'home.html')
     context = {'CompanyForm': company_form}
     return render(request, 'settings_page.html', context)
+
+
+def getHourRange(mintime, maxtime):
+    if maxtime.minute == 0:
+        maxtime = maxtime.hour - 1
+    else:
+        maxtime = maxtime.hour
+    mintime = mintime.hour
+    if maxtime <= 12:
+        return range(mintime, maxtime+1)
+    else:
+        maxtime = maxtime - 12
+    if mintime > 12:
+        mintime = mintime - 12
+        return range(mintime, maxtime)
+
+    morning = range(mintime, 13)
+    evening = range(1, maxtime+1)
+    return morning + evening
