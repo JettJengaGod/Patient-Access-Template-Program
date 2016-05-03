@@ -1,4 +1,9 @@
 
+
+function DrugSelected(){
+
+}
+
 //Color when nurses are available and are gone
 function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime, closeTime) {
     var table = document.getElementById("calendar");
