@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', PatientScheduling.views.home),
     url(r'^admin/', admin.site.urls),
     url(r'^settings/', PatientScheduling.views.settings_page),
+    url(r'^guide/', PatientScheduling.views.guide),
     url(r'^newSchedule/', PatientScheduling.views.new_schedule),
     url(r'^home/', PatientScheduling.views.home),
     url(r'^savedschedules/', PatientScheduling.views.saved_schedules),

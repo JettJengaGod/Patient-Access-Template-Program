@@ -144,6 +144,10 @@ def settings_page(request):
     return render(request, 'settings_page.html', context)
 
 
+def guide(request):
+    return render(request, 'documentation.html')
+
+
 def getHourRange(mintime, maxtime):
     if maxtime.minute == 0:
         maxtime = maxtime.hour - 1

@@ -181,3 +181,25 @@ a.appt:focus{
     font-size: xx-large;
     margin: 0px;
 }
+/*--------------used on the home page--------------*/
+/* sidebar */
+.bs-docs-sidebar {
+    padding-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-left: solid lightgrey 1px;
+}
+/* all links */
+.bs-docs-sidebar .nav>li>a {
+    color: #999;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 400;
+}
+/* nested links */
+.bs-docs-sidebar .nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 13px;
+}
