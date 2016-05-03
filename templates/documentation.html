@@ -1,0 +1,58 @@
+{% extends "Master.html" %}
+
+{% block title %}New Schedule{% endblock %}
+{% block head %}
+    <script>
+        $(document).ready(function(){
+            $('#mainNav').hide();
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <!--Main Content -->
+        <div class="col-md-9" role="main">
+            <section id="GroupA" class="group">
+                <h3>GroupA</h3>
+                dasdasdas dsadasd dsadasdasdsaddsadas
+            </section>
+            <section id="GroupB" class="group">
+
+            </section>
+            <section id="GroupC" class="group">
+
+            </section>
+        </div>
+        <!--Nav Bar -->
+        <div class="col-md-3 hidden-print hidden-xs">
+        <nav class="bs-docs-sidebar affix">
+            <ul class="nav nav-stacked fixed">
+                <li><a>Application Purpose</a></li>
+                <li><a>Preface</a>
+                    <ul class="nav nav-stacked">
+                        <li><a>Vocabulary</a></li>
+                        <li><a>Navigation</a></li>
+                    </ul>
+                </li>
+                <li><a>Functionality</a>
+                    <ul class="nav nav-stacked">
+                        <li><a>Creating new Schedule</a></li>
+                        <li><a>Calendar View</a></li>
+                        <li><a>Saved Schedules</a></li>
+                        <li><a>Settings</a></li>
+                        <li><a>Admin Page</a></li>
+                    </ul>
+                </li>
+                <li><a>Distribution</a>
+                    <ul class="nav nav-stacked">
+                        <li><a>Code Location</a></li>
+                        <li><a>Technology Overview</a></li>
+                        <li><a>Database</a></li>
+                    </ul>
+                </li>
+                <li><a>Meet the Creators</a></li>
+            </ul>
+        </nav>
+        </div>
+    </div>
+{% endblock %}

@@ -7,15 +7,15 @@
     <script>
         $(document).ready(function(){
             {% for Appt in Appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }});
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }}, {{ closeTime }});
             {% endfor %}
 
             {% for RN in RNSet %}
-                BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}');
+                BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}', {{ closeTime }});
             {% endfor %}
 
             {% for Appt in reserved_appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', "reserved{{ forloop.counter }}");
+                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', "reserved{{ forloop.counter }}", {{ closeTime }});
                 Reserve("reserved{{ forloop.counter }}");
             {% endfor %}
 
@@ -94,21 +94,14 @@
     <table id="calendar" class="table table-bordered table-responsive" width="100%">
         <tr style="background-color: beige">
             <th>Pod</th>
-            <th>8:00</th>
-            <th>9:00</th>
-            <th>10:00</th>
-            <th>11:00</th>
-            <th>12:00</th>
-            <th>1:00</th>
-            <th>2:00</th>
-            <th>3:00</th>
-            <th>4:00</th>
-            <th>5:00</th>
+            {% for hour in DayDuration %}
+                <th>{{ hour }}:00</th>
+            {% endfor %}
         </tr>
         {% for RN in RNSet %}
             {% ifchanged RN.Team %}
                 <tr id="collapse-row-{{ forloop.counter }}" onclick="rowSelect({{ forloop.counter }},4)" class="table-grouper">
-                    <td colspan="11">
+                    <td colspan="100%">
                         <span id="arrow-{{ forloop.counter }}" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;
                         Pod {{ RN.Team }}
                     </td>
@@ -119,16 +112,9 @@
             </tr>
             {% for i in Chairs %}
                 <tr id="RN-{{ forloop.parentloop.counter }}-row-{{ i }}">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    {% for hour in DayDuration %}
+                        <td></td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
         {% endfor %}
