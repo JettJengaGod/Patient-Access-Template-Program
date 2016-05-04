@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from PatientScheduling.models import ChemotherapyDrug, NurseScheduleGroups, SavedTimeSlot
 
@@ -26,10 +27,14 @@ class TimeSlotGroupAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         # qs = super(RNScheduleAdmin, self).get_queryset(request)
-        qs = SavedTimeSlot.objects.all().distinct('Name')
+        qs = SavedTimeSlot.objects.order_by('Name').distinct('Name') # will only work on PostgreSQL
         return qs
     def has_add_permission(self, request):
         return False
+    def has_module_permission(self, request):
+        if settings.DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql':
+            return False
+        return True
     def delete_model(self, request, obj):
         SavedTimeSlot.objects.filter(Name=obj.Name).delete()
 
