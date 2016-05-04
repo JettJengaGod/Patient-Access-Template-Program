@@ -13,11 +13,6 @@ from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, 
 from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, ChemotherapyDrug
 from PatientScheduling.Algorithm import clean_input
 
-
-def login_view(request):
-
-   return
-
 @login_required
 def new_schedule(request):
     chairs = UserSettings.get("MaxChairs")
@@ -78,7 +73,7 @@ def new_schedule(request):
         context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
         return render(request, 'new_schedule.html', context)
 
-
+@login_required
 def home(request):
     return render(request, 'home.html')
 

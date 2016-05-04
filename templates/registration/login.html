@@ -1,32 +1,65 @@
 {% extends "Master.html" %}
-{% block title %}Login{% endblock%}
+{% block title %}Login{% endblock %}
+
+
+{% block head %}
+    {% load static from staticfiles %}
+    <script>
+        $(document).ready(function(){
+            $('nav').hide();
+        });
+    </script>
+{% endblock %}
 {% block content %}
-    {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-        {{ form.errors }}
-    {% endif %}
-    {% if next %}
-        {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page.
-                To proceed, please login with an account that has access.</p>
-        {% else %}
-            <p>Please login to see this page.</p>
+<div id="login-container">
+
+    <div id="login-header">
+        <div id="login-header-branding">
+            <h1 id="site-name">
+                <p>Patient Scheduling Application Login</p>
+            </h1>
+        </div>
+    </div>
+    <div id="login-content">
+        {% if form.errors and not form.non_field_errors %}
+        <p class="errornote">
+        Please correct the errors below.
+        </p>
         {% endif %}
-    {% endif %}
-    <form method="POST" action="{% url 'login' %}">
-    {% csrf_token %}
-    <table>
-    <tr>
-        <td>{{ form.username.label_tag }}</td>
-        <td>{{ form.username }}</td>
-    </tr>
-    <tr>
-        <td>{{ form.password.label_tag }}</td>
-        <td>{{ form.password }}</td>
-    </tr>
-    </table>
 
-    <button type="submit" class="btn btn-primary">Login</button>
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <p class="errornote">
+            {{ error }}
+        </p>
+        {% endfor %}
+        {% endif %}
 
-    </form>
+        <div id="login-content-main">
+            {% if user.is_authenticated %}
+            <p class="errornote">
+            What you doing fool.
+            </p>
+            {% endif %}
+
+            <form method="POST" action="{% url 'login' %}" id="login-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    {{ form.username.errors }}
+                    {{ form.username.label_tag }} {{ form.username }}
+                </div>
+                <div class="form-row">
+                    {{ form.password.errors }}
+                    {{ form.password.label_tag }} {{ form.password }}
+                </div>
+                <div class="submit-row">
+                    <label>&nbsp;</label><button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="login-footer"></div>
+</div>
+
+
 {% endblock %}
