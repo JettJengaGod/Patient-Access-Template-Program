@@ -115,31 +115,29 @@ def view_schedule(request, schedule_id):
 def settings_page(request):
     company_form = CompanyForm()
     if request.method != 'POST':
-        with open('UserSettings', 'r') as f:
-            set = yaml.load(f)
-        if set:
+        sett = UserSettings.getAll()
+        if sett:
             company_form = CompanyForm\
                 (initial={
-                    'MaxChairs': set["MaxChairs"],
-                    'OpenTime': set["OpenTime"],
-                    'CloseTime': set["CloseTime"],
-                    'DayStartDelay': set["DayStartDelay"],
-                    'AppointmentStagger': set["AppointmentStagger"]
+                    'MaxChairs': sett["MaxChairs"],
+                    'OpenTime': sett["OpenTime"],
+                    'CloseTime': sett["CloseTime"],
+                    'DayStartDelay': sett["DayStartDelay"],
+                    'AppointmentStagger': sett["AppointmentStagger"]
                 }) # set: {'name': val}
     else: # if this is a POST request we need to process the form data
         company_form = CompanyForm(request.POST)
         if company_form.is_valid():
             cd = company_form.cleaned_data
-            with open('UserSettings', 'w') as f:
-                settings = {
+            settings = {
                     'MaxChairs': cd.get("MaxChairs"),
                     'OpenTime': cd.get("OpenTime").strftime("%H:%M"),
                     'CloseTime': cd.get("CloseTime").strftime("%H:%M"),
                     'DayStartDelay': cd.get("DayStartDelay"),
                     'AppointmentStagger': cd.get("AppointmentStagger")
                 }
-                yaml.dump(settings, f)
-                return render(request, 'home.html')
+            UserSettings.saveAll(settings)
+            return render(request, 'home.html')
     context = {'CompanyForm': company_form}
     return render(request, 'settings_page.html', context)
 
