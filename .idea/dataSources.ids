@@ -18,6 +18,7 @@
     <table name="PatientScheduling_chemotherapydrug" schema="" catalog="" type="TABLE">
       <column name="EarliestTime" sqlType="TIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <column name="LatestTime" sqlType="TIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="OtherRules" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <column name="Name" sqlType="VARCHAR(60)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <primary-key columns="name"/>
     </table>
@@ -53,9 +54,9 @@
     <table name="PatientScheduling_savedtimeslot" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="Name" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <column name="SavedDate" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="Duration" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="Count" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="SavedDate" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
     </table>
     <table name="auth_group" schema="" catalog="" type="TABLE">

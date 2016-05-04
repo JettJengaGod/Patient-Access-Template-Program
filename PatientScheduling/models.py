@@ -16,6 +16,7 @@ class NurseScheduleGroups(models.Model):
     Chairs = models.IntegerField(null=False)
     UserCreated = models.BooleanField(default=True)
     SavedDate = models.DateTimeField(auto_now=True, verbose_name="Created On")
+
     class Meta:
         verbose_name_plural = "RN Schedules"
         verbose_name = "RN Schedule"
@@ -46,6 +47,10 @@ class SavedTimeSlot(models.Model):
     Duration = models.IntegerField(default=0)
     Count = models.IntegerField(default=0)
 
+    class Meta:
+        verbose_name_plural = "Saved Time Slots Inputs"
+        verbose_name = "Time Slots Input"
+
 
 class Appointment(models.Model):
     # models.AutoField(primary_key=True) is a default field
@@ -62,6 +67,7 @@ class ChemotherapyDrug(models.Model):
     EarliestTime = models.TimeField(auto_now=False, null=True, blank=True, verbose_name="Earliest Schedule Time")
     LatestTime = models.TimeField(auto_now=False, null=True, blank=True, verbose_name="Latest Schedule Time")
     OtherRules = models.TextField(null=True, blank=True, verbose_name="Other Rules")
+
     class Meta:
         verbose_name_plural = "Chemotherapy Drugs"
         verbose_name = "Chemotherapy Drug"
