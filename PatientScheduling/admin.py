@@ -23,11 +23,12 @@ class RNScheduleAdmin(admin.ModelAdmin):
 
 class TimeSlotGroupAdmin(admin.ModelAdmin):
     list_display = ('Name','SavedDate')
-    ordering = ('SavedDate',)
+    # ordering must be done in get_queryset
 
     def get_queryset(self, request):
         # qs = super(RNScheduleAdmin, self).get_queryset(request)
         qs = SavedTimeSlot.objects.order_by('Name').distinct('Name') # will only work on PostgreSQL
+        qs.order_by("SavedDate")
         return qs
     def has_add_permission(self, request):
         return False
