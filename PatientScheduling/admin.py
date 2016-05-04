@@ -32,10 +32,6 @@ class TimeSlotGroupAdmin(admin.ModelAdmin):
         return qs
     def has_add_permission(self, request):
         return False
-    def has_module_permission(self, request):
-        if settings.DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql':
-            return False
-        return True
     def delete_model(self, request, obj):
         SavedTimeSlot.objects.filter(Name=obj.Name).delete()
 
