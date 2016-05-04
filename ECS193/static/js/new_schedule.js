@@ -300,7 +300,7 @@
                         return alert(textStatus + ': ' + response.responseText);
                 },
                 success: function(result) {
-                    if(result == 'True')
+                    if(result == 'False')
                         returnValue = false; //unique
                     else
                         returnValue = true; //already used

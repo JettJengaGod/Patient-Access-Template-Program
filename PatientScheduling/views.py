@@ -7,13 +7,15 @@ import yaml
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
 from PatientScheduling import UserSettings
 from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet
 from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, ChemotherapyDrug
 from PatientScheduling.Algorithm import clean_input
 
-
+@login_required
 def new_schedule(request):
     chairs = UserSettings.get("MaxChairs")
     if request.method == 'POST':  # if this is a POST request we need to process the form data
@@ -80,17 +82,19 @@ def new_schedule(request):
         context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
         return render(request, 'new_schedule.html', context)
 
-
+@login_required
 def home(request):
     return render(request, 'home.html')
 
 
+@login_required
 def saved_schedules(request):
     saved = SavedSchedule.objects.order_by('-SavedDate')
     context = {'saved_list': saved}
     return render(request, 'viewsavedschedule.html', context)
 
 
+@login_required
 def view_schedule(request, schedule_id):
     schedule = get_object_or_404(SavedSchedule, pk=schedule_id)
     try:
@@ -111,7 +115,7 @@ def view_schedule(request, schedule_id):
     except:
         raise Http404("Unable to load schedule '" + schedule.Name + "'")
 
-
+@login_required
 def settings_page(request):
     company_form = CompanyForm()
     if request.method != 'POST':
@@ -119,7 +123,7 @@ def settings_page(request):
         if sett:
             company_form = CompanyForm\
                 (initial={
-                    'MaxChairs': sett["MaxChairs"],
+                    'MaxChairs': int(sett["MaxChairs"]),
                     'OpenTime': sett["OpenTime"],
                     'CloseTime': sett["CloseTime"],
                     'DayStartDelay': sett["DayStartDelay"],

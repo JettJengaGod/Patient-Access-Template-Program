@@ -15,7 +15,7 @@ def getAll():
     with open('UserSettings', 'r') as f:
         s = yaml.load(f)
         result = s.items()
-    return result
+    return dict(result)
 
 
 def saveAll(dict):

@@ -1,0 +1,66 @@
+{% extends "Master.html" %}
+{% block title %}Login{% endblock %}
+
+
+{% block head %}
+    {% load static from staticfiles %}
+    <script>
+        $(document).ready(function(){
+            $('nav').hide();
+            $('#settingsButton').hide();
+        });
+    </script>
+{% endblock %}
+{% block content %}
+<div id="login-container">
+
+    <div id="login-header">
+        <div id="login-header-branding">
+            <h1 id="site-name">
+                <p>Patient Scheduling Application Login</p>
+            </h1>
+        </div>
+    </div>
+    <div id="login-content">
+        {% if form.errors and not form.non_field_errors %}
+        <p class="errornote">
+        Please correct the errors below.
+        </p>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <p class="errornote">
+            {{ error }}
+        </p>
+        {% endfor %}
+        {% endif %}
+
+        <div id="login-content-main">
+            {% if user.is_authenticated %}
+            <p class="errornote">
+            What you doing fool.
+            </p>
+            {% endif %}
+
+            <form method="POST" action="{% url 'login' %}" id="login-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    {{ form.username.errors }}
+                    {{ form.username.label_tag }} {{ form.username }}
+                </div>
+                <div class="form-row">
+                    {{ form.password.errors }}
+                    {{ form.password.label_tag }} {{ form.password }}
+                </div>
+                <div class="submit-row">
+                    <label>&nbsp;</label><button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="login-footer"></div>
+</div>
+
+
+{% endblock %}

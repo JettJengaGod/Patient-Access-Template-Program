@@ -24,6 +24,7 @@ class RNScheduleAdmin(admin.ModelAdmin):
 class TimeSlotGroupAdmin(admin.ModelAdmin):
     list_display = ('Name','SavedDate')
     # ordering must be done in get_queryset
+    fields = ('Name',)
 
     def get_queryset(self, request):
         # qs = super(RNScheduleAdmin, self).get_queryset(request)

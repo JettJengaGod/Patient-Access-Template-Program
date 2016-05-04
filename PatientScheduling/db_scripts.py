@@ -75,7 +75,7 @@ def load_schedule_group(request):
     except (KeyError, NurseScheduleGroups.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
 
-# -------used to load/manage appointment duratoin input------ #
+# -------used to load/manage appointment duration input------ #
 
 
 def load_time_slot_group_names(request):
@@ -186,7 +186,7 @@ def check_schedule_name(request):
     try:
         SavedSchedule.objects.get(Name=name)
     except (KeyError, SavedSchedule.DoesNotExist):
-        return HttpResponse('True', content_type="application/json")  # unique Schedule Name
-    else:
         return HttpResponse('False', content_type="application/json")  # unique Schedule Name
+    else:
+        return HttpResponse('True', content_type="application/json")
 
