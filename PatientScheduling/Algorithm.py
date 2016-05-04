@@ -4,16 +4,25 @@ from datetime import time
 import UserSettings
 
 
-longest_time = 40  # still need to put times from config file
-start_time = 1
-day_start = 8
+def convert_input(time):
+    hour = int(time[0:2])
+    minute = int(time[3:5])
+    return hour, minute
+
+
+start_time = UserSettings.get("DayStartDelay")/15
+day_start = convert_input(UserSettings.get("OpenTime"))
 num_chairs = UserSettings.get("MaxChairs")
+day_close = convert_input(UserSettings.get("CloseTime"))
+longest_time = (day_close[0]-day_start[0])*4+day_close[1]-day_start[1]
+
 
 def convert_to_format(time):
     if len(time) is 8:
         hour = int(time[0:2])
-        hour -= day_start
+        hour -= day_start[0]
         minute = int(time[3:5])
+        minute -= day_start[1]
         minute /= 15
         newTime = 4*hour +minute
     else:
@@ -27,7 +36,8 @@ def convert_to_time(slots):
     minutes = slots * 15
     hours = int(minutes/60)
     minutes -= hours*60
-    hours += day_start
+    hours += day_start[0]
+    minutes += day_start[1]
     return time(hours, minutes)
 
 
