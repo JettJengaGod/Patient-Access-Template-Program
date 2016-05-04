@@ -15,7 +15,10 @@ class NurseScheduleGroups(models.Model):
     Name = models.CharField(max_length=20, primary_key=True)
     Chairs = models.IntegerField(null=False)
     UserCreated = models.BooleanField(default=True)
-    SavedDate = models.DateTimeField(auto_now=True)
+    SavedDate = models.DateTimeField(auto_now=True, verbose_name="Created On")
+    class Meta:
+        verbose_name_plural = "RN Schedules"
+        verbose_name = "RN Schedule"
 
 
 class SavedSchedule(models.Model):
@@ -29,7 +32,7 @@ class NurseSchedule(models.Model):
     # models.AutoField(primary_key=True) is a default field
     NurseID = models.PositiveIntegerField(null=True)
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
-    ScheduleGroupName = models.ForeignKey(NurseScheduleGroups)
+    ScheduleGroupName = models.ForeignKey(NurseScheduleGroups, null=False, on_delete=models.CASCADE)
     StartTime = models.TimeField(auto_now=False, default='08:00')
     LunchTime = models.TimeField(auto_now=False, default='12:00', null=True)
     LunchDuration = models.PositiveIntegerField(default=60, null=True)
@@ -39,7 +42,7 @@ class NurseSchedule(models.Model):
 class SavedTimeSlot(models.Model):
     # models.AutoField(primary_key=True) is a default field
     Name = models.CharField(max_length=20, unique=False)
-    SavedDate = models.DateTimeField(auto_now=True)
+    SavedDate = models.DateTimeField(auto_now=True, verbose_name="Created On")
     Duration = models.IntegerField(default=0)
     Count = models.IntegerField(default=0)
 
@@ -55,6 +58,10 @@ class Appointment(models.Model):
 
 
 class ChemotherapyDrug(models.Model):
-    Name = models.CharField(primary_key=True, max_length=60, null=False)
-    EarliestTime = models.TimeField(auto_now=False, null=True)
-    LatestTime = models.TimeField(auto_now=False, null=True)
+    Name = models.CharField(primary_key=True, max_length=60, null=False, verbose_name="Name")
+    EarliestTime = models.TimeField(auto_now=False, null=True, blank=True, verbose_name="Earliest Schedule Time")
+    LatestTime = models.TimeField(auto_now=False, null=True, blank=True, verbose_name="Latest Schedule Time")
+    OtherRules = models.TextField(null=True, blank=True, verbose_name="Other Rules")
+    class Meta:
+        verbose_name_plural = "Chemotherapy Drugs"
+        verbose_name = "Chemotherapy Drug"

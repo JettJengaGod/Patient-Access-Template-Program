@@ -14,7 +14,7 @@
               this.onchange = function(){CheckHoursUsed();};
             });
             $('table select').each(function() {
-              this.onchange = function(){CheckHoursUsed();}
+              this.onchange = function(){CheckHoursUsed();};
             });
 
             $('.time_input > input').each(function(){
@@ -44,7 +44,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div style="display: inline-block;">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveRNmodal" onclick="
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveRNModal" onclick="
                         $('#yesOverwrite').hide();
                         $('#noOverwrite').hide();
                         $('#save_alert').hide();"
