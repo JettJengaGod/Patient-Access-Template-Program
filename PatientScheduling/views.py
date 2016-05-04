@@ -1,6 +1,8 @@
 from operator import attrgetter
 
 import time
+
+from datetime import datetime
 import yaml
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -49,16 +51,23 @@ def new_schedule(request):
                     StartTime=cd.get('StartTime'),
                     EndTime=cd.get('EndTime'),
                     NurseScheduleID=cd.get('RNNumber'),
-                    ChairID=cd.get('ChairNumber')
+                    ChairID=int(cd.get('ChairNumber'))
                 ))
             # -----Run Algorithm and build the context----- #
             all_appointments = clean_input(nurses, needed_appointments, reserved_appointments)  # this starts the algorithm
             scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
             unscheduled_appointments = all_appointments[1]
             reserved_appointments = all_appointments[2]
-            context = {'RNSet': nurses, 'RNSize': chairs+1, 'Appointments': scheduled_appointments,
+            maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
+            if maxtime.minute == 0:
+                maxhour = maxtime.hour - 1
+            else:
+                maxhour = maxtime.hour
+            mintime = min(nurses, key=attrgetter('StartTime')).StartTime
+            context = {'RNSet': nurses, 'RNSize': chairs+1, 'Appointments': scheduled_appointments, 'Chairs': range(0, chairs),
                        'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
-                       'Drugs': ChemotherapyDrug.objects.all()}
+                       'Drugs': ChemotherapyDrug.objects.all(),
+                       'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
             # -----save to the session in case user saves calendar later----- #
             request.session['nurseSchedules'] = serializers.serialize('json', nurses)
             request.session['appointments'] = serializers.serialize('json', scheduled_appointments)
@@ -93,7 +102,15 @@ def view_schedule(request, schedule_id):
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
         appointments = Appointment.objects.filter(SavedSchedule=schedule)
         chairs = nurse_group.Chairs
-        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments, 'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all()}
+        maxtime = max(nurses, key=attrgetter('EndTime'))
+        if maxtime.minute == 0:
+            maxhour = maxtime.hour - 1
+        else:
+            maxhour = maxtime.hour
+        mintime = min(nurses, key=attrgetter('StartTime'))
+        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments,
+                   'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all(),
+                   'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
         return render(request, 'calendar.html', context)
     except:
         raise Http404("Unable to load schedule '" + schedule.Name + "'")
@@ -102,30 +119,51 @@ def view_schedule(request, schedule_id):
 def settings_page(request):
     company_form = CompanyForm()
     if request.method != 'POST':
-        with open('UserSettings', 'r') as f:
-            set = yaml.load(f)
-        if set:
+        sett = UserSettings.getAll()
+        if sett:
             company_form = CompanyForm\
                 (initial={
-                    'MaxChairs': set["MaxChairs"],
-                    'OpenTime': set["OpenTime"],
-                    'CloseTime': set["CloseTime"],
-                    'DayStartDelay': set["DayStartDelay"],
-                    'AppointmentStagger': set["AppointmentStagger"]
+                    'MaxChairs': int(sett["MaxChairs"]),
+                    'OpenTime': sett["OpenTime"],
+                    'CloseTime': sett["CloseTime"],
+                    'DayStartDelay': sett["DayStartDelay"],
+                    'AppointmentStagger': sett["AppointmentStagger"]
                 }) # set: {'name': val}
     else: # if this is a POST request we need to process the form data
         company_form = CompanyForm(request.POST)
         if company_form.is_valid():
             cd = company_form.cleaned_data
-            with open('UserSettings', 'w') as f:
-                settings = {
+            settings = {
                     'MaxChairs': cd.get("MaxChairs"),
                     'OpenTime': cd.get("OpenTime").strftime("%H:%M"),
                     'CloseTime': cd.get("CloseTime").strftime("%H:%M"),
                     'DayStartDelay': cd.get("DayStartDelay"),
                     'AppointmentStagger': cd.get("AppointmentStagger")
                 }
-                yaml.dump(settings, f)
-                return render(request, 'home.html')
+            UserSettings.saveAll(settings)
+            return render(request, 'home.html')
     context = {'CompanyForm': company_form}
     return render(request, 'settings_page.html', context)
+
+
+def guide(request):
+    return render(request, 'documentation.html')
+
+
+def getHourRange(mintime, maxtime):
+    if maxtime.minute == 0:
+        maxtime = maxtime.hour - 1
+    else:
+        maxtime = maxtime.hour
+    mintime = mintime.hour
+    if maxtime <= 12:
+        return range(mintime, maxtime+1)
+    else:
+        maxtime = maxtime - 12
+    if mintime > 12:
+        mintime = mintime - 12
+        return range(mintime, maxtime)
+
+    morning = range(mintime, 13)
+    evening = range(1, maxtime+1)
+    return morning + evening

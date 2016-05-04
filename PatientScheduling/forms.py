@@ -104,11 +104,23 @@ AppointmentFormSet = formset_factory(AppointmentForm, can_delete=True)
 
 
 class ReservedForm(forms.Form):
-    StartTime = forms.TimeField(label='Start Time')
-    EndTime = forms.TimeField(label='End Time')
-    RNNumber = forms.IntegerField(label='RN Number', min_value=0)
-    ChairNumber = forms.ChoiceField(label='Chair Number',
-                                    choices=[(str(n),n) for n in range(1, UserSettings.get("MaxChairs")+1)])
+    StartTime = forms.TimeField(label='Start Time', required=False)
+    EndTime = forms.TimeField(label='End Time', required=False)
+    RNNumber = forms.IntegerField(label='RN Number', min_value=0, required=False)
+    ChairNumber = forms.ChoiceField(label='Chair Number', required=False,
+                                    choices=[(str(n),int(n)) for n in range(1, UserSettings.get("MaxChairs")+1)])
+    def clean(self):
+        cleaned_data = super(ReservedForm, self).clean()
+        StartTime = cleaned_data.get("StartTime")
+        EndTime = cleaned_data.get("EndTime")
+        RNNumber = cleaned_data.get("EndTime")
+        try:
+            if StartTime > EndTime:
+                raise forms.ValidationError('The start time must be before the end time')
+            if RNNumber != None and (StartTime == None or EndTime == None):
+                raise forms.ValidationError('Please complete all fields')
+        except:
+            return # allow the django alert to pop up
 
 
 ReservedFormSet = formset_factory(ReservedForm, can_delete=True)

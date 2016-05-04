@@ -1,18 +1,28 @@
-
-from PatientScheduling.models import NurseSchedule
+import os
 from PatientScheduling.models import Appointment
-import math
-from datetime import datetime
 from datetime import time
-longest_time = 40
-start_time = 1
+import UserSettings
+
+
+def convert_input(time):
+    hour = int(time[0:2])
+    minute = int(time[3:5])
+    return hour, minute
+
+
+start_time = UserSettings.get("DayStartDelay")/15
+day_start = convert_input(UserSettings.get("OpenTime"))
+num_chairs = UserSettings.get("MaxChairs")
+day_close = convert_input(UserSettings.get("CloseTime"))
+longest_time = (day_close[0]-day_start[0])*4+day_close[1]-day_start[1]
 
 
 def convert_to_format(time):
     if len(time) is 8:
         hour = int(time[0:2])
-        hour -= 8
+        hour -= day_start[0]
         minute = int(time[3:5])
+        minute -= day_start[1]
         minute /= 15
         newTime = 4*hour +minute
     else:
@@ -26,8 +36,9 @@ def convert_to_time(slots):
     minutes = slots * 15
     hours = int(minutes/60)
     minutes -= hours*60
-    hours += 8
-    return time(hours,minutes)
+    hours += day_start[0]
+    minutes += day_start[1]
+    return time(hours, minutes)
 
 
 def convert_to_duration(slots):
@@ -124,7 +135,7 @@ class Nurse:
     def __str__(self):  # function to print out which chairs are occupied by what at what times
         string = ""
         for j in range(self.end):
-            for i in range(3):
+            for i in range(num_chairs-1):
                 hour = 8 + j / 4
                 minute = (j % 4) * 15
                 string += str(hour) + ":" + str(minute)
@@ -137,14 +148,16 @@ class Nurse:
 
     def lunch_swap(self, time, length):
         for i in range(time, time + length):
-            if self.chairs[3][i] > 0:
+            if self.chairs[num_chairs-1][i] > 0:
                 return False
         return True
 
     def schedule(self, appointment, number, chair, time):  # fills the schedule with an appointment
+        # a 3 represents a point that has an appointment and has started an appointment in that time
+        # a 2 represents a point that has started an appointment in a differernt chair or the same one at that ime
         for i in range(time, time + appointment):
             self.chairs[chair][i] = number
-        for i in range(4):
+        for i in range(num_chairs):
             if self.chairs[i][time] >= 3:
                 self.chairs[i][time] = 3
             else:
@@ -154,8 +167,8 @@ class Nurse:
             else:
                 self.chairs[i][time+1] = 2
 
-    def help_start(self, time):
-        for i in range(3):
+    def help_start(self, time):  #sets the helper nurses starting time to 2s and 3s
+        for i in range(num_chairs-1):
             if self.chairs[i][time] >= 3:
                 self.chairs[i][time] = 3
             else:
@@ -166,8 +179,8 @@ class Nurse:
                 self.chairs[i][time+1] = 2
 
     def populate(self):  # fills the list of chairs when a nurse is initialized
-        self.chairs = [[0 for x in range(longest_time)] for x in range(4)]
-        for i in range(4):
+        self.chairs = [[0 for x in range(longest_time)] for x in range(num_chairs)]
+        for i in range(num_chairs):
             for j in range(self.lunch, self.lunch + self.lunchlength):  # all lunch times are 1
                 self.chairs[i][j] = 1
             for j in range(0, self.start):  # any time before starting is a 4
@@ -190,7 +203,7 @@ class Pod:
 
     def single_schedule(self, length, appt_number):
         for k in range(0, longest_time):
-            for j in range(3):
+            for j in range(num_chairs-1):
                 for i in range(len(self.nurses)):
                     check = self.check_time(i, j, k, length, appt_number)
                     if check:
@@ -211,7 +224,7 @@ class Pod:
             return False
         if current.chairs[chair][time] > 0 or current.chairs[chair][time+1] > 0:
             for i in range(len(self.nurses)):
-                for j in range(3):
+                for j in range(num_chairs-1):
                     if self.nurses[i].chairs[j][time] not in[1, 2, 3, 4] and self.nurses[i].chairs[j][time + 1] not in[1, 2, 3, 4] and extra is -1 and i is not nurseindex:
                         extra = [i, j]
                         break
@@ -238,7 +251,7 @@ class Pod:
         if found is not -1:
             lunch = self.nurses[found]
             for i in range(nurse.lunch, nurse.lunch + nurse.lunchlength):
-                lunch.chairs[3][i] = appt_number
+                lunch.chairs[num_chairs-1][i] = appt_number
             return True
         return False
 

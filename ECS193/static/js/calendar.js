@@ -1,9 +1,14 @@
 
+
+function DrugSelected(){
+
+}
+
 //Color when nurses are available and are gone
-function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
+function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime, closeTime) {
     var table = document.getElementById("calendar");
-    var maxCellIndex = 9;
-    var offset = 8; //used to calculate row index from given hour
+    var maxCellIndex = table.rows[0].cells.length - 2;
+    var offset = closeTime - maxCellIndex; //used to calculate row index from given hour
     var i = 0;
 
     var row = document.getElementById("RN-"+RNIndex+"-row-"+i);
@@ -47,7 +52,7 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
         //Mark times after RN leaves as unavailable
         var endTimeIndex = endTime.split(':')[0]-offset;
         var endTimePercent = (endTime.split(':')[1])/60;
-        if(endTimePercent == 0)
+        if(endTimePercent == 0 && endTimeIndex <= maxCellIndex)
             AddFill(row.cells[endTimeIndex++],1,'unavailable',true);
         else if(endTimePercent > 0)
             AddFill(row.cells[endTimeIndex++],1 - endTimePercent,'unavailable',false);
@@ -64,9 +69,10 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime) {
 var lastEndIndex = 0;
 var lastEndPercent = 0;
 var lastRNIndex = 1;
-function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID) {
+function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID, closeTime) {
     var row = document.getElementById("RN-"+RNIndex+"-row-"+chairIndex);
-    var offset = 8;
+    var maxCellIndex = row.cells.length - 1;
+    var offset = closeTime - maxCellIndex; //used to calculate row index from given hour
     if(lastRNIndex != RNIndex){
         lastEndIndex = 0;
         lastEndPercent = 0;
