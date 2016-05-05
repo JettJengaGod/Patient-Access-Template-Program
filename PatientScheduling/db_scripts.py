@@ -119,10 +119,6 @@ def delete_time_slot(request):
 
 def check_time_slot_group_name(request):
     name = request.GET['SaveName']
-
-
-    # ---- duration = request.GET['Duration']
-    #count = request.GET['NumTimeSlots']
     try:
         SavedTimeSlot.objects.filter(Name=name)
     except (KeyError, SavedTimeSlot.DoesNotExist):

@@ -53,7 +53,6 @@ class SavedTimeSlot(models.Model):
 
 
 class Appointment(models.Model):
-    # models.AutoField(primary_key=True) is a default field
     SavedSchedule = models.ForeignKey(SavedSchedule)
     NurseScheduleID = models.PositiveIntegerField(default=0)
     ChairID = models.PositiveIntegerField(default=0)
