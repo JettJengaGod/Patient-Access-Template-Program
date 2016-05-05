@@ -31,7 +31,7 @@
             //enable popovers
             $(function () {
               $('[data-toggle="popover"]').popover()
-            })
+            });
             //ensure the navbar is pointing to this page
             $('.nav > li').removeClass('active');
             {% if Schedule %}
@@ -69,7 +69,7 @@
     <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
 
     {% if Drugs %}
-        <select id="drug" title="chemotherapy" style="width: 200px; display: inline-block;" onselect="DrugSelected()">
+        <select id="drugDropdown" title="chemotherapy" style="width: 200px; display: inline-block;" onchange="DrugSelected();">
             <option value="NULL">None Selected</option>
             {% for D in Drugs %}
                 <option value="{{ D.pk }}">{{ D.Name }}</option>
@@ -85,9 +85,6 @@
         <span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Save"></span>
     </a>
     {% endif %}
-    <a style="float: right; margin: 4px">
-        <span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Download"></span>
-    </a>
     <a onclick="window.print(); return false;" style="float: right; margin: 4px">
         <span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span>
     </a>

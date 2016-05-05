@@ -1,8 +1,54 @@
 
 
+//-----------------Handling Chemotherapy Drug--------------//
 function DrugSelected(){
-
+    var dropdown = document.getElementById('drugDropdown');
+    var key = dropdown.options[dropdown.selectedIndex].value;
+    //load the ChemoDrug object with associated key
+    //display the rules on the screen in a div tag
+    //dim un-usable appointments
+    if(key == 'NULL')
+        highlight();
+    else
+        highlight('09:00', '15:00'); //testing the highlight functionality
 }
+
+function highlight(earliest, latest){
+    var allApps = $('.appt');
+    if(earliest == null && latest == null){
+        allApps.each(function(){
+            this.style.opacity = '1';
+        });
+        return;
+    }
+    var earliestStartHour=100, earliestStartMin=0, latestEndHour=0, latestEndMin=0;
+    if(earliest != null) {
+        earliestStartHour = parseInt(earliest.split(':')[0]);
+        earliestStartMin = parseInt(earliest.split(':')[1]);
+    }
+    if(latest != null) {
+        latestEndHour = parseInt(latest.split(':')[0]);
+        latestEndMin = parseInt(latest.split(':')[1]);
+    }
+    allApps.each(function(){
+        var x = $(this);
+        var tempStartHour = parseInt(x.attr('startTime').split(':')[0]);
+        var tempStartMin = parseInt(x.attr('startTime').split(':')[1]);
+        var tempEndHour = parseInt(x.attr('endTime').split(':')[0]);
+        var tempEndMin = parseInt(x.attr('endTime').split(':')[1]);
+        if(tempStartHour < earliestStartHour || tempEndHour > latestEndHour
+            || (tempStartHour == earliestStartHour && tempStartMin < earliestStartMin)
+            || (tempEndHour == latestEndHour && tempEndMin > latestEndMin)
+        ) {
+            this.style.opacity = '.25';
+        }
+        else {
+            this.style.opacity = '1';
+        }
+    });
+}
+
+//-----------------Displaying the Calendar--------------//
 
 //Color when nurses are available and are gone
 function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime, closeTime) {
@@ -220,6 +266,8 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     div.setAttribute('data-trigger', 'focus');
     div.setAttribute('data-placement', 'top');
     div.setAttribute('tabindex', '0');
+    div.setAttribute('startTime', startTime);
+    div.setAttribute('endTime', endTime);
     div.className += ' appt';
     div.style.width = (fraction * 100) + '%';
 
@@ -326,7 +374,7 @@ function MiddleCell(startCellIndex, endCellIndex){
 
 }
 
-//-----load/save operations of entire schedule-----//
+//---------load/save operations of entire schedule--------//
 function SaveSchedule(overwrite){
     var name = $('#SaveName').val();
     var alert = document.getElementById("save_alert");
