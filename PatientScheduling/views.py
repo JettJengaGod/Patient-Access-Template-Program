@@ -102,12 +102,12 @@ def view_schedule(request, schedule_id):
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
         appointments = Appointment.objects.filter(SavedSchedule=schedule)
         chairs = nurse_group.Chairs
-        maxtime = max(nurses, key=attrgetter('EndTime'))
+        maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
         if maxtime.minute == 0:
             maxhour = maxtime.hour - 1
         else:
             maxhour = maxtime.hour
-        mintime = min(nurses, key=attrgetter('StartTime'))
+        mintime = min(nurses, key=attrgetter('StartTime')).StartTime
         context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments,
                    'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all(),
                    'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}

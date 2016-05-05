@@ -389,9 +389,9 @@ function CheckSaveName(name){
         },
         success: function(result) {
             if(result == 'True')
-                returnValue = false; //unique
+                returnValue = true;
             else
-                returnValue = true; //already used
+                returnValue = false; //unique
         }
     });
     return returnValue;

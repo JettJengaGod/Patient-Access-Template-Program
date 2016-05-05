@@ -59,7 +59,7 @@ class Appointment(models.Model):
     ChairID = models.PositiveIntegerField(default=0)
     StartTime = models.TimeField(auto_now=False)
     EndTime = models.TimeField(auto_now=False)
-    SaveName = models.CharField(max_length=20, primary_key=True)
+    SaveName = models.CharField(max_length=20)
 
 
 class ChemotherapyDrug(models.Model):
