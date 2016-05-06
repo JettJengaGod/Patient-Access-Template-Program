@@ -22,18 +22,28 @@ class NurseScheduleGroups(models.Model):
         verbose_name = "RN Schedule"
 
 
+class SavedTimeSlotGroup(models.Model):
+    Name = models.CharField(max_length=20, primary_key=True)
+    SavedDate = models.DateTimeField(auto_now=True, verbose_name="Created On")
+
+    class Meta:
+        verbose_name_plural = "Saved Time Slots Inputs"
+        verbose_name = "Time Slots Input"
+
+
 class SavedSchedule(models.Model):
     # models.AutoField(primary_key=True) is a default field
     Name = models.CharField(max_length=20, unique=True)
     SavedDate = models.DateTimeField(auto_now=True)
-    NurseSchedule = models.ForeignKey(NurseScheduleGroups)
+    NurseSchedule = models.ForeignKey(NurseScheduleGroups, null=False, on_delete=models.CASCADE)
+    TimeSlots = models.ForeignKey(SavedTimeSlotGroup, null=False, on_delete=models.CASCADE)
 
 
 class NurseSchedule(models.Model):
     # models.AutoField(primary_key=True) is a default field
     NurseID = models.PositiveIntegerField(null=True)
     Team = models.CharField(max_length=1, default='A', validators=[model_one_letter])
-    ScheduleGroupName = models.ForeignKey(NurseScheduleGroups, null=False, on_delete=models.CASCADE)
+    ScheduleGroupName = models.ForeignKey(NurseScheduleGroups, null=False, on_delete=models.CASCADE, editable=False)
     StartTime = models.TimeField(auto_now=False, default='08:00')
     LunchTime = models.TimeField(auto_now=False, default='12:00', null=True)
     LunchDuration = models.PositiveIntegerField(default=60, null=True)
@@ -42,14 +52,9 @@ class NurseSchedule(models.Model):
 
 class SavedTimeSlot(models.Model):
     # models.AutoField(primary_key=True) is a default field
-    Name = models.CharField(max_length=20, unique=False)
-    SavedDate = models.DateTimeField(auto_now=True, verbose_name="Created On")
     Duration = models.IntegerField(default=0)
     Count = models.IntegerField(default=0)
-
-    class Meta:
-        verbose_name_plural = "Saved Time Slots Inputs"
-        verbose_name = "Time Slots Input"
+    Group = models.ForeignKey(SavedTimeSlotGroup, null=False, on_delete=models.CASCADE)
 
 
 class Appointment(models.Model):
