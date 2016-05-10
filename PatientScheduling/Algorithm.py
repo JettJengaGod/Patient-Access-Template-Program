@@ -9,6 +9,7 @@ def convert_input(time):
     minute = int(time[3:5])
     return hour, minute
 
+	
 
 start_time = UserSettings.get("DayStartDelay")/15
 day_start = convert_input(UserSettings.get("OpenTime"))
