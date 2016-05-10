@@ -3,14 +3,30 @@
 //-----------------Handling Chemotherapy Drug--------------//
 function DrugSelected(){
     var dropdown = document.getElementById('drugDropdown');
-    var key = dropdown.options[dropdown.selectedIndex].value;
+    var name = dropdown.options[dropdown.selectedIndex].value;
     //load the ChemoDrug object with associated key
     //display the rules on the screen in a div tag
     //dim un-usable appointments
-    if(key == 'NULL')
-        highlight();
-    else
-        highlight('09:00', '15:00'); //testing the highlight functionality
+    //var ChemotherapyDrug = $("#savedTimeSlots option:selected").html();
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '/load_chemotherapy_drug/',
+            contentType: "application/json",
+            data: {'Name': name},
+            complete: function(response, textStatus) {
+                if(textStatus != 'success')
+                    alert(textStatus + ': ' + response.responseText);
+            },
+            success: function(result) {
+                //display the rules on the screen in a div tag
+                if(result.OtherRules != null)
+                    window.alert(result.OtherRules);
+                //dim un-usable appointments
+                highlight(result.EarliestTime, result.LatestTime)
+
+            }
+        });
 }
 
 function highlight(earliest, latest){

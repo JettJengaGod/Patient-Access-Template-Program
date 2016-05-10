@@ -43,6 +43,8 @@ urlpatterns = [
     url(r'^delete_time_slot/', PatientScheduling.db_scripts.delete_time_slot),
     url(r'^check_time_slot_group_name/', PatientScheduling.db_scripts.check_time_slot_group_name),
     url(r'^load_time_slot_group/', PatientScheduling.db_scripts.load_time_slot_group),
-    url(r'^load_time_slot_group_names/', PatientScheduling.db_scripts.load_time_slot_group_names)
+    url(r'^load_time_slot_group_names/', PatientScheduling.db_scripts.load_time_slot_group_names),
                     #also need a load all unique save names
+    #for loading Chemotherapy Drug
+    url(r'^load_chemotherapy_drug/', PatientScheduling.db_scripts.load_chemotherapy_drug)
 ]

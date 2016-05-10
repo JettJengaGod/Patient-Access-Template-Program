@@ -7,7 +7,7 @@ from django.core import serializers
 
 from PatientScheduling import UserSettings
 from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule, Appointment, SavedTimeSlot, \
-    SavedTimeSlotGroup
+    SavedTimeSlotGroup, ChemotherapyDrug
 
 
 def generate_key(size):
@@ -183,3 +183,14 @@ def check_schedule_name(request):
     else:
         return HttpResponse('True', content_type="application/json")
 
+# ------------ used to load an chemotherapy drug --------- #
+
+
+def load_chemotherapy_drug(request):
+    name = request.GET['Name']
+    print name
+    try:
+        DrugObject = ChemotherapyDrug.objects.get(Name=name)
+        return HttpResponse(serializers.serialize('json', DrugObject), content_type="application/json")
+    except (KeyError, ChemotherapyDrug.DoesNotExist):
+        return HttpResponse(serializers.serialize('json', []), content_type="application/json")
