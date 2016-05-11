@@ -188,9 +188,10 @@ def check_schedule_name(request):
 
 def load_chemotherapy_drug(request):
     name = request.GET['Name']
-    print name
+
     try:
-        DrugObject = ChemotherapyDrug.objects.get(Name=name)
+        DrugObject = ChemotherapyDrug.objects.filter(Name=name)
+        print DrugObject
         return HttpResponse(serializers.serialize('json', DrugObject), content_type="application/json")
     except (KeyError, ChemotherapyDrug.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
