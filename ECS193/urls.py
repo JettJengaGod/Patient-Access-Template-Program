@@ -46,3 +46,4 @@ urlpatterns = [
     url(r'^load_time_slot_group_names/', PatientScheduling.db_scripts.load_time_slot_group_names)
                     #also need a load all unique save names
 ]
+admin.site.site_header = 'Patient Scheduling Application'
