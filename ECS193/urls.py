@@ -48,3 +48,4 @@ urlpatterns = [
     #for loading Chemotherapy Drug
     url(r'^load_chemotherapy_drug/', PatientScheduling.db_scripts.load_chemotherapy_drug)
 ]
+admin.site.site_header = 'Patient Scheduling Application'
