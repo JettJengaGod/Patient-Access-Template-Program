@@ -3,30 +3,30 @@
 //-----------------Handling Chemotherapy Drug--------------//
 function DrugSelected(){
     var dropdown = document.getElementById('drugDropdown');
+    var rulesLabel = document.getElementById('drugRules');
     var name = dropdown.options[dropdown.selectedIndex].value;
-    //load the ChemoDrug object with associated key
-    //display the rules on the screen in a div tag
-    //dim un-usable appointments
-    //var ChemotherapyDrug = $("#savedTimeSlots option:selected").html();
+    if(name != "NULL") {
         $.ajax({
             type: 'GET',
             dataType: 'html',
             url: '/load_chemotherapy_drug/',
             contentType: "application/json",
             data: {'Name': name},
-            complete: function(response, textStatus) {
-                if(textStatus != 'success')
+            complete: function (response, textStatus) {
+                if (textStatus != 'success')
                     alert(textStatus + ': ' + response.responseText);
             },
-            success: function(result) {
-                //display the rules on the screen in a div tag
-                if(result.OtherRules != null)
-                    window.alert(result.OtherRules);
-                //dim un-usable appointments
-                highlight(result.EarliestTime, result.LatestTime)
-
+            success: function (result) {
+                var drug = JSON.parse(result)[0].fields;
+                rulesLabel.innerText = drug.OtherRules;
+                highlight(drug.EarliestTime, drug.LatestTime)
             }
         });
+    }
+    else {
+        highlight();
+        rulesLabel.innerText = "";
+    }
 }
 
 function highlight(earliest, latest){
@@ -37,7 +37,7 @@ function highlight(earliest, latest){
         });
         return;
     }
-    var earliestStartHour=100, earliestStartMin=0, latestEndHour=0, latestEndMin=0;
+    var earliestStartHour=-1, earliestStartMin=0, latestEndHour=100, latestEndMin=0;
     if(earliest != null) {
         earliestStartHour = parseInt(earliest.split(':')[0]);
         earliestStartMin = parseInt(earliest.split(':')[1]);

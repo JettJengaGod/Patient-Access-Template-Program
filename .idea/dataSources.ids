@@ -48,17 +48,26 @@
       <column name="Name" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="SavedDate" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="NurseSchedule_id" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="TimeSlots_id" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_PatientScheduling_savedschedule_1" columns="NurseSchedule_id" ref-table="PatientScheduling_nurseschedulegroups" ref-schema="" ref-catalog="" ref-columns="Name" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_PatientScheduling_savedschedule_1" columns="TimeSlots_id" ref-table="PatientScheduling_savedtimeslotgroup" ref-schema="" ref-catalog="" ref-columns="Name" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_PatientScheduling_savedschedule_2" columns="NurseSchedule_id" ref-table="PatientScheduling_nurseschedulegroups" ref-schema="" ref-catalog="" ref-columns="Name" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="PatientScheduling_savedschedule_69801bb5" unique="true" columns="TimeSlots_id"/>
       <index name="PatientScheduling_savedschedule_9a8c30bb" unique="true" columns="NurseSchedule_id"/>
     </table>
     <table name="PatientScheduling_savedtimeslot" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="Name" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="Duration" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="Count" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="SavedDate" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Group_id" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
+      <foreign-key name="#FAKE_PatientScheduling_savedtimeslot_1" columns="Group_id" ref-table="PatientScheduling_savedtimeslotgroup" ref-schema="" ref-catalog="" ref-columns="Name" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="PatientScheduling_savedtimeslot_fcce8521" unique="true" columns="Group_id"/>
+    </table>
+    <table name="PatientScheduling_savedtimeslotgroup" schema="" catalog="" type="TABLE">
+      <column name="Name" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="SavedDate" sqlType="DATETIME" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <primary-key columns="name"/>
     </table>
     <table name="auth_group" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
