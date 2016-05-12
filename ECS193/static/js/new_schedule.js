@@ -367,27 +367,21 @@
         alert.innerHTML = ''; //clear any previous alerts
         $(alert).css("display", "none");//hide any possible existing notifications
         var TimeSlotGroup = $("#savedTimeSlots option:selected").html();
-        if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
-            $.ajax({
-                type: 'GET',
-                dataType: 'html',
-                url: '/load_time_slot_group/',
-                contentType: "application/json",
-                data: {'SaveName': TimeSlotGroup},
-                complete: function(response, textStatus) {
-                    if(textStatus != 'success')
-                        alert(textStatus + ': ' + response.responseText);
-                },
-                success: function(result) {
-                    var objectList = JSON.parse(result);
-                    fillTimeSlots(objectList, prefix);
-                }
-            });
-        }
-        else{
-            alert.innerHTML = "Not a valid save name";
-            $(alert).css("display", "block");
-        }
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '/load_time_slot_group/',
+            contentType: "application/json",
+            data: {'SaveName': TimeSlotGroup},
+            complete: function(response, textStatus) {
+                if(textStatus != 'success')
+                    alert(textStatus + ': ' + response.responseText);
+            },
+            success: function(result) {
+                var objectList = JSON.parse(result);
+                fillTimeSlots(objectList, prefix);
+            }
+        });
     }
     function fillTimeSlots(objectList, prefix){
         objectList = objectList.sort(compareTimeSlots);
@@ -443,7 +437,7 @@
                 removeOptions(document.getElementById("savedTimeSlots"));
                 //add the loaded options
                 for(var i = 0; i < count; i++)
-                    select.append(new Option(result[i].fields.Name, result[i].pk));
+                    select.append(new Option(result[i].pk, result[i].pk));
             }
         });
     }

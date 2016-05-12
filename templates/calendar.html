@@ -19,19 +19,27 @@
                 Reserve("reserved{{ forloop.counter }}");
             {% endfor %}
 
+            //Replace glyphicons with text where needed
+            $('.glyphicon').each(function(){
+               if(this.length == 0)
+                    this.innerText = this.title;
+            });
+
             //enable hover event for appointment blocks
             $('a.appt').hover(
                 function() {
-                    $('.appt-'+this.id).addClass('active');
+                    var groupID = this.attributes['apptSet'].value;
+                    $('.appt-'+groupID).addClass('active');
                 },
                 function() {
-                    $('.appt-'+this.id).removeClass('active');
+                    var groupID = this.attributes['apptSet'].value;
+                    $('.appt-'+groupID).removeClass('active');
                 }
             );
             //enable popovers
             $(function () {
               $('[data-toggle="popover"]').popover()
-            })
+            });
             //ensure the navbar is pointing to this page
             $('.nav > li').removeClass('active');
             {% if Schedule %}
@@ -69,26 +77,25 @@
     <div id="pageAlert" class="alert alert-success" role="alert" style="display: none;"></div>
 
     {% if Drugs %}
-        <select id="drug" title="chemotherapy" style="width: 200px; display: inline-block;" onselect="DrugSelected()">
+        <select id="drugDropdown" title="chemotherapy" style="width: 200px; display: inline-block;" onchange="DrugSelected();">
             <option value="NULL">None Selected</option>
             {% for D in Drugs %}
                 <option value="{{ D.pk }}">{{ D.Name }}</option>
             {% endfor %}
         </select>
+        <span id="drugRules" style="font-style: italic; color: darkslateblue;"></span>
     {% endif %}
 
     {% if not Schedule %}
-    <a id="saveSchd" style="float: right; margin: 4px" data-toggle="modal" data-target="#saveModal" onclick="
+    <a class="btn btn-default" id="saveSchd" style="float: right; margin: 4px" data-toggle="modal" data-target="#saveModal" aria-label="save"
+       onclick="
         $('#yesOverwrite').hide();
         $('#noOverwrite').hide();
         $('#save_alert').hide();">
         <span class="glyphicon glyphicon-floppy-disk glyphicon-button" aria-hidden="true" title="Save"></span>
     </a>
     {% endif %}
-    <a style="float: right; margin: 4px">
-        <span class="glyphicon glyphicon-download-alt glyphicon-button" aria-hidden="true" title="Download"></span>
-    </a>
-    <a onclick="window.print(); return false;" style="float: right; margin: 4px">
+    <a class="btn btn-default" onclick="window.print(); return false;" style="float: right; margin: 4px" aria-label="print">
         <span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span>
     </a>
 

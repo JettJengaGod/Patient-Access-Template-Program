@@ -44,21 +44,21 @@ body {
 }
 .header-title h3{
     padding: 1%;
-    margin: 0px;
+    margin: 0;
 }
 .glyphicon-button{
     font-size: x-large;
     color: #ff8000;
 }
-.glyphicon-button:hover{
-    color: #ffb366;
-    cursor: pointer;
-}
-.glyphicon-button-bright:hover{
-    color: #5bc0de !important;
-    cursor: pointer;
-    font-size: xx-large;
-}
+/*.glyphicon-button:hover{*/
+    /*color: #ffb366;*/
+    /*cursor: pointer;*/
+/*}*/
+/*.glyphicon-button-bright:hover{*/
+    /*color: #5bc0de !important;*/
+    /*cursor: pointer;*/
+    /*font-size: xx-large;*/
+/*}*/
 /*------------------new_schedule page & settings_page------------------*/
 input, select{
     width: 100%;
@@ -90,6 +90,7 @@ input, select{
     text-decoration: none;
     text-align: center;
     font-weight: bold;
+    background-color: #dcb6a3;
 }
 .appt-reserved{
     opacity: .5;
@@ -288,3 +289,21 @@ ul.errorlist {
     padding-left: 30px;
     font-size: 13px;
 }
+
+.appt30{ background-color: #ff8080;}
+.appt45{ background-color: #ff80ff;}
+.appt60{ background-color: #bf80ff;}
+.appt90{ background-color: #9f80ff;}
+.appt120{ background-color: #809fff;}
+.appt150{ background-color: #80dfff;}
+.appt180{ background-color: #80ffdf;}
+.appt210{ background-color: #80ff9f;}
+.appt240{ background-color: #80ff80;}
+.appt270{ background-color: #9fff80;}
+.appt300{ background-color: #bfff80;}
+.appt330{ background-color: #dfff80;}
+.appt360{ background-color: #ffff80;}
+.appt390{ background-color: #ffdf80;}
+.appt420{ background-color: #ffbf80;}
+.appt450{ background-color: #ff9f80;}
+.appt480{ background-color: #ff8080;}

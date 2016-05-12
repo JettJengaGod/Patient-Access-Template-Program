@@ -1,8 +1,70 @@
 
 
+//-----------------Handling Chemotherapy Drug--------------//
 function DrugSelected(){
-
+    var dropdown = document.getElementById('drugDropdown');
+    var rulesLabel = document.getElementById('drugRules');
+    var name = dropdown.options[dropdown.selectedIndex].value;
+    if(name != "NULL") {
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '/load_chemotherapy_drug/',
+            contentType: "application/json",
+            data: {'Name': name},
+            complete: function (response, textStatus) {
+                if (textStatus != 'success')
+                    alert(textStatus + ': ' + response.responseText);
+            },
+            success: function (result) {
+                var drug = JSON.parse(result)[0].fields;
+                rulesLabel.innerText = drug.OtherRules;
+                highlight(drug.EarliestTime, drug.LatestTime)
+            }
+        });
+    }
+    else {
+        highlight();
+        rulesLabel.innerText = "";
+    }
 }
+
+function highlight(earliest, latest){
+    var allApps = $('.appt');
+    if(earliest == null && latest == null){
+        allApps.each(function(){
+            this.style.opacity = '1';
+        });
+        return;
+    }
+    var earliestStartHour=-1, earliestStartMin=0, latestEndHour=100, latestEndMin=0;
+    if(earliest != null) {
+        earliestStartHour = parseInt(earliest.split(':')[0]);
+        earliestStartMin = parseInt(earliest.split(':')[1]);
+    }
+    if(latest != null) {
+        latestEndHour = parseInt(latest.split(':')[0]);
+        latestEndMin = parseInt(latest.split(':')[1]);
+    }
+    allApps.each(function(){
+        var x = $(this);
+        var tempStartHour = parseInt(x.attr('startTime').split(':')[0]);
+        var tempStartMin = parseInt(x.attr('startTime').split(':')[1]);
+        var tempEndHour = parseInt(x.attr('endTime').split(':')[0]);
+        var tempEndMin = parseInt(x.attr('endTime').split(':')[1]);
+        if(tempStartHour < earliestStartHour || tempEndHour > latestEndHour
+            || (tempStartHour == earliestStartHour && tempStartMin < earliestStartMin)
+            || (tempEndHour == latestEndHour && tempEndMin > latestEndMin)
+        ) {
+            this.style.opacity = '.25';
+        }
+        else {
+            this.style.opacity = '1';
+        }
+    });
+}
+
+//-----------------Displaying the Calendar--------------//
 
 //Color when nurses are available and are gone
 function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime, closeTime) {
@@ -199,7 +261,7 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     var StartHour = startTime.split(':')[0];
     var StartMinutes = startTime.split(':')[1];
     var minutes = (EndHour - StartHour)*60  + (EndMinutes - StartMinutes);
-    var color = GetColor(minutes);
+    var colorClass = "appt"+minutes;
     var durationText = getStringDuration(minutes);
 
     if(border != null && border != "")
@@ -212,15 +274,16 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     if (!leftAligned)
         div.style.float = 'right';
     var innertext = '&nbsp;';
-    div.style.backgroundColor = color;
-    div.style.color = color;
     div.className += ' appt-' + id;
+    div.setAttribute('apptSet', id);
     div.setAttribute('role', 'button');
     div.setAttribute('data-toggle', 'popover');
     div.setAttribute('data-trigger', 'focus');
     div.setAttribute('data-placement', 'top');
     div.setAttribute('tabindex', '0');
-    div.className += ' appt';
+    div.setAttribute('startTime', startTime);
+    div.setAttribute('endTime', endTime);
+    div.className += ' appt ' + colorClass;
     div.style.width = (fraction * 100) + '%';
 
     //----Show the duration in the div if requested---
@@ -261,47 +324,6 @@ function rowSelect(grouping){
     }
 }
 
-function GetColor(duration){
-    switch(duration){
-        case 30:
-            return "#ff8080";
-        case 45:
-            return "#ff80ff";
-        case 60:
-            return "#bf80ff";
-        case 90:
-            return "#9f80ff";
-        case 120:
-            return "#809fff";
-        case 150:
-            return "#80dfff";
-        case 180:
-            return "#80ffdf";
-        case 210:
-            return "#80ff9f";
-        case 240:
-            return "#80ff80";
-        case 270:
-            return "#9fff80";
-        case 300:
-            return "#bfff80";
-        case 330:
-            return "#dfff80";
-        case 360:
-            return "#ffff80";
-        case 390:
-            return "#ffdf80";
-        case 420:
-            return "#ffbf80";
-        case 450:
-            return "#ff9f80";
-        case 480:
-            return "#ff8080";
-        default:
-            return "#dcb6a3";
-    }
-}
-
 function getStringDuration(duration){
     var durationText = "";
     if(duration/60 >= 1){ //if it is longer than an hour
@@ -326,7 +348,7 @@ function MiddleCell(startCellIndex, endCellIndex){
 
 }
 
-//-----load/save operations of entire schedule-----//
+//---------load/save operations of entire schedule--------//
 function SaveSchedule(overwrite){
     var name = $('#SaveName').val();
     var alert = document.getElementById("save_alert");
