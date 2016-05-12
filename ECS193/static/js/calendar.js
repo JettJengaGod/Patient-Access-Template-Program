@@ -261,7 +261,7 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     var StartHour = startTime.split(':')[0];
     var StartMinutes = startTime.split(':')[1];
     var minutes = (EndHour - StartHour)*60  + (EndMinutes - StartMinutes);
-    var color = GetColor(minutes);
+    var colorClass = "appt"+minutes;
     var durationText = getStringDuration(minutes);
 
     if(border != null && border != "")
@@ -274,9 +274,8 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     if (!leftAligned)
         div.style.float = 'right';
     var innertext = '&nbsp;';
-    div.style.backgroundColor = color;
-    div.style.color = color;
     div.className += ' appt-' + id;
+    div.setAttribute('apptSet', id);
     div.setAttribute('role', 'button');
     div.setAttribute('data-toggle', 'popover');
     div.setAttribute('data-trigger', 'focus');
@@ -284,7 +283,7 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     div.setAttribute('tabindex', '0');
     div.setAttribute('startTime', startTime);
     div.setAttribute('endTime', endTime);
-    div.className += ' appt';
+    div.className += ' appt ' + colorClass;
     div.style.width = (fraction * 100) + '%';
 
     //----Show the duration in the div if requested---
@@ -322,47 +321,6 @@ function rowSelect(grouping){
         else
             row.hide();
         row = row.next();
-    }
-}
-
-function GetColor(duration){
-    switch(duration){
-        case 30:
-            return "#ff8080";
-        case 45:
-            return "#ff80ff";
-        case 60:
-            return "#bf80ff";
-        case 90:
-            return "#9f80ff";
-        case 120:
-            return "#809fff";
-        case 150:
-            return "#80dfff";
-        case 180:
-            return "#80ffdf";
-        case 210:
-            return "#80ff9f";
-        case 240:
-            return "#80ff80";
-        case 270:
-            return "#9fff80";
-        case 300:
-            return "#bfff80";
-        case 330:
-            return "#dfff80";
-        case 360:
-            return "#ffff80";
-        case 390:
-            return "#ffdf80";
-        case 420:
-            return "#ffbf80";
-        case 450:
-            return "#ff9f80";
-        case 480:
-            return "#ff8080";
-        default:
-            return "#dcb6a3";
     }
 }
 

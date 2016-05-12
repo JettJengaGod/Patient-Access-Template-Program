@@ -15,23 +15,42 @@ body {
     margin:0;
     padding:0;
 }
-#header, #footer {
-    display: none;
-}
 
-.appt {
-    background-color: darkseagreen !important;
-}
+/*.appt {*/
+    /*background-color: darkseagreen !important;*/
+/*}*/
 
 tr.table-grouper > td{
     background-color: inherit !important;
     font-weight: bold;
+}
+.table-grouper{
+    background-color: grey;
+    color: white;
 }
 
 th{
     background-color: beige !important;
 }
 
-.glyphicon, .alert{
+.glyphicon, .alert, select, .btn, #header, #footer{
     display: none;
 }
+
+.appt30{ background-color: #ff8080 !important;}
+.appt45{ background-color: #ff80ff !important;}
+.appt60{ background-color: #bf80ff !important;}
+.appt90{ background-color: #9f80ff !important;}
+.appt120{ background-color: #809fff !important;}
+.appt150{ background-color: #80dfff !important;}
+.appt180{ background-color: #80ffdf !important;}
+.appt210{ background-color: #80ff9f !important;}
+.appt240{ background-color: #80ff80 !important;}
+.appt270{ background-color: #9fff80 !important;}
+.appt300{ background-color: #bfff80 !important;}
+.appt330{ background-color: #dfff80 !important;}
+.appt360{ background-color: #ffff80 !important;}
+.appt390{ background-color: #ffdf80 !important;}
+.appt420{ background-color: #ffbf80 !important;}
+.appt450{ background-color: #ff9f80 !important;}
+.appt480{ background-color: #ff8080 !important;}
