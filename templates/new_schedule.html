@@ -138,11 +138,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div style="display: inline-block;">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveTimeSlotModal"
-                    onclick="$('#yesOverwrite_app').hide();
-                        $('#noOverwrite_app').hide();
-                        $('#save_app_alert').hide();
-                    ">Save Time Slots Input</button>
+                    <button type="button" class="btn btn-primary" onclick="SaveTimeSlotButtonClick('{{ AppointmentFormSet.prefix }}');" >Save Time Slots Input</button>
                     <br><br>
                 </div>
                 <div style="display: inline-block;">

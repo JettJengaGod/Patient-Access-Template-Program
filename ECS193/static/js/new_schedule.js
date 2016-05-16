@@ -1,5 +1,8 @@
 
 
+    const SPANBOLD = "<span style='font-weight:bold'>";
+    const ENDSPANBOLD = "</span>";
+
     //removes all listed options in dropdown list
     function removeOptions(selectbox) {
         var i;
@@ -7,7 +10,7 @@
             selectbox.remove(i);
     }
 
-    //Actions for nurse schedule groups
+    //----------------Actions for nurse schedule groups-----------------
     function SaveSchedule(prefix, overwrite){
         var ScheduleGroup = $('#id_ScheduleGroupName').val();
         var alert = document.getElementById("save_alert");
@@ -285,6 +288,42 @@
 
     //------------------------------------------------------------------------------------------------------------
 
+    function ValidTimeSlotInput(prefix){
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
+
+        var alert = document.getElementById("appointment_alert");
+        alert.innerHTML = ''; //clear any previous alerts
+        var table = document.getElementById(prefix + 'Table');
+        if(table.rows.length < 3){
+            alert.InnerHTML = SPANBOLD + "Oops!" + ENDSPANBOLD + " Looks like you forgot to enter time slots";
+            return false;
+        }
+        //loop through each row to ensure all fields are filled in
+        for (var i = 1; i < table.rows.length - 1; i++) {
+            var row = table.rows[i];
+            if (row.cells[1].firstChild.value == null || row.cells[2].firstChild.value == null) {
+                alert.InnerHTML = SPANBOLD + "Oops!" + ENDSPANBOLD + " Looks like you forgot to fill in all the fields";
+                return false;
+            }
+            if(isNaN(row.cells[2].firstChild.value) || row.cells[2].firstChild.value < 0){
+                alert.InnerHTML = row.cells[2].firstChild.value + " is not a valid input";
+                return false;
+            }
+        }
+        return true;
+    }
+    function SaveTimeSlotButtonClick(prefix){
+        if(ValidTimeSlotInput(prefix)) {
+            $('#yesOverwrite_app').hide();
+            $('#noOverwrite_app').hide();
+            $('#save_app_alert').hide();
+            $('#saveTimeSlotModal').modal('show');
+        }
+    }
     function TimeSlotNameUsed(TimeSlotGroup){
         if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
             var returnValue = false;
@@ -310,7 +349,7 @@
         }
     }
     function SaveTimeSlots(prefix, overwrite){
-        var SaveName = $('#TimeSlotSaveName').val(); //grab save name from input box
+        var SaveName = document.getElementById("TimeSlotSaveName").value; //grab save name from input box
         var alert = document.getElementById("save_app_alert");
         $('#yesOverwrite_app').hide();
         $('#noOverwrite_app').hide();
@@ -319,6 +358,7 @@
 
         if(SaveName.match(/[\w+\.\_]+/)) { //defining regex (stuff we accept)
             var alreadyExists = TimeSlotNameUsed(SaveName);
+            var ajaxFailed = false;
             if(alreadyExists && overwrite == false)     //ask the user if they want to overwrite
             {
                  $('#yesOverwrite_app').show();
@@ -334,22 +374,46 @@
                     dataType: 'html',
                     url: '/delete_time_slot/',  //changed and is now defined in urls.py
                     contentType: "application/json",
-                    data: {'SaveName': SaveName} //overwrite name
+                    data: {'SaveName': SaveName}, //overwrite name
+                    complete: function(response, textStatus) {
+                        if(textStatus != 'success') {
+                            //alert(textStatus + ': ' + response.responseText);
+                            ajaxFailed = true;
+                        }
+                    }
                 });
             }
             //if we overwrite or we are successful, loop through and save values
             var table = document.getElementById(prefix + 'Table');
             for (var i = 1; i < table.rows.length - 1; i++) { //loop through each row and grab value in the input box
+                if(ajaxFailed) break;
                 var row = table.rows[i];
+                if(row.cells[1].firstChild.value == null || row.cells[2].firstChild.value == null)
+                    continue;
+                var doNotWait = true;
+                if(i == table.rows.length - 2) //last itteration
+                    doNotWait = false;
                 $.ajax({
                     type: 'GET',
                     dataType: 'html',
-                    url: '/save_time_slot/', //saved schedule*****************************
+                    url: '/save_time_slot/',
+                    async: doNotWait,
                     contentType: "application/json",
-                    data: {'SaveName': SaveName, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value}
+                    data: {'SaveName': SaveName, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value},
+                    complete: function(response, textStatus) {
+                        if(textStatus != 'success')
+                            ajaxFailed = true;
+                    }
                 });
             }
+
             var label = $("#appointment_alert");
+            if(ajaxFailed){
+                label.text(SaveName + ' could not be saved');
+                label.css("display", "block");
+                label.addClass("alert-danger").removeClass("alert-success");
+                return false;
+            }
             label.text(SaveName + ' has been saved');
             label.css("display", "block");
             label.addClass("alert-success").removeClass("alert-danger");
@@ -384,6 +448,11 @@
         });
     }
     function fillTimeSlots(objectList, prefix){
+        if(objectList.length == 0) {
+            document.getElementById("appointment_alert").innerHTML =
+                SPANBOLD + "Uh oh," + ENDSPANBOLD + " we were unable to load the requested time slot input";
+            return;
+        }
         objectList = objectList.sort(compareTimeSlots);
         var count = objectList.length;
         var table = document.getElementById(prefix + 'Table');
@@ -412,10 +481,7 @@
     //compares team, then StartTime
     function compareTimeSlots(s1, s2){
         if(s1.fields.Duration == s2.fields.Duration)
-        {
-                return 0;
-
-        }
+            return 0;
         else if(s1.fields.Duration > s2.fields.Duration)
             return 1;
         else return -1;
