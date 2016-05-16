@@ -73,14 +73,6 @@ class Migration(migrations.Migration):
                 ('NurseSchedule', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PatientScheduling.NurseScheduleGroups')),
             ],
         ),
-        migrations.CreateModel(
-            name='SavedTimeSlot',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('Duration', models.IntegerField(default=0)),
-                ('Count', models.IntegerField(default=0)),
-            ],
-        ),
         migrations.AddField(
             model_name='nurseschedule',
             name='ScheduleGroupName',
