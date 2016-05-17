@@ -64,10 +64,10 @@
             <ul>
                 {% for minutes, number in UnschAppts %}
                     <li>
-                    {% if ':' not in minutes %}
-                        {{ number }} of the {{ minutes }} minute appointments
-                    {% else %}
+                    {% if ":" not in minutes|stringformat:'s' %}
                         {{ number }} of the {{ minutes }} hour appointments
+                    {% else %}
+                        {{ number }} of the {{ minutes }} minute appointments
                     {% endif %}
                     </li>
                 {% endfor %}
