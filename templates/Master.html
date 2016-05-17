@@ -16,9 +16,13 @@
     <link href="{% static "css/print.css" %}" rel="stylesheet"type="text/css" media="print"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <!--[if lt IE 7]>
+      <script>
+        //Replace glyphicons with text where needed
+        $('.btn > span.glyphicon').each(function(){
+            this.innerHTML = this.title;
+        });
+    </script>
     <![endif]-->
 
     {% block head %}{% endblock %}
@@ -26,7 +30,7 @@
 <body>
     <div id="container">
         <div id="header">
-            <nav class="navbar header-title">
+            <nav class="navbar header-title" style="margin-bottom: 0; border-radius: 0;">
               <div class="container-fluid text-center">
               <div class="navbar-header" style="width: 450px;">
                   <h3 id="branding"><a href="/home/" title="home" style="vertical-align: middle">PATIENT SCHEDULING APPLICATION</a></h3>

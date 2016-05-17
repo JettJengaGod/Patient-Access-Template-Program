@@ -19,12 +19,6 @@
                 Reserve("reserved{{ forloop.counter }}");
             {% endfor %}
 
-            //Replace glyphicons with text where needed
-            $('.glyphicon').each(function(){
-               if(this.length == 0)
-                    this.innerText = this.title;
-            });
-
             //enable hover event for appointment blocks
             $('a.appt').hover(
                 function() {
@@ -96,7 +90,7 @@
     </a>
     {% endif %}
     <a class="btn btn-default" onclick="window.print(); return false;" style="float: right; margin: 4px" aria-label="print">
-        <span class="glyphicon glyphicon-fdsfds glyphicon-button" aria-hidden="true" title="Print"></span>
+        <span class="glyphicon glyphicon-print glyphicon-button" aria-hidden="true" title="Print"></span>
     </a>
 
     <table id="calendar" class="table table-bordered table-responsive" width="100%">
