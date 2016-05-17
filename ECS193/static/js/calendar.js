@@ -420,6 +420,7 @@ function CheckSaveName(name){
 }
 
 function DeleteSchedule(name){
+    var result = false;
     $.ajax({
         type: 'GET',
         dataType: 'html',
@@ -429,11 +430,10 @@ function DeleteSchedule(name){
         async: false,
         complete: function(response, textStatus) {
             if(textStatus != 'success')
-                return false;
-        },
-        success: function() {
-            return true;
+                result = false;
+            else
+                result = true;
         }
     });
-    return true;
+    return result;
 }

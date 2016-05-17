@@ -7,50 +7,73 @@
             $('#mainNav').hide();
         });
     </script>
+    <style>
+        h2{
+            width: 100%;
+            border-bottom: solid lightgrey 1px;
+        }
+        h3{
+            color: grey;
+            padding-left: 3%;
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="row">
         <!--Main Content -->
         <div class="col-md-9" role="main">
-            <section id="GroupA" class="group">
-                <h3>GroupA</h3>
+            <section class="group">
+                <h2 id="ApplicationPurpose">Application Purpose</h2>
                 dasdasdas dsadasd dsadasdasdsaddsadas
             </section>
-            <section id="GroupB" class="group">
-
+            <section class="group">
+                <h2 id="Preface">Preface</h2>
+                <h3 id="Vocabulary">Vocabulary</h3>
+                <h3 id="Navigation">Navigation</h3>
             </section>
-            <section id="GroupC" class="group">
-
+            <section class="group">
+                <h2 id="Functionality">Functionality</h2>
+            </section>
+            <section class="group">
+                <h2 id="Meet The Creators">MeetTheCreators</h2>
+                <img alt="Rachel Church" src="http://www.gravatar.com/avatar/b002350502e3734bcc94d9d11240e022">
+                Rachel Church <br>
+                <img alt="Alex Peng" src="http://www.gravatar.com/avatar/d85b9512652016482919000a189124fa">
+                Alex Peng <br>
+                <img alt="Jett Lewis" src="http://www.gravatar.com/avatar/cc0e9ffcb0e8c4ec97e0525b40e2a17d">
+                Jett Lewis <br>
+                <img alt="Carl Glahn" src="http://www.gravatar.com/avatar/7a494380b665811215fa70cfda441d2b">
+                Carl Glahn <br>
             </section>
         </div>
         <!--Nav Bar -->
         <div class="col-md-3 hidden-print hidden-xs">
         <nav class="bs-docs-sidebar affix">
             <ul class="nav nav-stacked fixed">
-                <li><a>Application Purpose</a></li>
-                <li><a>Preface</a>
+                <li><a href="#ApplicationPurpose">Application Purpose</a></li>
+                <li><a href="#Preface">Preface</a>
                     <ul class="nav nav-stacked">
-                        <li><a>Vocabulary</a></li>
-                        <li><a>Navigation</a></li>
+                        <li><a href="#Vocabulary">Vocabulary</a></li>
+                        <li><a href="#Navigation">Navigation</a></li>
                     </ul>
                 </li>
-                <li><a>Functionality</a>
+                <li><a href="#Functionality">Functionality</a>
                     <ul class="nav nav-stacked">
-                        <li><a>Creating new Schedule</a></li>
-                        <li><a>Calendar View</a></li>
-                        <li><a>Saved Schedules</a></li>
-                        <li><a>Settings</a></li>
-                        <li><a>Admin Page</a></li>
+                        <li><a href="#CreatingNewSchedule">Creating new Schedule</a></li>
+                        <li><a href="#CalendarView">Calendar View</a></li>
+                        <li><a href="#SavedSchedules">Saved Schedules</a></li>
+                        <li><a href="#Settings">Settings</a></li>
+                        <li><a href="#AdminPage">Admin Page</a></li>
                     </ul>
                 </li>
-                <li><a>Distribution</a>
+                <li><a href="#Distribution">Distribution</a>
                     <ul class="nav nav-stacked">
-                        <li><a>Code Location</a></li>
-                        <li><a>Technology Overview</a></li>
-                        <li><a>Database</a></li>
+                        <li><a href="#CodeLocation">Code Location</a></li>
+                        <li><a href="#TechnologyOverview">Technology Overview</a></li>
+                        <li><a href="#Database">Database</a></li>
                     </ul>
                 </li>
-                <li><a>Meet the Creators</a></li>
+                <li><a href="#MeetTheCreators">Meet the Creators</a></li>
             </ul>
         </nav>
         </div>

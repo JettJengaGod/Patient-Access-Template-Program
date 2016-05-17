@@ -34,6 +34,10 @@ body {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+#branding a:hover{
+    color: white;
+    text-decoration: none;
+}
 .header-title{
     width: 100%;
     background-color: #003b71;
@@ -46,19 +50,18 @@ body {
     padding: 1%;
     margin: 0;
 }
+.header-btn{
+    color: white;
+    height: 100%;
+}
+.header-btn:hover{
+    background-color: #2b669a;
+    color: white !important;
+}
 .glyphicon-button{
     font-size: x-large;
     color: #ff8000;
 }
-/*.glyphicon-button:hover{*/
-    /*color: #ffb366;*/
-    /*cursor: pointer;*/
-/*}*/
-/*.glyphicon-button-bright:hover{*/
-    /*color: #5bc0de !important;*/
-    /*cursor: pointer;*/
-    /*font-size: xx-large;*/
-/*}*/
 /*------------------new_schedule page & settings_page------------------*/
 input, select{
     width: 100%;
@@ -81,6 +84,7 @@ input, select{
 .nav-tabs > li:not(.active) > a:hover{
     background-color: #0077e6 !important;
 }
+
 /*--------------used on the calendar page--------------*/
 .appt{
     float: left;
