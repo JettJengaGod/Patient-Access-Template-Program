@@ -161,11 +161,9 @@ def remove_schedule(request):
     try:
         schedule = SavedSchedule.objects.get(Name=save_name)
         nurse_group = schedule.NurseSchedule
-        app_group = schedule.TimeSlots
+        appointments = Appointment.objects.filter(SavedSchedule=schedule)
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
-        appointments = Appointment.objects.filter(Group=app_group)
         nurse_group.delete()
-        app_group.delete()
         nurses.delete()
         appointments.delete()
         schedule.delete()
