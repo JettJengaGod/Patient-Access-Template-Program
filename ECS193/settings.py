@@ -25,6 +25,13 @@ SECRET_KEY = 'u=(my1cm9k)ana)!#6zb$gio5z5cmku_+5a*az9rup^$l3-)a3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#note if testing email, have to run this command in command line
+#python -m smtpd -n -c DebuggingServer localhost:1025
+if DEBUG:
+    EMAIL_HOST = 'localhost'
+    EMAIL_PORT = 1025
+
+
 ALLOWED_HOSTS = []
 
 

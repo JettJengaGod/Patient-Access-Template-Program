@@ -39,7 +39,7 @@
         <div id="login-content-main">
             {% if user.is_authenticated %}
             <p class="errornote">
-            What you doing fool.
+            What you doing fool. Logged in user already trying to log in.
             </p>
             {% endif %}
 
@@ -59,7 +59,7 @@
             </form>
         </div>
     </div>
-    <div id="login-footer"></div>
+    <div id="login-footer"><a href="/user/password/reset">Forgot my password?</a></div>
 </div>
 
 
