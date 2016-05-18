@@ -19,12 +19,6 @@
                 Reserve("reserved{{ forloop.counter }}");
             {% endfor %}
 
-            //Replace glyphicons with text where needed
-            $('.glyphicon').each(function(){
-               if(this.length == 0)
-                    this.innerText = this.title;
-            });
-
             //enable hover event for appointment blocks
             $('a.appt').hover(
                 function() {
@@ -49,6 +43,7 @@
             {% endif %}
         });
     </script>
+    
 {% endblock %}
 {% block content %}
     {% if Schedule %}
@@ -64,10 +59,10 @@
             <ul>
                 {% for minutes, number in UnschAppts %}
                     <li>
-                    {% if ':' not in minutes %}
-                        {{ number }} of the {{ minutes }} minute appointments
-                    {% else %}
+                    {% if ":" not in minutes|stringformat:'s' %}
                         {{ number }} of the {{ minutes }} hour appointments
+                    {% else %}
+                        {{ number }} of the {{ minutes }} minute appointments
                     {% endif %}
                     </li>
                 {% endfor %}

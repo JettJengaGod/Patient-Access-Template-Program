@@ -351,6 +351,7 @@ function MiddleCell(startCellIndex, endCellIndex){
 //---------load/save operations of entire schedule--------//
 function SaveSchedule(overwrite){
     var name = $('#SaveName').val();
+    var label = $("#pageAlert");
     var alert = document.getElementById("save_alert");
     $('#yesOverwrite').hide();
     $('#noOverwrite').hide();
@@ -368,7 +369,13 @@ function SaveSchedule(overwrite){
     }
     else if(alreadyExists && overwrite == true)  //delete so we can overwrite
     {
-        DeleteSchedule(name);
+        if(!DeleteSchedule(name))
+        {
+            label.css("display", "block");
+            label.addClass("alert-danger").removeClass("alert-danger");
+            label.text("Unable to save " + name);
+            return;
+        }
     }
     //Save to DB
     $.ajax({
@@ -377,19 +384,16 @@ function SaveSchedule(overwrite){
         url: '/save_schedule/',
         contentType: "application/json",
         data: {'SaveName': name},
-        success: function(result) {
-            var label = $("#pageAlert");
-            label.text(result);
-            label.css("display", "block");
-            label.addClass("alert-success").removeClass("alert-danger");
-            $('#saveSchedule').disable();
-        },
         complete: function(response, textStatus) {
             if(textStatus != 'success') {
-                var label = $("#pageAlert");
                 label.text(name + ' could not be saved');
                 label.css("display", "block");
                 label.addClass("alert-danger").removeClass("alert-success");
+            }
+            else{
+                label.text(name + "has been saved");
+                label.css("display", "block");
+                label.addClass("alert-success").removeClass("alert-danger");
             }
         }
     });
@@ -420,6 +424,7 @@ function CheckSaveName(name){
 }
 
 function DeleteSchedule(name){
+    var result = false;
     $.ajax({
         type: 'GET',
         dataType: 'html',
@@ -429,11 +434,10 @@ function DeleteSchedule(name){
         async: false,
         complete: function(response, textStatus) {
             if(textStatus != 'success')
-                return false;
-        },
-        success: function() {
-            return true;
+                result = false;
+            else
+                result = true;
         }
     });
-    return true;
+    return result;
 }

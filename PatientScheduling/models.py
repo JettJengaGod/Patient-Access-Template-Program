@@ -36,7 +36,6 @@ class SavedSchedule(models.Model):
     Name = models.CharField(max_length=20, unique=True)
     SavedDate = models.DateTimeField(auto_now=True)
     NurseSchedule = models.ForeignKey(NurseScheduleGroups, null=False, on_delete=models.CASCADE)
-    TimeSlots = models.ForeignKey(SavedTimeSlotGroup, null=False, on_delete=models.CASCADE)
 
 
 class NurseSchedule(models.Model):
