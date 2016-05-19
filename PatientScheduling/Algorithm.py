@@ -9,8 +9,6 @@ def convert_input(time):
     minute = int(time[3:5])
     return hour, minute
 
-	
-
 start_time = UserSettings.get("DayStartDelay")/15
 day_start = convert_input(UserSettings.get("OpenTime"))
 num_chairs = UserSettings.get("MaxChairs")
@@ -54,7 +52,16 @@ def convert_to_duration(slots):
         return str(hours) + ':' + str(minutes)
 
 
+def update_user_settings():
+    start_time = UserSettings.get("DayStartDelay") / 15
+    day_start = convert_input(UserSettings.get("OpenTime"))
+    num_chairs = UserSettings.get("MaxChairs")
+    day_close = convert_input(UserSettings.get("CloseTime"))
+    longest_time = (day_close[0] - day_start[0]) * 4 + day_close[1] - day_start[1]
+
+
 def clean_input(nurseSchedules, appointments, scheduled_appointments):
+    update_user_settings()
     # first we convert them to nurses
     nurses = []
     for nurse in nurseSchedules:
