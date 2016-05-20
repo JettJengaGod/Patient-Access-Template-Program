@@ -55,7 +55,7 @@ def new_schedule(request):
                 ))
             # -----Run Algorithm and build the context----- #
             all_appointments = clean_input(nurses, needed_appointments, reserved_appointments)  # this starts the algorithm
-            scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
+            scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
             unscheduled_appointments = all_appointments[1]
             reserved_appointments = all_appointments[2]
             maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
@@ -100,7 +100,9 @@ def view_schedule(request, schedule_id):
     try:
         nurse_group = schedule.NurseSchedule
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
+        nurses = sorted(nurses, key=attrgetter('Team', 'NurseID'))
         appointments = Appointment.objects.filter(SavedSchedule=schedule)
+        appointments = sorted(appointments, key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
         chairs = nurse_group.Chairs
         maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
         if maxtime.minute == 0:
@@ -108,7 +110,7 @@ def view_schedule(request, schedule_id):
         else:
             maxhour = maxtime.hour
         mintime = min(nurses, key=attrgetter('StartTime')).StartTime
-        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments,
+        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0, chairs), 'Appointments': appointments,
                    'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all(),
                    'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
         return render(request, 'calendar.html', context)
