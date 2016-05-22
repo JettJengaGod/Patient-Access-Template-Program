@@ -24,7 +24,7 @@
         function CheckHoursUsed(){
             var appMins = GetTotalAppointmentMinutes('{{ AppointmentFormSet.prefix }}');
             var RNMins = GetTotalRNMinutes('{{ RNFormSet.prefix }}', {{Chairs}}[{{Chairs}}.length -1]+1); //very dirty but it works
-            var alert = document.getElementById("appointment_alert");
+            var alert = document.getElementById("ExceedTimeAlert");
             if(appMins > RNMins)
             {
                 $(alert).show();
@@ -135,6 +135,7 @@
     <div>
         <h3>Needed Timeslots</h3>
         <div id="appointment_alert" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <div id="ExceedTimeAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
             <div class="col-md-6">
                 <div style="display: inline-block;">

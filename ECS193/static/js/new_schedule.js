@@ -76,7 +76,8 @@
         var label = $("#pageAlert"); //hide any possible existing notifications
         label.css("display", "none");
         var ScheduleGroup = $("#savedSchedules option:selected").html();
-        document.getElementById("pageAlert").innerHTML = ''; //clear any previous alerts
+        label.innerHTML = ''; //clear any previous alerts
+        label.hide();
         if(ScheduleGroup.match(/[\w+\.\_]+/)) {
             $.ajax({
                 type: 'GET',
@@ -286,38 +287,39 @@
         return totalminutes * chairs;
     }
 
-    //------------------------------------------------------------------------------------------------------------
+    //-----------------Actions for time-slot input----------------------
 
     function ValidTimeSlotInput(prefix){
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <returns></returns>
-
         var alert = document.getElementById("appointment_alert");
         alert.innerHTML = ''; //clear any previous alerts
+        $(alert).hide();
         var table = document.getElementById(prefix + 'Table');
         if(table.rows.length < 3){
-            alert.InnerHTML = SPANBOLD + "Oops!" + ENDSPANBOLD + " Looks like you forgot to enter time slots";
+            $(alert).show();
+            alert.innerHTML = SPANBOLD + "Oops!" + ENDSPANBOLD + " Looks like you forgot to enter time slots";
             return false;
         }
         //loop through each row to ensure all fields are filled in
         for (var i = 1; i < table.rows.length - 1; i++) {
             var row = table.rows[i];
-            if (row.cells[1].firstChild.value == null || row.cells[2].firstChild.value == null) {
-                alert.InnerHTML = SPANBOLD + "Oops!" + ENDSPANBOLD + " Looks like you forgot to fill in all the fields";
+            var timePeriod = row.cells[1].firstChild.value;
+            var num = row.cells[2].firstChild.value;
+            if (timePeriod == "" || num == "") {
+                $(alert).show();
+                alert.innerHTML = SPANBOLD + "Oops!" + ENDSPANBOLD + " Looks like you forgot to fill in all the fields";
                 return false;
             }
-            if(isNaN(row.cells[2].firstChild.value) || row.cells[2].firstChild.value < 0){
-                alert.InnerHTML = row.cells[2].firstChild.value + " is not a valid input";
+            if(isNaN(num) || num < 0){
+                $(alert).show();
+                alert.innerHTML = num + " is not a valid input";
                 return false;
             }
         }
         return true;
     }
     function SaveTimeSlotButtonClick(prefix){
-        if(ValidTimeSlotInput(prefix)) {
+        $('#TimeSlotSaveName').removeAttr('readonly');
+        if(ValidTimeSlotInput(prefix)) { //checks all fields in the table
             $('#yesOverwrite_app').hide();
             $('#noOverwrite_app').hide();
             $('#save_app_alert').hide();
@@ -361,7 +363,7 @@
             var ajaxFailed = false;
             if(alreadyExists && overwrite == false)     //ask the user if they want to overwrite
             {
-                 $('#yesOverwrite_app').show();
+                $('#yesOverwrite_app').show();
                 $('#noOverwrite_app').show();
                 $('#save_app_alert').show();
                 alert.innerHTML = 'That name is already used. Would you like to overwrite it?';
@@ -374,6 +376,7 @@
                     dataType: 'html',
                     url: '/delete_time_slot/',  //changed and is now defined in urls.py
                     contentType: "application/json",
+                    async: false,
                     data: {'SaveName': SaveName}, //overwrite name
                     complete: function(response, textStatus) {
                         if(textStatus != 'success') {
@@ -429,6 +432,7 @@
     function LoadTimeSlots(prefix){
         var alert = document.getElementById("appointment_alert");
         alert.innerHTML = ''; //clear any previous alerts
+        $(alert).hide();
         $(alert).css("display", "none");//hide any possible existing notifications
         var TimeSlotGroup = $("#savedTimeSlots option:selected").html();
         $.ajax({
