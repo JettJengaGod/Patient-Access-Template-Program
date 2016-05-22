@@ -133,7 +133,7 @@
     </div>
 
     <div>
-        <h3>Needed Timeslots</h3>
+        <h3>Needed Timeslots </h3>
         <div id="appointment_alert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div id="ExceedTimeAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
@@ -144,8 +144,14 @@
                 </div>
                 <div style="display: inline-block;">
                 <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button><br><br></div>
+
             </div>
         </div>
+        <label for="NeedToSort"  style="overflow: hidden; padding: 0px 0px 0px 5px;">  Schedule Longest First
+                <input id="NeedToSort" type="checkbox" style="float: left;"> || why the hell is this so weird <br>
+        </label>
+
+
         {{ AppointmentFormSet.management_form }}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>
