@@ -1,16 +1,46 @@
-
+//-----------------Handles Schedule Inputs--------------//
 
     const SPANBOLD = "<span style='font-weight:bold'>";
     const ENDSPANBOLD = "</span>";
 
-    //removes all listed options in dropdown list
+/*
+   Function: removeOptions
+
+   Clears the dropdown menu that occurs when loading saved schedules and time slots.
+
+   Parameters:
+
+      selectbox - identifier for dropdown menu
+
+   Returns:
+
+      None
+ */
     function removeOptions(selectbox) {
         var i;
         for(i=selectbox.options.length-1;i>=0;i--)
             selectbox.remove(i);
     }
 
-    //----------------Actions for nurse schedule groups-----------------
+/*
+   Function: SaveSchedule
+
+   Gets called once user clicks save button from popup menu.
+   Handles saving the RN schedules to the database through an AJAX call.
+   Handles same name schedules and overriding previous saved schedules.
+   Handles saving by going through each row in the table and stores the
+   information into var Nurse.
+   Notifies user if save was successful or not.
+
+   Parameters:
+
+      prefix - Used for identifying elements on table by ID. ex: RN
+      overwrite - Used to identify if user wants to overwrite prev schedule
+
+   Returns:
+
+      boolean - true if successful save; false if otherwise
+ */
     function SaveSchedule(prefix, overwrite){
         var ScheduleGroup = $('#id_ScheduleGroupName').val();
         var alert = document.getElementById("save_alert");
@@ -72,6 +102,22 @@
             return false;
         }
     }
+
+/*
+   Function: LoadSchedule
+
+   Gets called once user hits load button from popup menu.
+   Handles loading the RN schedules from database through AJAX call.
+   If AJAX call is successful, calls fillRNSchedule
+
+   Parameters:
+
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+      None
+ */
     function LoadSchedule(prefix){
         var label = $("#pageAlert"); //hide any possible existing notifications
         label.css("display", "none");
@@ -96,6 +142,21 @@
             });
         }
     }
+
+/*
+   Function: ScheduleNameUsed
+
+   Checks if ScheduleGroup (name of Schedule) is stored in database.
+   Used in SaveSchedule function, overwrite section.
+
+   Parameters:
+
+      ScheduleGroup - Name of schedule that user wants to save.
+
+   Returns:
+
+      returnValue - boolean, false if unique name, true if otherwise
+ */
     function ScheduleNameUsed(ScheduleGroup){
         if(ScheduleGroup.match(/[\w+\.\_]+/)) {
             var returnValue = false;
@@ -120,6 +181,21 @@
             return returnValue;
         }
     }
+
+/*
+   Function: LoadScheduleNames
+
+   Gets called once user hits Load Nurse Schedule button.
+   Does AJAX call to load up all saved schedule's names.
+
+   Parameters:
+
+      None
+
+   Returns:
+
+      None
+ */
     function LoadScheduleNames(){
         $.ajax({
             type: 'GET',
@@ -145,6 +221,22 @@
             }
         });
     }
+
+/*
+   Function: fillRNSchedule
+
+   Fills up RN table information of loaded schedule by going through each row and adding the information.
+   Removes previous RN table information after loading.
+
+   Parameters:
+
+      objectList - Contains information of saved RN schedules (Team, StartTime, etc)
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+      None
+ */
     function fillRNSchedule(objectList, prefix){
         objectList = objectList.sort(compareRNSchedules);
         var count = objectList.length;
@@ -173,8 +265,24 @@
             row.cells[6].firstChild.value = obj.EndTime;
         }
     }
-    //used when sorting. returns negative if s1 < s2, 0 if s1=s2, and positive if s1 > s2
-    //compares team, then StartTime
+
+/*
+   Function: compareRNSchedules
+
+   Used when sorting.
+   Sorts by team and then StartTime.
+
+   Parameters:
+
+      s1 - first RN object for comparison
+      s2 - second RN object for comparison
+
+   Returns:
+
+      -1 - if s1 < s2
+      0 - if s1 is equal to s2
+      1 - if s1 > s2
+ */
     function compareRNSchedules(s1, s2){
         if(s1.fields.Team == s2.fields.Team)
         {
@@ -188,7 +296,24 @@
             return 1;
         else return -1;
     }
-    //maintains tables with dynamic # of rows
+/*
+   Function: updateElementIndex
+
+   Maintains tables with dynamic number of rows.
+   Handles the logic to maintain ID is correct per row.
+   Used when adding or deleting rows.
+   Ex: 4 nurses 1-4. Delete first row. nurses 2-4. Changes identifier to nurses 1-3.
+
+   Parameters:
+
+      object - used to identify the button for deletion/insertion of rows
+      prefix - Used for identifying elements on table by ID. ex: RN
+      index - used for identifying which row is currently being updated
+
+   Returns:
+
+      None
+ */
     function updateElementIndex(object, prefix, index) {
 		var id_regex = new RegExp('(' + prefix + '-\\d+)');
 		var replacement = prefix + '-' + index;
@@ -200,7 +325,35 @@
                     RemoveRowClick(index+1, prefix);
             });
 	}
+
+/*
+   Function: buttonDayClick
+
+   Does nothing.
+
+   Parameters:
+
+      None
+
+   Returns:
+
+      None
+ */
     function buttonDayClick() {}
+/*
+   Function: AddRowClick
+
+   Gets called once user hits (+) button to add an additional row to a table.
+   Adds a row while maintaining IDs are maintained correctly.
+
+   Parameters:
+
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+      None
+ */
     function AddRowClick(prefix) {
         try {
             var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
@@ -224,6 +377,21 @@
             alert(e);
         }
     }
+/*
+   Function: RemoveRowClick
+
+   Gets called once user hits (-) button to delete specific row from table.
+   Deletes a row while maintaining IDs are maintained correctly.
+
+   Parameters:
+
+      rowIndex - Used to identify which row is to be deleted
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+      None
+ */
     function RemoveRowClick(rowIndex, prefix){
          var form_count = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
          try {
@@ -253,7 +421,19 @@
             lastDeleteButton.disabled = true;
         }
     }
+/*
+   Function: GetTotalAppointmentMinutes
 
+   Grabs the total appointment minutes.
+
+   Parameters:
+
+      AppPrefix - Used for identifying the table
+
+   Returns:
+
+      totalminutes - Total minutes from appointment
+ */
     function GetTotalAppointmentMinutes(AppPrefix){
         var table = document.getElementById(AppPrefix + 'Table');
         if(table == null) return 0;
@@ -268,7 +448,20 @@
         }
         return totalminutes;
     }
+/*
+   Function: GetTotalRNMinutes
 
+   Grabs the total RN minutes.
+
+   Parameters:
+
+      RNPrefix - Used for identifying the table
+      chairs - Number of chairs per nurse
+
+   Returns:
+
+      totalminutes * chairs - All minutes for entire appointment
+ */
     function GetTotalRNMinutes(RNPrefix, chairs){
         var table = document.getElementById(RNPrefix + 'Table');
         if(table == null) return 0;
@@ -288,7 +481,20 @@
     }
 
     //-----------------Actions for time-slot input----------------------
+/*
+   Function: ValidTimeSlotInput
 
+   Validation for time slots.
+   Alerts users if input is incorrect.
+
+   Parameters:
+
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+      boolean - true if all inputs are valid, false if otherwise
+ */
     function ValidTimeSlotInput(prefix){
         var alert = document.getElementById("appointment_alert");
         alert.innerHTML = ''; //clear any previous alerts
@@ -317,6 +523,19 @@
         }
         return true;
     }
+/*
+   Function: SaveTimeSlotButtonClick
+
+   Button for saving the time slots.
+
+   Parameters:
+
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+     None
+ */
     function SaveTimeSlotButtonClick(prefix){
         $('#TimeSlotSaveName').removeAttr('readonly');
         if(ValidTimeSlotInput(prefix)) { //checks all fields in the table
@@ -326,6 +545,20 @@
             $('#saveTimeSlotModal').modal('show');
         }
     }
+/*
+   Function: TimeSlotNameUsed
+
+   Checks if TimeSlot name is unique.
+   Does AJAX call to check and compare with other previous saved timeslots.
+
+   Parameters:
+
+      TimeSlotGroup - name of Timeslot that user wants to save.
+
+   Returns:
+
+      returnValue - boolean value; false if unique name, true if otherwise
+ */
     function TimeSlotNameUsed(TimeSlotGroup){
         if(TimeSlotGroup.match(/[\w+\.\_]+/)) {
             var returnValue = false;
@@ -350,6 +583,23 @@
             return returnValue;
         }
     }
+/*
+   Function: SaveTimeSlots
+
+   Gets called once user clicks save button from popup menu.
+   Handles saving the TimeSlots to the database through an AJAX call.
+   Handles same name TimeSlots and overriding previous saved TimeSLots.
+   Notifies user if save was successful or not.
+
+   Parameters:
+
+      prefix - Used for identifying elements on table by ID. ex: RN
+      overwrite - Used to identify if user wants to overwrite prev TimeSlot
+
+   Returns:
+
+      boolean - true if successful save; false if otherwise
+ */
     function SaveTimeSlots(prefix, overwrite){
         var SaveName = document.getElementById("TimeSlotSaveName").value; //grab save name from input box
         var alert = document.getElementById("save_app_alert");
@@ -429,6 +679,21 @@
             return false;
         }
     }
+/*
+   Function: LoadTimeSlots
+
+   Gets called once user hits load button from popup menu.
+   Handles loading the TimeSlots from database through AJAX call.
+   If AJAX call is successful, calls fillTimeSlots
+
+   Parameters:
+
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+      None
+ */
     function LoadTimeSlots(prefix){
         var alert = document.getElementById("appointment_alert");
         alert.innerHTML = ''; //clear any previous alerts
@@ -451,6 +716,21 @@
             }
         });
     }
+/*
+   Function: fillTimeSlots
+
+   Fills up TimeSlots table information of loaded TimeSlots by going through each row and adding the information.
+   Removes previous TimeSlots table information after loading.
+
+   Parameters:
+
+      objectList - Contains information of saved TimeSlots schedules (Duration and Count)
+      prefix - Used for identifying elements on table by ID. ex: RN
+
+   Returns:
+
+      None
+ */
     function fillTimeSlots(objectList, prefix){
         if(objectList.length == 0) {
             document.getElementById("appointment_alert").innerHTML =
@@ -481,8 +761,24 @@
             row.cells[2].firstChild.value = obj.Count;
         }
     }
-    //used when sorting. returns negative if s1 < s2, 0 if s1=s2, and positive if s1 > s2
-    //compares team, then StartTime
+
+/*
+   Function: compareTimeSlots
+
+   Used when sorting.
+   Sorts by duration.
+
+   Parameters:
+
+      s1 - first TimeSlot object for comparison
+      s2 - second TimeSlot object for comparison
+
+   Returns:
+
+      -1 - if s1 < s2
+      0 - if s1 is equal to s2
+      1 - if s1 > s2
+ */
     function compareTimeSlots(s1, s2){
         if(s1.fields.Duration == s2.fields.Duration)
             return 0;
@@ -491,6 +787,20 @@
         else return -1;
     }
 
+/*
+   Function: LoadTimeSlotNames
+
+   Gets called once user hits Load TimeSlot button.
+   Does AJAX call to load up all TimeSlot's names.
+
+   Parameters:
+
+      None
+
+   Returns:
+
+      None
+ */
     function LoadTimeSlotNames(){
         $.ajax({
             type: 'GET',
