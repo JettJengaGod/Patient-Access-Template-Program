@@ -55,9 +55,13 @@
             <h4>Could Not Schedule:</h4>
             <ul>
                 {% for minutes, number in UnschAppts %}
-                    <li>
-                    {% if ":" not in minutes|stringformat:'s' %}
-                        {{ number }} of the {{ minutes }} hour appointments
+                     <li>
+                    {% if ":" not in minutes|stringformat:'s'%}
+                        {% if minutes|stringformat:'s'|length == 1%}
+                            {{ number }} of the {{ minutes }} hour appointments
+                        {% else %}
+                            {{ number }} of the {{ minutes }} minute appointments
+                        {% endif %}
                     {% else %}
                         {{ number }} of the {{ minutes }} minute appointments
                     {% endif %}
