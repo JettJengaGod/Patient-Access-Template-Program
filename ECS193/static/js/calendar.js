@@ -363,7 +363,7 @@ function AddFill(cell, fraction, className, leftAligned){
    Function: BuildApptDiv
 
    Dynamically builds the html div for the appointment (similar to function AddFill except with appointment only attributes)
-   BuildApptDiv(cell, endPercent, true, cell == DurationCell, apptID, startTime, endTime);
+
    Parameters:
 
       cell - cell to be filled
@@ -373,7 +373,7 @@ function AddFill(cell, fraction, className, leftAligned){
       id - Id of the appointment this cell is a part of
       startTime - the time when the appointment that encompasses this cell starts (or at least the part of this cell that we are filling)
       endTime - the time when the appointment that encompasses this cell ends (or at least the part of this cell that we are filling)
-      vorder - where to put the border to separate this appointment from the next
+      border - where to put the border to separate this appointment from the next
 
    Returns:
 
