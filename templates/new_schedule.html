@@ -148,11 +148,12 @@
             </div>
         </div>
         <label for="NeedToSort"  style="overflow: hidden; padding: 0px 0px 0px 5px;">  Schedule Longest First
-                <input id="NeedToSort" type="checkbox" style="float: left;" value="SLF"> || why the hell is this so weird <br>
+                <input id="NeedToSort" type="checkbox" style="float: left;" name ="shouldSort" value="True"> || why the hell is this so weird <br>
         </label>
 
-
         {{ AppointmentFormSet.management_form }}
+
+
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>
                 <th></th>
