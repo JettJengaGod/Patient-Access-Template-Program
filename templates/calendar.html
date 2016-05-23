@@ -100,7 +100,7 @@
         </tr>
         {% for RN in RNSet %}
             {% ifchanged RN.Team %}
-                <tr id="collapse-row-{{ forloop.counter }}" onclick="rowSelect({{ forloop.counter }},4)" class="table-grouper">
+                <tr id="collapse-row-{{ forloop.counter }}" onclick="rowSelect({{ forloop.counter }})" class="table-grouper">
                     <td colspan="100%">
                         <span id="arrow-{{ forloop.counter }}" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;
                         Pod {{ RN.Team }}

@@ -9,14 +9,39 @@ from PatientScheduling import UserSettings
 from PatientScheduling.models import NurseScheduleGroups, NurseSchedule, SavedSchedule, Appointment, SavedTimeSlot, \
     SavedTimeSlotGroup, ChemotherapyDrug
 
+'''
+   Function: generate_key
 
+      Generates a random string of ascii characters with length 'size'.
+      Used to create a random save name for RNSchedules when saving a generated appointment schedule
+
+   Parameters:
+
+      size - length of characters
+
+   Returns:
+
+      The randomly generated string
+'''
 def generate_key(size):
     chars = string.ascii_uppercase + string.digits
     return ''.join(random.choice(chars) for x in range(size))
 
 # ------used to load/manage nurses and nurse schedules------- #
+'''
+   Function: check_schedule_group_name
 
+      Checks if a RN schedule with the given name exists in the DB
 
+   Parameters:
+
+      request.GET['ScheduleGroupName'] - The save name to be checked
+
+   Returns:
+
+      True - If the provided name is unique
+      False - If the provided name has been used already
+'''
 def check_schedule_group_name(request):
     name = request.GET['ScheduleGroupName']
     try:
@@ -26,7 +51,21 @@ def check_schedule_group_name(request):
     else:
         return HttpResponse('False', content_type="application/json")  # unique Schedule Name
 
+'''
+   Function: load_schedule_group_names
 
+      Attempts to load a list of existing RN schedules from the DB
+
+   Parameters:
+
+      None
+
+   Returns:
+
+      A json serialized list of all saved RN schedules
+
+
+'''
 def load_schedule_group_names(request):
     try:
         nameslist = NurseScheduleGroups.objects.filter(UserCreated=True)
@@ -37,7 +76,19 @@ def load_schedule_group_names(request):
     except (KeyError, NurseScheduleGroups.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
 
+'''
+   Function: delete_schedule_group
 
+      Attempts to remove the RN schedule with the given save name from the DB.
+
+   Parameters:
+
+      request.GET['ScheduleGroupName'] - The save name of the RN schedule to be deleted
+
+   Returns:
+
+      A HttpResponse with either a success or fail message
+'''
 def delete_schedule_group(request):
     name = request.GET['ScheduleGroupName']
     try:
@@ -46,7 +97,28 @@ def delete_schedule_group(request):
         return HttpResponse('failed to delete ' + name, content_type="application/json")
     return HttpResponse('removed all ' + name + ' schedules', content_type="application/json")
 
+'''
+   Function: add_to_schedule_group
 
+      Adds a RN to the RN schedule. If the given RN schedule does not exist, one is created.
+
+   Parameters:
+
+      request.GET['ScheduleGroupName'] - the name of the RN schedule
+      request.GET['Team'] - the pod this particular RN is in
+      request.GET['StartTime'] - the time this particular RN starts work
+      request.GET['LunchTime'] - the time the RN leaves for lunch
+      request.GET['LunchDuration'] - the duration of the lunch break
+      request.GET['EndTime'] - the time this particular RN ends work
+
+   Returns:
+
+      A HttpResponse with either a success or fail message
+
+    See Also:
+        <UserSettings.get>
+
+'''
 def add_to_schedule_group(request):
     r = request.GET
     group_name = r['ScheduleGroupName']
@@ -67,7 +139,19 @@ def add_to_schedule_group(request):
     rn.save()
     return HttpResponse('The rn schedule ' + group_name + 'has been saved', content_type="application/json")
 
+'''
+   Function: load_schedule_group
 
+      Attempts to load the RN schedule with the given name from the DB
+
+   Parameters:
+
+      request.GET['ScheduleGroupName'] - the name of the RN schedule
+
+   Returns:
+
+      A json serialized string containing a list of all loaded RN objects from the DB
+'''
 def load_schedule_group(request):
     name = request.GET['ScheduleGroupName']
     try:
@@ -78,7 +162,19 @@ def load_schedule_group(request):
 
 # -------used to load/manage appointment duration input------ #
 
+'''
+   Function: load_time_slot_group_names
 
+      Loads the save name of all currently saved time slot inputs
+
+   Parameters:
+
+      None
+
+   Returns:
+
+      A Json serialized list of saved names
+'''
 def load_time_slot_group_names(request):
     try:
         groups = SavedTimeSlotGroup.objects.all()
@@ -89,7 +185,19 @@ def load_time_slot_group_names(request):
     except (KeyError, SavedTimeSlot.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
 
+'''
+   Function: load_time_slot_group
 
+      Attempts to load the time slot input with the given saved name from the DB
+
+   Parameters:
+
+      request.GET['SaveName']
+
+   Returns:
+
+      A json serialized string of saved names
+'''
 def load_time_slot_group(request):
     name = request.GET['SaveName']
     try:
@@ -99,7 +207,22 @@ def load_time_slot_group(request):
     except (KeyError, SavedTimeSlot.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
 
+'''
+   Function: save_time_slot
 
+      Adds the given time slot to the input group in the DB with the given name.
+      If the input group does not exist in the DB, then one is created.
+
+   Parameters:
+
+      request.GET['SaveName'] - the name of the saved time slot group
+      request.GET['Duration'] - the duration of the given time slot
+      request.GET['Count'] - how many time slots are requested
+
+   Returns:
+
+      A HttpResponse with either a success or fail message
+'''
 def save_time_slot(request):
     save_name = request.GET['SaveName']
     try:  # check if the name has already been used
@@ -114,7 +237,19 @@ def save_time_slot(request):
     time_slot.save()
     return HttpResponse('The duration and number of the time slots: ' + save_name + 'has been saved', content_type="application/json")
 
+'''
+   Function: delete_time_slot
 
+      Attempts to remove the saved time slot group with the matching primary key from the DB
+
+   Parameters:
+
+      request.GET['SaveName'] - the name of the time slot input group to be delted
+
+   Returns:
+
+      A HttpResponse with either a success or fail message
+'''
 def delete_time_slot(request):
     save_name = request.GET['SaveName']
     try:
@@ -123,7 +258,20 @@ def delete_time_slot(request):
         return HttpResponse('failed to delete ' + save_name, content_type="application/json")
     return HttpResponse('removed all ' + save_name + ' schedules', content_type="application/json")
 
+'''
+   Function: check_time_slot_group_name
 
+      Searches the DB to see if the given name has already been used for a time slot group save name
+
+   Parameters:
+
+      request.GET['SaveName'] - the name to be checked
+
+   Returns:
+
+      false - if the given name is unique
+      true - if the given name has already been used
+'''
 def check_time_slot_group_name(request):
     save_name = request.GET['SaveName']
     try:
@@ -131,13 +279,30 @@ def check_time_slot_group_name(request):
     except (KeyError, SavedTimeSlotGroup.DoesNotExist):
         return HttpResponse('False', content_type="application/json")  # unique Time Slot Name
     else:
-        return HttpResponse('True', content_type="application/json")  # unique Time Slot Name
+        return HttpResponse('True', content_type="application/json")
 
 
 # ------used to load/manage full schedules------- #
+'''
+   Function: save_schedule
 
+      Grabs the input used to generate the schedule from the session variables 'nurseSchedules' and 'appointments'
+      and saves them to the DB along with the generated appointments
+
+   Parameters:
+
+      request.GET['SaveName'] - the save name to be used
+
+   Returns:
+
+      A HttpResponse with either a success or fail message
+
+   See Also:
+        <UserSettings.get>
+'''
 @transaction.atomic  # ensures that either all of the DB changes are saved or none
 def save_schedule(request):
+    # todo: check if the session is still valid
     save_name = request.GET['SaveName']
     # Save the nurse schedules
     nurse_group = NurseScheduleGroups(Name=generate_key(20), UserCreated=False, Chairs=UserSettings.get("MaxChairs"))
@@ -154,7 +319,20 @@ def save_schedule(request):
         wrapper.object.save()
     return HttpResponse('The schedule ' + save_name + ' has been saved', content_type="application/json")
 
+'''
+   Function: remove_schedule
 
+      Attempts to remove the schedule with the matching name from the DB and all associated foreign key objects
+      from the DB
+
+   Parameters:
+
+      request.GET['SaveName'] - the save name of the schedule
+
+   Returns:
+
+      A HttpResponse with either a success or fail message
+'''
 @transaction.atomic  # ensures that either all of the DB changes are saved or none
 def remove_schedule(request):
     save_name = request.GET['SaveName']
@@ -171,7 +349,20 @@ def remove_schedule(request):
         return HttpResponse('An error has occurred', content_type="application/json")
     return HttpResponse('Deleted ' + save_name, content_type="application/json")
 
+'''
+   Function: check_schedule_name
 
+      Checks if the given name has been used to save another schedule already
+
+   Parameters:
+
+      request.GET['SaveName'] - the save name to check
+
+   Returns:
+
+      false - if the schedule name is unique
+      true - if the name has been used
+'''
 def check_schedule_name(request):
     name = request.GET['SaveName']
     try:
@@ -183,7 +374,19 @@ def check_schedule_name(request):
 
 # ------------ used to load an chemotherapy drug --------- #
 
+'''
+   Function: load_chemotherapy_drug
 
+      Loads the chemotherapy drug object from the DB that has the associated name
+
+   Parameters:
+
+      request.GET['Name'] - the drug name
+
+   Returns:
+
+      A json serialized object representing the drug
+'''
 def load_chemotherapy_drug(request):
     name = request.GET['Name']
 
