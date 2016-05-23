@@ -60,7 +60,7 @@ def update_user_settings():
     longest_time = (day_close[0] - day_start[0]) * 4 + day_close[1] - day_start[1]
 
 
-def clean_input(nurseSchedules, appointments, scheduled_appointments, sort):
+def clean_input(nurseSchedules, appointments, scheduled_appointments):
     update_user_settings()
     # first we convert them to nurses
     nurses = []

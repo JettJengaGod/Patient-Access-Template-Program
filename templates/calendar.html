@@ -30,10 +30,7 @@
                     $('.appt-'+groupID).removeClass('active');
                 }
             );
-            //enable popovers
-            $(function () {
-              $('[data-toggle="popover"]').popover()
-            });
+
             //ensure the navbar is pointing to this page
             $('.nav > li').removeClass('active');
             {% if Schedule %}

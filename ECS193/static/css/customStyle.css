@@ -62,14 +62,28 @@ body {
     font-size: x-large;
     color: #ff8000;
 }
-/*------------------new_schedule page & settings_page------------------*/
-input, select{
+/*------------------global------------------*/
+input[type=text], select{
     width: 100%;
     padding: 6px 12px;
     border-radius: 4px;
     border: 1px solid #ccc
 }
-
+input[type=checkbox]{
+    display: inline-block;
+    height: 17px;
+    width: 17px;
+    vertical-align: sub;
+}
+.help-glyphicon{
+    color: #2aabd2;
+    font-size: medium;
+    vertical-align: sub;
+}
+.help-glyphicon:hover{
+    color: #ff8000;
+    cursor: pointer;
+}
 /*------------------navigation------------------*/
 .nav-tabs > li > a{
     padding-top: 5px !important;
@@ -152,6 +166,25 @@ a.appt:focus{
     background-color: #0084ff !important;
     text-decoration: none;
 }
+
+.appt30{ background-color: #ff8080;}
+.appt45{ background-color: #ff80ff;}
+.appt60{ background-color: #bf80ff;}
+.appt90{ background-color: #9f80ff;}
+.appt120{ background-color: #809fff;}
+.appt150{ background-color: #80dfff;}
+.appt180{ background-color: #80ffdf;}
+.appt210{ background-color: #80ff9f;}
+.appt240{ background-color: #80ff80;}
+.appt270{ background-color: #9fff80;}
+.appt300{ background-color: #bfff80;}
+.appt330{ background-color: #dfff80;}
+.appt360{ background-color: #ffff80;}
+.appt390{ background-color: #ffdf80;}
+.appt420{ background-color: #ffbf80;}
+.appt450{ background-color: #ff9f80;}
+.appt480{ background-color: #ff8080;}
+
 /*--------------used on the home page--------------*/
 .links-container{
     margin-bottom: 40px;
@@ -293,21 +326,3 @@ ul.errorlist {
     padding-left: 30px;
     font-size: 13px;
 }
-
-.appt30{ background-color: #ff8080;}
-.appt45{ background-color: #ff80ff;}
-.appt60{ background-color: #bf80ff;}
-.appt90{ background-color: #9f80ff;}
-.appt120{ background-color: #809fff;}
-.appt150{ background-color: #80dfff;}
-.appt180{ background-color: #80ffdf;}
-.appt210{ background-color: #80ff9f;}
-.appt240{ background-color: #80ff80;}
-.appt270{ background-color: #9fff80;}
-.appt300{ background-color: #bfff80;}
-.appt330{ background-color: #dfff80;}
-.appt360{ background-color: #ffff80;}
-.appt390{ background-color: #ffdf80;}
-.appt420{ background-color: #ffbf80;}
-.appt450{ background-color: #ff9f80;}
-.appt480{ background-color: #ff8080;}

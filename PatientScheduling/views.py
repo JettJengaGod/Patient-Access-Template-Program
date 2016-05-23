@@ -1,4 +1,4 @@
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 
 import time
 
@@ -22,11 +22,7 @@ def new_schedule(request):
         rn_form = RNFormSet(request.POST, prefix='RN')
         app_form = AppointmentFormSet(request.POST, prefix='APP')
         reserved_form = ReservedFormSet(request.POST, prefix='RESERVED')
-        shouldSort = request.POST.get('shouldSort', False) #this is a string "true" if it was checked
-        if shouldSort:
-            sort = 1
-        else:
-            sort = 0
+        prioritize_longest = len(request.POST.getlist('PrioritizeLongest')) > 0
         if rn_form.is_valid() & app_form.is_valid() & reserved_form.is_valid():
             # -----Build nurse objects---- #
             nurses = []
@@ -47,7 +43,9 @@ def new_schedule(request):
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data
-                needed_appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
+                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount'))])
+            if prioritize_longest:
+                needed_appointments = sorted(needed_appointments, key=itemgetter(0), reverse=True)
             # -----Build list of pre-reserved time slots----- #
             reserved_appointments = []
             for form in reserved_form:
@@ -59,7 +57,7 @@ def new_schedule(request):
                     ChairID=int(cd.get('ChairNumber'))
                 ))
             # -----Run Algorithm and build the context----- #
-            all_appointments = clean_input(nurses, needed_appointments, reserved_appointments, sort)  # this starts the algorithm
+            all_appointments = clean_input(nurses, needed_appointments, reserved_appointments)  # this starts the algorithm
             scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
             unscheduled_appointments = all_appointments[1]
             reserved_appointments = all_appointments[2]
