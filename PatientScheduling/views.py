@@ -79,11 +79,11 @@ def new_schedule(request):
         rn_form = RNFormSet(prefix='RN')
         app_form = AppointmentFormSet(prefix='APP')
         appointment = AppointmentForm()
-        timeslot_count = 0;
-        for x in appointment.TIMESLOTS:
-            timeslot_count = timeslot_count + 1
+        appt_minutes = []
+        for x,y in appointment.TIMESLOTS:
+            appt_minutes.append(x)
         reserved_form = ReservedFormSet(prefix='RESERVED')
-        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form, 'ts_count': timeslot_count, 'appt_ts': appointment.TIMESLOTS}
+        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form, 'appt_ts': appt_minutes}
         return render(request, 'new_schedule.html', context)
 
 @login_required

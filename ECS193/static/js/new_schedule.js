@@ -511,34 +511,38 @@
             }
         });
     }
+/*
+   Function: PrepopulateTimeslots
 
-    //used to prepopulate timeslots with values from 0 minutes to 480 minutes
-    //hardcoded as of now, unsure on way to past in list of tuples through template to JS
-    function PrepopulateTimeslots(count, prefix) {
-        var temp = [30, 45, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330,
-                    360, 390, 420, 450, 480];
-        if(count > temp.length) {
-            document.getElementById("appointment_alert").innerHTML =
-                SPANBOLD + "Uh oh," + ENDSPANBOLD + "PrepopulateTimeslots function will not work due to change in forms.Appointmentforms.TIMESLOTS count";
-            return;
-        }
+   Prepopulates timeslots with values from AppointmentForm.TIMESLOTS
+   Populates each timeslow row with each TIMESLOTS
+
+   Parameters:
+
+      prefix - used to identify row ex: RN
+      tslots - list of TIMESLOTS
+
+   Returns:
+
+      None
+ */
+    function PrepopulateTimeslots(prefix, tslots) {
         var table = document.getElementById(prefix + 'Table');
         var tableRows = table.rows.length - 2;
-        if(tableRows < count)
-            while(tableRows != count) {
+        if(tableRows < tslots.length)
+            while(tableRows != tslots.length) {
                 AddRowClick(prefix);
                 tableRows++;
             }
-        else if(tableRows > count)
-            while(tableRows != count) {
+        else if(tableRows > tslots.length)
+            while(tableRows != tslots.length) {
                 RemoveRowClick(tableRows,prefix);
                 tableRows--;
             }
-        for (var i = 0; i < count; i++) {
+        for (var i = 0; i < tslots.length; i++) {
             var row = table.rows[i+1];
-            row.cells[1].firstChild.value = temp[i];
+            row.cells[1].firstChild.value = tslots[i];
             row.cells[2].firstChild.value = 0;
         }
-
     }
 
