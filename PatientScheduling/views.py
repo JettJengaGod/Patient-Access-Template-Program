@@ -13,7 +13,7 @@ from django.contrib.auth import authenticate, login
 from PatientScheduling import UserSettings
 from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet
 from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, ChemotherapyDrug
-from PatientScheduling.Algorithm import clean_input
+from PatientScheduling.Algorithm import clean_input, run_algorithm
 
 @login_required
 def new_schedule(request):
@@ -57,10 +57,11 @@ def new_schedule(request):
                     ChairID=int(cd.get('ChairNumber'))
                 ))
             # -----Run Algorithm and build the context----- #
-            all_appointments = clean_input(nurses, needed_appointments, reserved_appointments)  # this starts the algorithm
+            cleaned_input = clean_input(nurses, needed_appointments, reserved_appointments)  # clean the input
+            all_appointments = run_algorithm(cleaned_input[0], cleaned_input[2])
             scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
             unscheduled_appointments = all_appointments[1]
-            reserved_appointments = all_appointments[2]
+            reserved_appointments = cleaned_input[1]
             maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
             if maxtime.minute == 0:
                 maxhour = maxtime.hour - 1
