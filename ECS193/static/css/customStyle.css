@@ -63,7 +63,7 @@ body {
     color: #ff8000;
 }
 /*------------------global------------------*/
-input[type=text], select{
+input:not([type=checkbox]), select{
     width: 100%;
     padding: 6px 12px;
     border-radius: 4px;
@@ -111,7 +111,7 @@ input[type=checkbox]{
     background-color: #dcb6a3;
 }
 .appt-reserved{
-    opacity: .5;
+    opacity: .75;
 }
 a.appt:hover{
     text-decoration: none;

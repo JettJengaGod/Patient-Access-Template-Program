@@ -50,18 +50,20 @@ def new_schedule(request):
             reserved_appointments = []
             for form in reserved_form:
                 cd = form.cleaned_data
-                reserved_appointments.append(Appointment(
+                app = Appointment(
                     StartTime=cd.get('StartTime'),
                     EndTime=cd.get('EndTime'),
                     NurseScheduleID=cd.get('RNNumber'),
                     ChairID=int(cd.get('ChairNumber'))
-                ))
+                )
+                setattr(app, 'reserved', True)
+                reserved_appointments.append(app)
             # -----Run Algorithm and build the context----- #
             cleaned_input = clean_input(nurses, needed_appointments, reserved_appointments)  # clean the input
             all_appointments = run_algorithm(cleaned_input[0], cleaned_input[2])
-            scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
+            scheduled_appointments = all_appointments[0] + reserved_appointments
+            scheduled_appointments = sorted(scheduled_appointments, key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
             unscheduled_appointments = all_appointments[1]
-            reserved_appointments = cleaned_input[1]
             maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
             if maxtime.minute == 0:
                 maxhour = maxtime.hour - 1
@@ -69,7 +71,7 @@ def new_schedule(request):
                 maxhour = maxtime.hour
             mintime = min(nurses, key=attrgetter('StartTime')).StartTime
             context = {'RNSet': nurses, 'RNSize': chairs+1, 'Appointments': scheduled_appointments, 'Chairs': range(0, chairs),
-                       'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
+                       'UnschAppts': unscheduled_appointments,
                        'Drugs': ChemotherapyDrug.objects.all(),
                        'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
             # -----save to the session in case user saves calendar later----- #
