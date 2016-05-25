@@ -1,4 +1,4 @@
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 
 import time
 
@@ -13,7 +13,7 @@ from django.contrib.auth import authenticate, login
 from PatientScheduling import UserSettings
 from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet
 from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, ChemotherapyDrug
-from PatientScheduling.Algorithm import clean_input
+from PatientScheduling.Algorithm import clean_input, run_algorithm
 
 @login_required
 def new_schedule(request):
@@ -22,6 +22,7 @@ def new_schedule(request):
         rn_form = RNFormSet(request.POST, prefix='RN')
         app_form = AppointmentFormSet(request.POST, prefix='APP')
         reserved_form = ReservedFormSet(request.POST, prefix='RESERVED')
+        prioritize_longest = len(request.POST.getlist('PrioritizeLongest')) > 0
         if rn_form.is_valid() & app_form.is_valid() & reserved_form.is_valid():
             # -----Build nurse objects---- #
             nurses = []
@@ -42,22 +43,27 @@ def new_schedule(request):
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data
-                needed_appointments.append([cd.get('TimePeriod'), cd.get('Amount')])
+                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount'))])
+            if prioritize_longest:
+                needed_appointments = sorted(needed_appointments, key=itemgetter(0), reverse=True)
             # -----Build list of pre-reserved time slots----- #
             reserved_appointments = []
             for form in reserved_form:
                 cd = form.cleaned_data
-                reserved_appointments.append(Appointment(
+                app = Appointment(
                     StartTime=cd.get('StartTime'),
                     EndTime=cd.get('EndTime'),
                     NurseScheduleID=cd.get('RNNumber'),
                     ChairID=int(cd.get('ChairNumber'))
-                ))
+                )
+                setattr(app, 'reserved', True)
+                reserved_appointments.append(app)
             # -----Run Algorithm and build the context----- #
-            all_appointments = clean_input(nurses, needed_appointments, reserved_appointments)  # this starts the algorithm
-            scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID','ChairID','StartTime'))
+            cleaned_input = clean_input(nurses, needed_appointments, reserved_appointments)  # clean the input
+            all_appointments = run_algorithm(cleaned_input[0], cleaned_input[2])
+            scheduled_appointments = all_appointments[0] + reserved_appointments
+            scheduled_appointments = sorted(scheduled_appointments, key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
             unscheduled_appointments = all_appointments[1]
-            reserved_appointments = all_appointments[2]
             maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
             if maxtime.minute == 0:
                 maxhour = maxtime.hour - 1
@@ -65,7 +71,7 @@ def new_schedule(request):
                 maxhour = maxtime.hour
             mintime = min(nurses, key=attrgetter('StartTime')).StartTime
             context = {'RNSet': nurses, 'RNSize': chairs+1, 'Appointments': scheduled_appointments, 'Chairs': range(0, chairs),
-                       'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
+                       'UnschAppts': unscheduled_appointments,
                        'Drugs': ChemotherapyDrug.objects.all(),
                        'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
             # -----save to the session in case user saves calendar later----- #
@@ -100,7 +106,9 @@ def view_schedule(request, schedule_id):
     try:
         nurse_group = schedule.NurseSchedule
         nurses = NurseSchedule.objects.filter(ScheduleGroupName=nurse_group)
+        nurses = sorted(nurses, key=attrgetter('Team', 'NurseID'))
         appointments = Appointment.objects.filter(SavedSchedule=schedule)
+        appointments = sorted(appointments, key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
         chairs = nurse_group.Chairs
         maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
         if maxtime.minute == 0:
@@ -108,7 +116,7 @@ def view_schedule(request, schedule_id):
         else:
             maxhour = maxtime.hour
         mintime = min(nurses, key=attrgetter('StartTime')).StartTime
-        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0,chairs), 'Appointments': appointments,
+        context = {'Schedule': schedule, 'RNSet': nurses, 'Chairs': range(0, chairs), 'Appointments': appointments,
                    'RNSize': chairs+1, 'Drugs': ChemotherapyDrug.objects.all(),
                    'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
         return render(request, 'calendar.html', context)

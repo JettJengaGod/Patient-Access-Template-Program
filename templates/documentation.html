@@ -13,8 +13,9 @@
             border-bottom: solid lightgrey 1px;
         }
         h3{
-            color: grey;
+            color: #8aa4ab;
             padding-left: 3%;
+            margin-top: 0;
         }
     </style>
 {% endblock %}
@@ -26,16 +27,79 @@
                 <h2 id="ApplicationPurpose">Application Purpose</h2>
                 dasdasdas dsadasd dsadasdasdsaddsadas
             </section>
+
             <section class="group">
                 <h2 id="Preface">Preface</h2>
                 <h3 id="Vocabulary">Vocabulary</h3>
                 <h3 id="Navigation">Navigation</h3>
             </section>
+
             <section class="group">
                 <h2 id="Functionality">Functionality</h2>
+                <h3 id="CreatingNewSchedule">Creating a New Schedule</h3>
+                <h3 id="CalendarView">The Calendar view</h3>
+                <h3 id="SavedSchedules">Viewing Saved Schedules</h3>
+                <div class="row well">
+                    <h3 id="Settings">Schedule Generation Settings</h3>
+                    <div class="col-md-8">
+                        <p>
+                            These settings allow the user to change the way that the schedules are generated.
+                            Please be aware that changing these settings will effect all users.
+                        </p><br>
+                        <table class="table">
+                            <tr>
+                                <th style="min-width: 100px;">Chairs per RN</th>
+                                <td>The maximum number of patients that each RN can be assigned at a time.</td>
+                            </tr>
+                            <tr>
+                                <th>Open Time</th>
+                                <td>The time that the chemotherapy facility opens.
+                                    Restricts the time that RNs can be start, and the time that appointments can be scheduled
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Close Time</th>
+                                <td>The time that the chemotherapy facility closes.
+                                    Restricts the time that RNs can work until, and the time that appointments can be scheduled
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Start Delay</th>
+                                <td>The amount of minutes after the open time before any appointments can be scheduled</td>
+                            </tr>
+                        </table>
+                        <br>
+                        <p>
+                            The settings are saved to the text file called UserSettings in YAML format.
+                        </p>
+                    </div>
+                    <div class="col-md-4"><img src="\static\images\SettingsExample.png"></div>
+                </div>
+                <h3 id="AdminPage">The Admin Page</h3>
             </section>
+
             <section class="group">
-                <h2 id="Meet The Creators">MeetTheCreators</h2>
+                <h2 id="Distribution">Distribution</h2>
+                <div class="well">
+                <h3 id="Database">Setting up the Database</h3>
+                <p>
+                    The python file settings.py is what Django uses to determine the application settings being used.
+                    The 'DATABASES' field will need to be changed to specify your database engine (ex: postgresql) and
+                    the connection information.
+                </p>
+                <p>
+                    <a href="https://docs.djangoproject.com/en/1.9/ref/databases/">Click Here</a>
+                     For more information on what database engines Django supports.
+                </p>
+                <p>
+                    <a href="https://docs.djangoproject.com/en/1.9/topics/settings/">Click Here</a>
+                     For more information on configuring the settings.py file.
+                </p>
+                </div>
+            </section>
+
+            <section class="group">
+                <h2 id="MeetTheCreators">Meet The Creators</h2>
                 <img alt="Rachel Church" src="http://www.gravatar.com/avatar/b002350502e3734bcc94d9d11240e022">
                 Rachel Church <br>
                 <img alt="Alex Peng" src="http://www.gravatar.com/avatar/d85b9512652016482919000a189124fa">
@@ -46,6 +110,7 @@
                 Carl Glahn <br>
             </section>
         </div>
+
         <!--Nav Bar -->
         <div class="col-md-3 hidden-print hidden-xs">
         <nav class="bs-docs-sidebar affix">

@@ -7,16 +7,16 @@
     <script>
         $(document).ready(function(){
             {% for Appt in Appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }}, {{ closeTime }});
+                {% if Appt.reserved %}
+                    AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', "reserved{{ forloop.counter }}", {{ closeTime }});
+                    Reserve("reserved{{ forloop.counter }}");
+                {% else %}
+                    AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }}, {{ closeTime }});
+                {% endif %}
             {% endfor %}
 
             {% for RN in RNSet %}
                 BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}', {{ closeTime }});
-            {% endfor %}
-
-            {% for Appt in reserved_appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', "reserved{{ forloop.counter }}", {{ closeTime }});
-                Reserve("reserved{{ forloop.counter }}");
             {% endfor %}
 
             //enable hover event for appointment blocks
@@ -30,10 +30,7 @@
                     $('.appt-'+groupID).removeClass('active');
                 }
             );
-            //enable popovers
-            $(function () {
-              $('[data-toggle="popover"]').popover()
-            });
+
             //ensure the navbar is pointing to this page
             $('.nav > li').removeClass('active');
             {% if Schedule %}
@@ -58,9 +55,13 @@
             <h4>Could Not Schedule:</h4>
             <ul>
                 {% for minutes, number in UnschAppts %}
-                    <li>
-                    {% if ":" not in minutes|stringformat:'s' %}
-                        {{ number }} of the {{ minutes }} hour appointments
+                     <li>
+                    {% if ":" not in minutes|stringformat:'s'%}
+                        {% if minutes|stringformat:'s'|length == 1%}
+                            {{ number }} of the {{ minutes }} hour appointments
+                        {% else %}
+                            {{ number }} of the {{ minutes }} minute appointments
+                        {% endif %}
                     {% else %}
                         {{ number }} of the {{ minutes }} minute appointments
                     {% endif %}
@@ -103,7 +104,7 @@
         </tr>
         {% for RN in RNSet %}
             {% ifchanged RN.Team %}
-                <tr id="collapse-row-{{ forloop.counter }}" onclick="rowSelect({{ forloop.counter }},4)" class="table-grouper">
+                <tr id="collapse-row-{{ forloop.counter }}" onclick="rowSelect({{ forloop.counter }})" class="table-grouper">
                     <td colspan="100%">
                         <span id="arrow-{{ forloop.counter }}" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;
                         Pod {{ RN.Team }}

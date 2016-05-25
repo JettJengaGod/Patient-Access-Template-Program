@@ -24,7 +24,7 @@
         function CheckHoursUsed(){
             var appMins = GetTotalAppointmentMinutes('{{ AppointmentFormSet.prefix }}');
             var RNMins = GetTotalRNMinutes('{{ RNFormSet.prefix }}', {{Chairs}}[{{Chairs}}.length -1]+1); //very dirty but it works
-            var alert = document.getElementById("appointment_alert");
+            var alert = document.getElementById("ExceedTimeAlert");
             if(appMins > RNMins)
             {
                 $(alert).show();
@@ -133,8 +133,9 @@
     </div>
 
     <div>
-        <h3>Needed Timeslots</h3>
+        <h3>Needed Timeslots </h3>
         <div id="appointment_alert" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <div id="ExceedTimeAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
             <div class="col-md-6">
                 <div style="display: inline-block;">
@@ -143,8 +144,20 @@
                 </div>
                 <div style="display: inline-block;">
                 <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button><br><br></div>
+
+            </div>
+            <div class="col-md-6">
+                <a data-toggle="popover"  tabindex="0" title="Appointment Priority" role="button"
+                   data-placement="top" data-trigger="focus"
+                      data-content="When checked the longer duration time slots are prioritized.
+                      When not checked, the time slots that are placed higher in the list are given higher priority.">
+                        <span class="glyphicon glyphicon-question-sign help-glyphicon" aria-hidden="true"></span>
+                </a>
+                <label for="PrioritizeLongest">Prioritize Longer Appointments: </label>
+                <input id="PrioritizeLongest" name="PrioritizeLongest" type="checkbox" checked="checked">
             </div>
         </div>
+
         {{ AppointmentFormSet.management_form }}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>

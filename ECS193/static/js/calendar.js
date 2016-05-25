@@ -1,6 +1,25 @@
 
 
 //-----------------Handling Chemotherapy Drug--------------//
+
+/*
+   Function: DrugSelected
+
+   Uses Ajax to get the chemotherapy drug rules and other information from the database
+   then calls highlight() to apply them to the calendar view
+
+   Parameters:
+
+      None
+
+   Returns:
+
+      None
+
+    See Also:
+
+      <highlight>
+*/
 function DrugSelected(){
     var dropdown = document.getElementById('drugDropdown');
     var rulesLabel = document.getElementById('drugRules');
@@ -28,7 +47,21 @@ function DrugSelected(){
         rulesLabel.innerText = "";
     }
 }
+/*
+   Function: highlight
 
+   After parsing the time value information from the parameters, it uses them to fade the appointments that do not
+   fall into the specified time frame for the selected drug.
+
+   Parameters:
+
+      earliest - earliest time the drug can be scheduled
+      latest - latest time the drug can be scheduled
+
+   Returns:
+
+      None
+*/
 function highlight(earliest, latest){
     var allApps = $('.appt');
     if(earliest == null && latest == null){
@@ -65,8 +98,28 @@ function highlight(earliest, latest){
 }
 
 //-----------------Displaying the Calendar--------------//
+/*
+   Function: BuildRNRow
 
-//Color when nurses are available and are gone
+   Displays the RN's start time, lunch break, and leaving time on the calendar
+
+   Parameters:
+
+      RNIndex - the ID of the Nurse (they are passed in sequentially i.e. 1, 2, 3...)
+      startTime - the time when the nurse starts for the day
+      lunchTime - the time when the nurse's lunch starts for the day
+      duration - how long the lunch is
+      endTime - the time when the nurse ends for the day
+      closeTime - the time when the chemotherapy facility ends for the day
+
+   Returns:
+
+      None
+
+   See Also:
+
+      <AddFill>
+*/
 function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime, closeTime) {
     var table = document.getElementById("calendar");
     var maxCellIndex = table.rows[0].cells.length - 2;
@@ -127,7 +180,32 @@ function BuildRNRow(RNIndex, startTime, lunchTime, duration, endTime, closeTime)
         row = document.getElementById("RN-"+RNIndex+"-row-"+i);
     }
 }
+/*
+   Function: AddAppointment
 
+   Places an appointment on the calendar. Utilizes global variables lastEndIndex, lastEndPercent,
+   and lastRNIndex. Assumes the appointments have been sorted by Pod, by RN, and then by time.
+
+   Parameters:
+
+      RNIndex - the ID of the Nurse the appointment is being scheduled over
+      chairIndex - which chair the appointment will be scheduled under (sequential for each RN)
+      startTime - the time when the appointment starts
+      endTime - the time when the appointment ends
+      appID - ID of the appointment
+      closeTime - the time when the chemotherapy facility ends for the day
+
+   Returns:
+
+      None
+
+   See Also:
+
+      <BuildApptDiv>
+      <AddFill>
+      <getStringDuration>
+      <MiddleCell>
+*/
 var lastEndIndex = 0;
 var lastEndPercent = 0;
 var lastRNIndex = 1;
@@ -212,7 +290,20 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID, closeTi
         if (!endPlaced) enddiv.style.borderRight = 'black solid 1px';
     }
 }
+/*
+   Function: Reserve
 
+   reserves an appointment on the calendar.
+
+   Parameters:
+
+      appID - ID of the appointment to be reserved
+
+   Returns:
+
+      None
+
+*/
 function Reserve(apptID){
     $('.appt-'+apptID).each(function () {
         var x = $(this);
@@ -221,11 +312,27 @@ function Reserve(apptID){
         x.attr('data-content', x.attr('data-content')+str);
     });
 }
+/*
+   Function: AddFill
 
+   Adds a div of 'fraction'% width into the provided cell. Used to display when nurses are unavailable,
+   such as when they are on lunch, or to add invisible buffer blocks for a appointment <a> tag
+
+   Parameters:
+
+      cell - cell to be filled
+      fraction - fraction of the cell to be filled by this call
+      classname - to be applied to the cell
+      leftAligned - boolean on whether the cell is left aligned
+
+   Returns:
+
+      div -  the constructed div to apply to the portion of the cell
+*/
 function AddFill(cell, fraction, className, leftAligned){
     if(fraction > 1 || fraction < 0)
     {
-        alert("The given fraction to fill the cell by is not a valid percent!")
+        alert("The given fraction to fill the cell by is not a valid percent!");
         return;
     }
 
@@ -244,8 +351,27 @@ function AddFill(cell, fraction, className, leftAligned){
     cell.appendChild(div);
     return div;
 }
+/*
+   Function: BuildApptDiv
 
-//similar to function AddFill except with appointment only attributes
+     Dynamically builds the html <a> for an appointment and places it in the given cell.
+     (similar to function AddFill except with appointment only attributes)
+
+   Parameters:
+
+      cell - cell to be filled
+      fraction - fraction of the cell to be filled by this call
+      leftAligned - boolean on whether the cell is left aligned
+      showDuration - boolean on whether the to display the duration in this cell
+      id - Id of the appointment this cell is a part of
+      startTime - the time when the appointment that encompasses this cell starts
+      endTime - the time when the appointment that encompasses this cell ends
+      border - where to put the border to separate this appointment from the next
+
+   Returns:
+
+      div -  the constructed div to apply to the portion of the cell
+*/
 function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, endTime, border) {
     if(fraction > 1 || fraction < 0)
     {
@@ -303,11 +429,23 @@ function BuildApptDiv(cell, fraction, leftAligned, showDuration, id, startTime, 
     cell.appendChild(div);
     return div;
 }
+/*
+   Function: rowSelect
 
-//Collapse/expand a pod
-function rowSelect(grouping){
-    var groupRow = $('#collapse-row-'+grouping);
-    var arrow = document.getElementById('arrow-'+grouping);
+      collapses or expands a pod on the calendar view
+
+   Parameters:
+
+      podID - ID of the pod to be collapsed/expanded
+
+   Returns:
+
+      None
+
+*/
+function rowSelect(podID){
+    var groupRow = $('#collapse-row-'+podID);
+    var arrow = document.getElementById('arrow-'+podID);
     var row = groupRow.next();
     if(arrow.className.indexOf('up') > 0)
         arrow.className = "glyphicon glyphicon-chevron-down";
@@ -323,7 +461,21 @@ function rowSelect(grouping){
         row = row.next();
     }
 }
+/*
+   Function: getStringDuration
 
+      converts a duration of minutes into a string
+
+   Parameters:
+
+      duration - number of minutes
+
+   Returns:
+
+      durationText - a string  in the format of hours:minutes with an h appended
+                    or minutes with an m appended if the duration was less than an hour
+
+*/
 function getStringDuration(duration){
     var durationText = "";
     if(duration/60 >= 1){ //if it is longer than an hour
@@ -335,20 +487,51 @@ function getStringDuration(duration){
     else durationText = duration%60 + 'm';
     return durationText;
 }
+/*
+   Function: MiddleCell
 
-//returns index of cell between the given indices.
+     given two cell indexes, returns the index of the cell between the given indices.
+     Used to determine what cell to place the duration label in for a particular appointment.
+
+   Parameters:
+
+      startCellIndex - the start cell index to look from
+      endCellIndex -  the end cell index to look from
+
+   Returns:
+
+      returns index of cell between the given indices
+
+*/
 function MiddleCell(startCellIndex, endCellIndex){
     var difference = endCellIndex - startCellIndex;
     if(difference == 0)
         return startCellIndex;
     else if(difference % 2 == 0) //even number
-        return startCellIndex + (difference/2)
+        return startCellIndex + (difference/2);
     else
-        return startCellIndex + ((difference - 1)/2)
+        return startCellIndex + ((difference - 1)/2);
 
 }
 
 //---------load/save operations of entire schedule--------//
+/*
+   Function: SaveSchedule
+
+      saves the currently displayed schedule to the database with the provided name as the primary key.
+      If 'overwrite' is false and the name already exists the user will be prompted if they wish to overwrite the saved schedule.
+      If 'overwrite' is true, an Ajax call will be made to delete the old schedule then an
+      Ajax call will be made to save the currently displayed schedule.
+
+   Parameters:
+
+      overwrite - boolean on whether or not to overwrite an entry of the same name in the database
+
+   Returns:
+
+      none
+
+*/
 function SaveSchedule(overwrite){
     var name = $('#SaveName').val();
     var label = $("#pageAlert");
@@ -399,7 +582,25 @@ function SaveSchedule(overwrite){
     });
     $('#saveModal').modal('hide');
 }
+/*
+   Function: CheckSaveName
 
+      checks to see if the name is already attached to a schedule in the database
+
+   Parameters:
+
+      name - name of schedule to be checked
+
+   Returns:
+
+      returnValue - true if the the name is in the database, false otherwise
+
+   See Also:
+
+      <CheckSaveName>
+      <DeleteSchedule>
+
+*/
 function CheckSaveName(name){
     var returnValue = false;
     $.ajax({
@@ -422,7 +623,20 @@ function CheckSaveName(name){
     });
     return returnValue;
 }
+/*
+   Function: DeleteSchedule
 
+      Deletes the schedule with the given save name, and deletes all associated foreign key objects
+
+   Parameters:
+
+      name - name of schedule to be deleted
+
+   Returns:
+
+      result - true if the the schedule was successfully deleted from the database, false otherwise
+
+*/
 function DeleteSchedule(name){
     var result = false;
     $.ajax({
