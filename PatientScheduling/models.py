@@ -51,6 +51,7 @@ class NurseSchedule(models.Model):
 
 class SavedTimeSlot(models.Model):
     # models.AutoField(primary_key=True) is a default field
+    Priority = models.IntegerField(default=0)
     Duration = models.IntegerField(default=0)
     Count = models.IntegerField(default=0)
     Group = models.ForeignKey(SavedTimeSlotGroup, null=False, on_delete=models.CASCADE)
