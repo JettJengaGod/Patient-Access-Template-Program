@@ -821,4 +821,38 @@
             }
         });
     }
+/*
+   Function: PrepopulateTimeslots
+
+   Prepopulates timeslots with values from AppointmentForm.TIMESLOTS
+   Populates each timeslow row with each TIMESLOTS
+
+   Parameters:
+
+      prefix - used to identify row ex: RN
+      tslots - list of TIMESLOTS
+
+   Returns:
+
+      None
+ */
+    function PrepopulateTimeslots(prefix, tslots) {
+        var table = document.getElementById(prefix + 'Table');
+        var tableRows = table.rows.length - 2;
+        if(tableRows < tslots.length)
+            while(tableRows != tslots.length) {
+                AddRowClick(prefix);
+                tableRows++;
+            }
+        else if(tableRows > tslots.length)
+            while(tableRows != tslots.length) {
+                RemoveRowClick(tableRows,prefix);
+                tableRows--;
+            }
+        for (var i = 0; i < tslots.length; i++) {
+            var row = table.rows[i+1];
+            row.cells[1].firstChild.value = tslots[i];
+            row.cells[2].firstChild.value = 0;
+        }
+    }
 
