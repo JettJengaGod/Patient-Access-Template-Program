@@ -138,15 +138,10 @@
         <div id="ExceedTimeAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
             <div class="col-md-6">
-                <div style="display: inline-block;">
-                    <button type="button" class="btn btn-primary" onclick="SaveTimeSlotButtonClick('{{ AppointmentFormSet.prefix }}');" >Save Time Slots Input</button>
-                    <br><br>
-                </div>
-                <div style="display: inline-block;">
-                <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button><br><br></div>
-
+                <button type="button" class="btn btn-primary" onclick="SaveTimeSlotButtonClick('{{ AppointmentFormSet.prefix }}');" >Save Time Slots Input</button>
+                <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <a data-toggle="popover"  tabindex="0" title="Appointment Priority" role="button"
                    data-placement="top" data-trigger="focus"
                       data-content="When checked the longer duration time slots are prioritized.
@@ -156,7 +151,11 @@
                 <label for="PrioritizeLongest">Prioritize Longer Appointments: </label>
                 <input id="PrioritizeLongest" name="PrioritizeLongest" type="checkbox" checked="checked">
             </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary" onclick="PrepopulateTimeslots('{{ AppointmentFormSet.prefix }}', {{ appt_ts }});">Prepopulate Timeslots</button>
+            </div>
         </div>
+        <br><br>
 
         {{ AppointmentFormSet.management_form }}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>

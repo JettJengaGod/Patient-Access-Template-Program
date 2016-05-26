@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 
 from PatientScheduling import UserSettings
-from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet
+from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet, AppointmentForm
 from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, ChemotherapyDrug
 from PatientScheduling.Algorithm import clean_input, run_algorithm
 
@@ -84,8 +84,12 @@ def new_schedule(request):
     else:  # not post
         rn_form = RNFormSet(prefix='RN')
         app_form = AppointmentFormSet(prefix='APP')
+        appointment = AppointmentForm()
+        appt_minutes = []
+        for x,y in appointment.TIMESLOTS:
+            appt_minutes.append(x)
         reserved_form = ReservedFormSet(prefix='RESERVED')
-        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
+        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form, 'appt_ts': appt_minutes}
         return render(request, 'new_schedule.html', context)
 
 @login_required
