@@ -43,7 +43,7 @@ def new_schedule(request):
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data
-                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount'))])
+                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount')), cd.get('TimeOfDay')])
             if prioritize_longest:
                 needed_appointments = sorted(needed_appointments, key=itemgetter(0), reverse=True)
             # -----Build list of pre-reserved time slots----- #
