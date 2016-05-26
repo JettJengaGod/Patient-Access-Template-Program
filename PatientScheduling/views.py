@@ -61,7 +61,7 @@ def new_schedule(request):
             # -----Run Algorithm and build the context----- #
             cleaned_input = clean_input(nurses, needed_appointments, reserved_appointments)  # clean the input
             all_appointments = run_algorithm(cleaned_input[0], cleaned_input[2])
-            scheduled_appointments = all_appointments[0] + reserved_appointments
+            scheduled_appointments = all_appointments[0] + cleaned_input[1]
             scheduled_appointments = sorted(scheduled_appointments, key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
             unscheduled_appointments = all_appointments[1]
             maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
