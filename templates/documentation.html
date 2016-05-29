@@ -30,14 +30,132 @@
 
             <section class="group">
                 <h2 id="Preface">Preface</h2>
-                <h3 id="Vocabulary">Vocabulary</h3>
+                <div class="row well">
+                    <h3 id="Vocabulary">Vocabulary</h3>
+                    <div class="col-md-8">
+                        <p>
+                            Definitions of common terms used.
+                        </p><br>
+                            <table class="table">
+                            <tr>
+                                <th style="min-width: 100px;">RN Schedules</th>
+                                <td>Location where users can add/remove RNs and add their work details.</td>
+                            </tr>
+                            <tr>
+                                <th>Pod Team</th>
+                                <td>Team associated with RN. Used to identify who works with each other as a team.</td>
+                            </tr>
+                            <tr>
+                                <th>Start Time</th>
+                                <td>The time where a RN officially starts work.</td>
+                            </tr>
+                            <tr>
+                                <th>Lunch Time</th>
+                                <td>The time where a RN officially starts his/her lunch.</td>
+                            </tr>
+                            <tr>
+                                <th>Lunch Duration</th>
+                                <td>The duration of RN's lunch break.</td>
+                            </tr>
+                            <tr>
+                                <th>End Time</th>
+                                <td>The time where a RN officially ends work.</td>
+                            </tr>
+                            <tr>
+                                <th>Reserved Time Periods</th>
+                                <td>Used to place mandatory appointments for a RN. Example:
+                                    If Nurse 1 knows he/she has an appointment that can not be missed for 1 hour at
+                                    9 am. You would use section of the form to input it.</td>
+                            </tr>
+                            <tr>
+                                <th>RN Number</th>
+                                <td>Unique ID associated with RN. Look at left most column at RN Schedules when
+                                    using the new Schedule page to find the ID.</td>
+                            </tr>
+                            <tr>
+                                <th>Chair Number</th>
+                                <td>Represents which chair you want to assign the mandatory appointment. Total number
+                                    of chairs per nurse can be changed at the settings page.</td>
+                            </tr>
+                            <tr>
+                                <th>Needed Timeslots</th>
+                                <td>Location where users can input the number of different appointments that users want.
+                                    Example: 30 30 minute appointments, 15 1 hour appointments, etc</td>
+                            </tr>
+                            <tr>
+                                <th>Prioritize Longer Appointments</th>
+                                <td>If checked, the algorithm will try to fit as many longest appointments and work
+                                    its way down to smaller appointments. If not checked, priority will be given based
+                                    on the order of the list from top to bottom.</td>
+                            </tr>
+                            <tr>
+                                <th>Prepopulate Timeslots</th>
+                                <td>If clicked, it will autofill the timeslots selections with every single timeslot and
+                                    autofill the total needed with 0.</td>
+                            </tr>
+                            <tr>
+                                <th>Error Message</th>
+                                <td>An input given was incorrect. Please fix the error listed and try again.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
                 <h3 id="Navigation">Navigation</h3>
             </section>
 
             <section class="group">
                 <h2 id="Functionality">Functionality</h2>
                 <h3 id="CreatingNewSchedule">Creating a New Schedule</h3>
-                <h3 id="CalendarView">The Calendar view</h3>
+                <div class="row well">
+                    <h3 id="CalendarView">The Calendar view</h3>
+                    <div class="col-md-8">
+                        <p>
+                            This page is where users can see the final schedule for the RNs. Each column is broken down
+                            by the hour and each row block represents a pod and their respective nurse.
+                        </p><br>
+                        <table class="table">
+                            <tr>
+                                <th>Pod</th>
+                                <td>Each pod is represented by a solid grey filled bar. Right below are the respective
+                                    RN for the pods. A pod can be collapsed to make it easier to view other pods.</td>
+                            </tr>
+                            <tr>
+                                <th>Nurse / Chairs</th>
+                                <td>Each RN is represented by their ID and chair in the pattern #:A where # represents
+                                    the ID and A represents their chair. They can be found in the very left column of the
+                                    calendar. The rows next to the RNs represent their respective chairs.</td>
+                            </tr>
+                            <tr>
+                                <th>Appointment</th>
+                                <td>The color bars shown represent all possible appointments. Each appointment length
+                                    has their own unique color code. Each appointment can be clicked on to show more
+                                    specific details such as start time, end time, and duration.</td>
+                            </tr>
+                            <tr>
+                                <th>Striped Bars</th>
+                                <td>The blue striped bars represent the RN's lunch time. The grey striped bars represent
+                                    times when they are not available due to early end time or later start time.</td>
+                            </tr>
+                            <tr>
+                                <th>Dropdown Menu</th>
+                                <td>The dropdown menu represents the drugs that are available for the patients. Each drug
+                                    has specific rules and any appointments that can not satisfy the rules are greyed out.</td>
+                            </tr>
+                        </table>
+                        <br>
+                        <p>
+                            <strong>How to use:</strong>
+                            The calendar shows all the appointments that can fit for each nurse. The appointments that
+                            can not be fitted are shown in a red alert box at the top and means that the user has inputted
+                            too many appointments. RNs be collapsed by their respective pods for easier visibility. Each
+                            appointment is color coded by their length and be clicked on to show extra details. The drop
+                            down menu in the top left corner gives the user the ability to show which appointment can
+                            satisfy the selected drug's rules. The blue-striped bars represent RN's lunch time and the
+                            grey-striped bars represent when they are not available. Users also have the ability to save
+                            and print their schedule which can be found at the top right of the calendar.
+                        </p>
+                    </div>
+                </div>
                 <h3 id="SavedSchedules">Viewing Saved Schedules</h3>
                 <div class="row well">
                     <h3 id="Settings">Schedule Generation Settings</h3>

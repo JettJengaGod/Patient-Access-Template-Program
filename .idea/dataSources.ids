@@ -57,6 +57,7 @@
       <column name="Duration" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="Count" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="Group_id" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Priority" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_PatientScheduling_savedtimeslot_1" columns="Group_id" ref-table="PatientScheduling_savedtimeslotgroup" ref-schema="" ref-catalog="" ref-columns="Name" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="PatientScheduling_savedtimeslot_fcce8521" unique="true" columns="Group_id"/>
