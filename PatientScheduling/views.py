@@ -11,9 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 
 from PatientScheduling import UserSettings
-from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet
+from PatientScheduling.forms import RNFormSet, AppointmentFormSet, CompanyForm, ReservedFormSet, AppointmentForm
 from PatientScheduling.models import NurseSchedule, SavedSchedule, Appointment, ChemotherapyDrug
-from PatientScheduling.Algorithm import clean_input
+from PatientScheduling.Algorithm import clean_input, run_algorithm
 
 @login_required
 def new_schedule(request):
@@ -43,24 +43,27 @@ def new_schedule(request):
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data
-                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount'))])
+                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount')), cd.get('TimeOfDay')])
             if prioritize_longest:
                 needed_appointments = sorted(needed_appointments, key=itemgetter(0), reverse=True)
             # -----Build list of pre-reserved time slots----- #
             reserved_appointments = []
             for form in reserved_form:
                 cd = form.cleaned_data
-                reserved_appointments.append(Appointment(
+                app = Appointment(
                     StartTime=cd.get('StartTime'),
                     EndTime=cd.get('EndTime'),
                     NurseScheduleID=cd.get('RNNumber'),
                     ChairID=int(cd.get('ChairNumber'))
-                ))
+                )
+                setattr(app, 'reserved', True)
+                reserved_appointments.append(app)
             # -----Run Algorithm and build the context----- #
-            all_appointments = clean_input(nurses, needed_appointments, reserved_appointments)  # this starts the algorithm
-            scheduled_appointments = sorted(all_appointments[0], key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
+            cleaned_input = clean_input(nurses, needed_appointments, reserved_appointments)  # clean the input
+            all_appointments = run_algorithm(cleaned_input[0], cleaned_input[2])
+            scheduled_appointments = all_appointments[0] + cleaned_input[1]
+            scheduled_appointments = sorted(scheduled_appointments, key=attrgetter('NurseScheduleID', 'ChairID', 'StartTime'))
             unscheduled_appointments = all_appointments[1]
-            reserved_appointments = all_appointments[2]
             maxtime = max(nurses, key=attrgetter('EndTime')).EndTime
             if maxtime.minute == 0:
                 maxhour = maxtime.hour - 1
@@ -68,7 +71,7 @@ def new_schedule(request):
                 maxhour = maxtime.hour
             mintime = min(nurses, key=attrgetter('StartTime')).StartTime
             context = {'RNSet': nurses, 'RNSize': chairs+1, 'Appointments': scheduled_appointments, 'Chairs': range(0, chairs),
-                       'UnschAppts': unscheduled_appointments, 'reserved_appointments': reserved_appointments,
+                       'UnschAppts': unscheduled_appointments,
                        'Drugs': ChemotherapyDrug.objects.all(),
                        'DayDuration': getHourRange(mintime, maxtime), 'closeTime': maxhour}
             # -----save to the session in case user saves calendar later----- #
@@ -81,8 +84,12 @@ def new_schedule(request):
     else:  # not post
         rn_form = RNFormSet(prefix='RN')
         app_form = AppointmentFormSet(prefix='APP')
+        appointment = AppointmentForm()
+        appt_minutes = []
+        for x,y in appointment.TIMESLOTS:
+            appt_minutes.append(x)
         reserved_form = ReservedFormSet(prefix='RESERVED')
-        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form}
+        context = {'RNFormSet': rn_form, 'Chairs': range(0, chairs), 'AppointmentFormSet': app_form, 'ReservedFormSet': reserved_form, 'appt_ts': appt_minutes}
         return render(request, 'new_schedule.html', context)
 
 @login_required

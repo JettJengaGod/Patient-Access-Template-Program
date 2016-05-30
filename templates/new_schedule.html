@@ -138,30 +138,32 @@
         <div id="ExceedTimeAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
             <div class="col-md-6">
-                <div style="display: inline-block;">
-                    <button type="button" class="btn btn-primary" onclick="SaveTimeSlotButtonClick('{{ AppointmentFormSet.prefix }}');" >Save Time Slots Input</button>
-                    <br><br>
-                </div>
-                <div style="display: inline-block;">
-                <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button><br><br></div>
-
+                <button type="button" class="btn btn-primary" onclick="SaveTimeSlotButtonClick('{{ AppointmentFormSet.prefix }}');" >Save Time Slots Input</button>
+                <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button>
             </div>
-            <div class="col-md-6">
-                <span class="glyphicon glyphicon-question-sign help-glyphicon" aria-hidden="true" data-toggle="popover" title="Help - Appointment Priority" data-placement="top"
+            <div class="col-md-3">
+                <a data-toggle="popover"  tabindex="0" title="Appointment Priority" role="button"
+                   data-placement="top" data-trigger="focus"
                       data-content="When checked the longer duration time slots are prioritized.
                       When not checked, the time slots that are placed higher in the list are given higher priority.">
-                </span>
+                        <span class="glyphicon glyphicon-question-sign help-glyphicon" aria-hidden="true"></span>
+                </a>
                 <label for="PrioritizeLongest">Prioritize Longer Appointments: </label>
                 <input id="PrioritizeLongest" name="PrioritizeLongest" type="checkbox" checked="checked">
             </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary" onclick="PrepopulateTimeslots('{{ AppointmentFormSet.prefix }}', {{ appt_ts }});">Prepopulate Timeslots</button>
+            </div>
         </div>
+        <br><br>
 
         {{ AppointmentFormSet.management_form }}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>
-                <th></th>
-                <th>Time Period</th>
-                <th>Total Needed</th>
+            <th></th>
+            <th>Time Period</th>
+            <th>Total Needed</th>
+            <th>Preferred Time</th>
         </tr>
         {% for form in AppointmentFormSet.forms %}
             <tr id="{{ AppointmentFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ AppointmentFormSet.prefix }}-row">
@@ -173,6 +175,7 @@
                 </td>
                 <td>{{ form.TimePeriod }}</td>
                 <td>{{ form.Amount }}</td>
+                <td>{{ form.TimeOfDay }}</td>
             </tr>
         {% endfor %}
         <tr><td colspan="6">

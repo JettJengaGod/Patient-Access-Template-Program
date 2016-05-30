@@ -1,0 +1,18 @@
+Crash Message:
+
+   The first content line in /cygdrive/e/Alex Jett/Coding/NaturalDocs/Config/Topics.txt must be the Format: line.
+
+Natural Docs version 1.52
+Perl version 5.22.1 on cygwin
+
+Command Line:
+
+   -i ../Patient-Template -o HTML ../Patient-Template -p ../Patient-Template
+
+Stack Trace:
+
+   NaturalDocs::Error::CatchDeath, called from
+   NaturalDocs::ConfigFile::Open, line 173, called from
+   NaturalDocs::Topics::LoadFile, line 361, called from
+   NaturalDocs::Topics::Load, line 299, called from
+   (eval), line 282 of NaturalDocs

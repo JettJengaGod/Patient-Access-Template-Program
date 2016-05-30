@@ -7,16 +7,16 @@
     <script>
         $(document).ready(function(){
             {% for Appt in Appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }}, {{ closeTime }});
+                {% if Appt.reserved %}
+                    AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', "reserved{{ forloop.counter }}", {{ closeTime }});
+                    Reserve("reserved{{ forloop.counter }}");
+                {% else %}
+                    AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', {{ forloop.counter }}, {{ closeTime }});
+                {% endif %}
             {% endfor %}
 
             {% for RN in RNSet %}
                 BuildRNRow({{ forloop.counter }},'{{ RN.StartTime | time:"H:i" }}','{{ RN.LunchTime | time:"H:i" }}', {{ RN.LunchDuration }}, '{{ RN.EndTime | time:"H:i" }}', {{ closeTime }});
-            {% endfor %}
-
-            {% for Appt in reserved_appointments %}
-                AddAppointment({{ Appt.NurseScheduleID }}, {{ Appt.ChairID }}, '{{ Appt.StartTime | time:"H:i" }}', '{{ Appt.EndTime | time:"H:i" }}', "reserved{{ forloop.counter }}", {{ closeTime }});
-                Reserve("reserved{{ forloop.counter }}");
             {% endfor %}
 
             //enable hover event for appointment blocks

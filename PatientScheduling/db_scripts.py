@@ -1,5 +1,6 @@
 import json
 import string, random
+from operator import attrgetter
 
 from django.db import transaction
 from django.http import HttpResponse
@@ -203,6 +204,7 @@ def load_time_slot_group(request):
     try:
         group_object = SavedTimeSlotGroup.objects.get(Name=name)
         time_slot_list = SavedTimeSlot.objects.filter(Group=group_object)
+        time_slot_list = sorted(time_slot_list, key=attrgetter('Priority'))
         return HttpResponse(serializers.serialize('json', time_slot_list), content_type="application/json")
     except (KeyError, SavedTimeSlot.DoesNotExist):
         return HttpResponse(serializers.serialize('json', []), content_type="application/json")
@@ -218,6 +220,7 @@ def load_time_slot_group(request):
       request.GET['SaveName'] - the name of the saved time slot group
       request.GET['Duration'] - the duration of the given time slot
       request.GET['Count'] - how many time slots are requested
+      request.GET['Priority'] - the scheduling priority of the time slot
 
    Returns:
 
@@ -232,8 +235,9 @@ def save_time_slot(request):
         group_object = SavedTimeSlotGroup(pk=save_name)
         group_object.save()
     duration = request.GET['Duration']
+    priority = request.GET['Priority']
     count = request.GET['Count']
-    time_slot = SavedTimeSlot(Group=group_object, Duration=duration, Count=count)
+    time_slot = SavedTimeSlot(Group=group_object, Duration=duration, Count=count, Priority=priority)
     time_slot.save()
     return HttpResponse('The duration and number of the time slots: ' + save_name + 'has been saved', content_type="application/json")
 

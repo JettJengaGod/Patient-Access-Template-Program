@@ -652,7 +652,7 @@
                     url: '/save_time_slot/',
                     async: doNotWait,
                     contentType: "application/json",
-                    data: {'SaveName': SaveName, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value},
+                    data: {'SaveName': SaveName, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value, 'Priority': i},
                     complete: function(response, textStatus) {
                         if(textStatus != 'success')
                             ajaxFailed = true;
@@ -737,7 +737,6 @@
                 SPANBOLD + "Uh oh," + ENDSPANBOLD + " we were unable to load the requested time slot input";
             return;
         }
-        objectList = objectList.sort(compareTimeSlots);
         var count = objectList.length;
         var table = document.getElementById(prefix + 'Table');
         var tableRows = table.rows.length - 2; //one row is header and one is add button
@@ -760,31 +759,6 @@
             row.cells[1].firstChild.value = obj.Duration;
             row.cells[2].firstChild.value = obj.Count;
         }
-    }
-
-/*
-   Function: compareTimeSlots
-
-   Used when sorting.
-   Sorts by duration.
-
-   Parameters:
-
-      s1 - first TimeSlot object for comparison
-      s2 - second TimeSlot object for comparison
-
-   Returns:
-
-      -1 - if s1 < s2
-      0 - if s1 is equal to s2
-      1 - if s1 > s2
- */
-    function compareTimeSlots(s1, s2){
-        if(s1.fields.Duration == s2.fields.Duration)
-            return 0;
-        else if(s1.fields.Duration > s2.fields.Duration)
-            return 1;
-        else return -1;
     }
 
 /*
@@ -820,5 +794,40 @@
                     select.append(new Option(result[i].pk, result[i].pk));
             }
         });
+    }
+/*
+   Function: PrepopulateTimeslots
+
+   Prepopulates timeslots with values from AppointmentForm.TIMESLOTS
+   Populates each timeslow row with each TIMESLOTS
+
+   Parameters:
+
+      prefix - used to identify row ex: RN
+      tslots - list of TIMESLOTS
+
+   Returns:
+
+      None
+ */
+    function PrepopulateTimeslots(prefix, tslots) {
+        var table = document.getElementById(prefix + 'Table');
+        var tableRows = table.rows.length - 2;
+        if(tableRows < tslots.length)
+            while(tableRows != tslots.length) {
+                AddRowClick(prefix);
+                tableRows++;
+            }
+        else if(tableRows > tslots.length)
+            while(tableRows != tslots.length) {
+                RemoveRowClick(tableRows,prefix);
+                tableRows--;
+            }
+        for (var i = 0; i < tslots.length; i++) {
+            var row = table.rows[i+1];
+            row.cells[1].firstChild.value = tslots[i];
+            row.cells[2].firstChild.value = 0;
+            row.cells[3].firstChild.selectedIndex = 0;
+        }
     }
 
