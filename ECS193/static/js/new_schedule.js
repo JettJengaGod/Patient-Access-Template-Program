@@ -827,6 +827,7 @@
             var row = table.rows[i+1];
             row.cells[1].firstChild.value = tslots[i];
             row.cells[2].firstChild.value = 0;
+            row.cells[3].firstChild.selectedIndex = 0;
         }
     }
 

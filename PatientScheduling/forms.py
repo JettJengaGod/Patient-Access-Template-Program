@@ -92,12 +92,12 @@ class AppointmentForm(forms.Form):
        (450, '7 Hours 30 Minutes'),
        (480, '8 Hours'),
         )
+    TimeOfDay = forms.ChoiceField(label='Preferred Time', choices=(('M', 'Morning'), ('A', 'Afternoon')), initial='M')
     TimePeriod = forms.ChoiceField(label='Time Period', choices=TIMESLOTS)
     Amount = forms.IntegerField(label='Amount',
                                 initial=1,
                                 min_value=0,
-                                max_value=99
-                                )
+                                max_value=99)
 
 
 AppointmentFormSet = formset_factory(AppointmentForm, can_delete=True)

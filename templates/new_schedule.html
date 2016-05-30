@@ -160,9 +160,10 @@
         {{ AppointmentFormSet.management_form }}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>
-                <th></th>
-                <th>Time Period</th>
-                <th>Total Needed</th>
+            <th></th>
+            <th>Time Period</th>
+            <th>Total Needed</th>
+            <th>Preferred Time</th>
         </tr>
         {% for form in AppointmentFormSet.forms %}
             <tr id="{{ AppointmentFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ AppointmentFormSet.prefix }}-row">
@@ -174,6 +175,7 @@
                 </td>
                 <td>{{ form.TimePeriod }}</td>
                 <td>{{ form.Amount }}</td>
+                <td>{{ form.TimeOfDay }}</td>
             </tr>
         {% endfor %}
         <tr><td colspan="6">
