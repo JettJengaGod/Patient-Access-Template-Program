@@ -180,10 +180,15 @@ def clean_input(nurseSchedules, appointments, scheduled_appointments):
     else:
         reserved_appointments = []
     # now we deal with the appointments
-    appt = []
+    morning = []
+    evening = []
     for appointment in appointments:
-        appt.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
-    return [nurses, reserved_appointments, appt]
+        if appointment[2] == u'M':
+            morning.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
+        else:
+            evening.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
+
+    return [nurses, reserved_appointments, [morning, evening]]
 
 # Function: run_algorithm
 #
@@ -192,7 +197,7 @@ def clean_input(nurseSchedules, appointments, scheduled_appointments):
 # Parameters:
 #
 #    nurses - a list of nurses in the format of the algorithm with the prescheduled timeslots scheduled already
-#    appt - a list of appointments in the format of the algorithm
+#    appt - 2 lists of appointments in the format of the algorithm
 #
 # Returns:
 #
@@ -400,11 +405,35 @@ class Pod:
     # See Also:
     #    <Alg_Appointment> <check_time>
 
-    def single_schedule(self, length, appt_number):
+    def morning_schedule(self, length, appt_number):
         for k in range(0, longest_time):
             for j in range(num_chairs-1):
                 for i in range(len(self.nurses)):
                     check = self.check_time(i, j, k, length, appt_number)
+                    if check:
+                        return check
+        return False
+
+    # Function: evening_schedule
+    #   Loops through a pod to see if it can schedule a single appointment in the evening
+    #   Time -> Nurse -> Chairs
+    # Parameters:
+    #
+    #    length - how long the appointment is
+    #    appt_number - the number attached to the appointment
+    #
+    # Returns:
+    #
+    #    An object of the type <Alg_Appointment> if there is an available slot in the pod open or false if there is not
+    #
+    # See Also:
+    #    <Alg_Appointment> <check_time>
+
+    def evening_schedule(self, length, appt_number):
+        for k in range(longest_time-1, 0, -1):
+            for j in range(num_chairs - 1):
+                for i in range(len(self.nurses)):
+                    check = self.check_time(i, j, k-length, length, appt_number)
                     if check:
                         return check
         return False
@@ -436,7 +465,7 @@ class Pod:
         if current.chairs[chair][time + length] is 1 or current.chairs[chair][time + length + 1] is 1 or current.chairs[chair][time + length - 1] is 1:  # ends during lunch
             return False
         extra = -1
-        if current.chairs[chair][time] is 1 or current.chairs[chair][time+1] is 1:  # starts during lunch
+        if current.chairs[chair][time] is 1 or current.chairs[chair][time-1] is 1 or current.chairs[chair][time+1] is 1:  # starts during lunch
             return False
         if current.chairs[chair][time] > 0 or current.chairs[chair][time+1] > 0:  # needs help starting the appointment
             for i in range(len(self.nurses)):
@@ -511,7 +540,7 @@ class Alg_Appointment:
 # Parameters:
 #
 #    pods - list of pods that have been supplied from the webpage
-#    appointments - list of appointments that need to be scheduled in the format of how long they are
+#    appointments - 2 lists of appointments that need to be scheduled in the format of how long they are
 #    final - the list of scheduled appointments that is handed back to the webpage
 #
 # Returns:
@@ -523,19 +552,36 @@ class Alg_Appointment:
 def schedule_slots(pods, appointments, final):
     number = 5
     discarded = []
-    while len(appointments) is not 0:
+    appointments[0].sort
+    appointments[0].reverse
+    appointments[1].sort
+    appointments[1].reverse
+    while len(appointments[0]) is not 0:
         stuck = number + 0
         for i in range(len(pods)):
-            if len(appointments) is 0:
-                return discarded
-            a = pods[i].single_schedule(appointments[0], number)
+            if len(appointments[0]) is 0:
+                break
+            a = pods[i].morning_schedule(appointments[0][0], number)
             if a:
                 print a
-                appointments.pop(0)
+                appointments[0].pop(0)
                 final.append(a)
                 number += 1
         if number is stuck:
-            discarded.append(appointments.pop(0))
+            discarded.append(appointments[0].pop(0))
             # return "Failed"
+    while len(appointments[1]) is not 0:
+        stuck = number + 0
+        for i in range(len(pods)):
+            if len(appointments[1]) is 0:
+                return discarded
+            a = pods[i].evening_schedule(appointments[1][0], number)
+            if a:
+                print a
+                appointments[1].pop(0)
+                final.append(a)
+                number += 1
+        if number is stuck:
+            discarded.append(appointments[0].pop(0))
     final.sort(key=lambda x: (x.nurse.id, x.chair, x.time))
     return discarded
