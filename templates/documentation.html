@@ -56,6 +56,12 @@
                 </div>
                 <div class="row well">
                     <h3 id="Navigation">Navigation</h3>
+                    <div class="col-sm-12">
+                        <p>
+                            After logging in, there are 4 options available to a user, create a new schedule, view saved schedules, access admin page and view documentation.
+                            Once the user has clicked on any of these pages, they have to oppertunity to return to the home screen simply by clicking the "Patient Scheduling Application" link in the top left corner. Everything can be reached from the homepage.
+                        </p>
+                    </div>
                 </div>
             </section>
 
@@ -63,10 +69,22 @@
                 <h2 id="Functionality">Functionality</h2>
                 <div class="row well">
                     <h3 id="CreatingNewSchedule">Creating a New Schedule</h3>
+                     <div class="col-sm-12">
+                        <p>
+                            There are 3 main parts to the create a new schedule page: RN schedules, Reserved Time Periods and Needed Timeslots
+                        </p>
+                        <p>
+                            RN Schedules : A list of nurse availability for a given day including their start time, lunch time, leave time, and the pod they are working within.
+                        </p>
+                     </div>
                     <table class="table">
                         <tr>
-                            <th style="min-width: 100px;">RN Schedule</th>
-                            <td>A list of nurse availability for a given day including their start time, lunch time, leave time, and the pod they are working within.</td>
+                            <th>Save Nurse Schedule</th>
+                            <td>Brings up a popup menu that allows for the user to save a specific schedule using a name to describe this schedule. If the name is already taken, it will overwrite it.</td>
+                        </tr>
+                        <tr>
+                            <th>Load Nurse Schedule</th>
+                            <td>Loads a previously saved schedule.</td>
                         </tr>
                         <tr>
                             <th>RN Number</th>
@@ -93,21 +111,36 @@
                             <th>End Time</th>
                             <td>The time where a RN officially ends work.</td>
                         </tr>
-                        <tr>
-                            <th>Reserved Time Periods</th>
-                            <td>Used to place mandatory appointments for a particular RN before generating the schedule. Example:
+
+                    </table>
+                    <p>
+                            Reserved Time Periods: Used to place mandatory appointments for a particular RN before generating the schedule. Example:
                                 If Nurse 1 knows he/she has an appointment that can not be missed for 1 hour at
-                                9 am. You would use section of the form to input it.</td>
+                                9 am. You would use section of the form to input it
+                    </p>
+                    <table class="table">
+                        <tr>
+                            <th>RN Number</th>
+                            <td>The number assigned to the paricular RN you want to mark a time for (This is generated in RN schedules where it says "Nurse x").</td>
                         </tr>
                         <tr>
                             <th>Chair Number</th>
                             <td>Represents which chair you want to assign the mandatory appointment. Total number
                                 of chairs per nurse can be changed at the settings page.</td>
                         </tr>
+                    </table>
+                    <p>
+                        Needed Timeslots: Location where users can input the number of different appointments that users want.
+                                Example: 30 30 minute appointments, 15 1 hour appointments, etc
+                    </p>
+                    <table class="table">
                         <tr>
-                            <th>Needed Timeslots</th>
-                            <td>Location where users can input the number of different appointments that users want.
-                                Example: 30 30 minute appointments, 15 1 hour appointments, etc</td>
+                            <th>Save Time Slots Input</th>
+                            <td>Brings up a popup menu that allows for the user to save his input using a name to describe the input. If the name is already taken, it will overwrite it.</td>
+                        </tr>
+                        <tr>
+                            <th>Load Saved Input</th>
+                            <td>Loads a previously saved input into the timeslots.</td>
                         </tr>
                         <tr>
                             <th>Prioritize Longer Appointments</th>
