@@ -652,7 +652,12 @@
                     url: '/save_time_slot/',
                     async: doNotWait,
                     contentType: "application/json",
-                    data: {'SaveName': SaveName, 'Duration': row.cells[1].firstChild.value, 'Count': row.cells[2].firstChild.value, 'Priority': i},
+                    data: {'SaveName': SaveName,
+                        'Duration': row.cells[1].firstChild.value,
+                        'Count': row.cells[2].firstChild.value,
+                        'Priority': i,
+                        'TimeOfDay' : row.cells[3].firstChild.options[row.cells[3].firstChild.selectedIndex].value
+                    },
                     complete: function(response, textStatus) {
                         if(textStatus != 'success')
                             ajaxFailed = true;
@@ -758,6 +763,10 @@
             var obj = objectList[i].fields;
             row.cells[1].firstChild.value = obj.Duration;
             row.cells[2].firstChild.value = obj.Count;
+            if(obj.TimeOfDay == 'M')
+                row.cells[3].firstChild.selectedIndex = 0;
+            else
+                row.cells[3].firstChild.selectedIndex = 1;
         }
     }
 
