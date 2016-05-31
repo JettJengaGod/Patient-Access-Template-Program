@@ -470,7 +470,7 @@ class Pod:
         if current.chairs[chair][time] > 0 or current.chairs[chair][time+1] > 0:  # needs help starting the appointment
             for i in range(len(self.nurses)):
                 for j in range(num_chairs-1):
-                    if self.nurses[i].chairs[j][time] not in[1, 2, 3, 4] and self.nurses[i].chairs[j][time + 1] not in[1, 2, 3, 4] and extra is -1 and i is not nurseindex:
+                    if self.nurses[i].chairs[j][time] not in[1, 2, 3, 4]and self.nurses[i].chairs[j][time - 1] not in[1, 2, 3, 4] and self.nurses[i].chairs[j][time + 1] not in[1, 2, 3, 4] and extra is -1 and i is not nurseindex:
                         extra = [i, j]  # the index of the nurse that can help
                         break
             if extra is -1:  # found no one to help

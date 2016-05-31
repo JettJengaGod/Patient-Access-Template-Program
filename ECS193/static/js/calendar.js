@@ -574,7 +574,7 @@ function SaveSchedule(overwrite){
                 label.addClass("alert-danger").removeClass("alert-success");
             }
             else{
-                label.text(name + "has been saved");
+                label.text(name + " has been saved");
                 label.css("display", "block");
                 label.addClass("alert-success").removeClass("alert-danger");
             }
