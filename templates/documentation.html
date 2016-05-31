@@ -23,6 +23,9 @@
     <div class="row">
         <!--Main Content -->
         <div class="col-md-9" role="main">
+			<div class="alert alert-danger" role="alert">
+				This application is designed to be used in Google Chrome browser. Some features may not work in other browsers.
+			</div>
             <section class="group">
                 <h2 id="Preface">Preface</h2>
                 <div class="row well">
@@ -208,45 +211,40 @@
                     <div class="col-md-12">
                         <table class="table">
                             <tr>
-                                <th style="min-width: 100px;">Login Page: </th>
-                                <td>To log into the admin page the user must be a designated Superuser,
-                                    the process for which is explained in section XXX. Once you have obtained your credentials,
-                                    you can simply log into the main website with them and append “/admin/” to the main page to
-                                    gain access to the admin page.</td>
-                            </tr>
-                            <tr>
                                 <th>The Main Page:</th>
-                                <td>In the top right of the main page, you should see some text saying WELCOME, USERNAME followed by three options:
-                                    ViewSite, which will take you back to he main page of the scheduling application, Change Password which will take
-                                    you to the password change page, and Log Out which will log the user out and bring the user to the logout page. On
-                                    the left side of the page under the AUTHENTICATION AND AUTHORIZATION bar there are two rows, one for users and one for groups
+                                <td><p>In the top right of the main page, you should see some text saying WELCOME, *USERNAME* followed by three options:
+                                    "ViewSite", which will take you back to he main page of the scheduling application, "Change Password" which will take
+                                    you to the password change page, and "Log Out" which will log the user out and bring the user to the logout page.</p>
+									<p>On the left side of the page under the AUTHENTICATION AND AUTHORIZATION bar there are two rows, one for users and one for groups
                                     (a group of users with a set of permissions or traits). By clicking the title “Users” or “Groups”, the admin site will redirect you to the
                                     appropriate pages to edit the current users or groups in the database. Clicking the pencil icon to the far right of
                                     the row will have the same effect. By clicking on the + button on either of these rows, the admin site will redirect
-                                    you to the “add” page for users or groups.Below this there is the PATIENTSCHEDULING section which works in a very similar
-                                    fashion to the section above it. The main differences are that the rows reference to the chemotherapy drugs, nurse schedules
-                                    in the system, and Saved Time Slots Inputs, which reference the sets of time slots that you can save and load in the main
+                                    you to the “add” page for users or groups.</p>
+									<p>Below this there is the PATIENTSCHEDULING section which works in a very similar
+                                    fashion to the section above it. The main differences are that the rows reference to the chemotherapy drugs, nurse schedules,
+									and Saved Time Slots Inputs, the last of which reference the sets of time slots that you can save and load in the main
                                     application. One thing to note here is that the last two rows in this section can only be edited on the admin page as you
-                                    can only add a new nurse schedule or set of time slots in the main application Finally, to the left of these two sections is
-                                    the Recent actions tab, which record the recent actions (such as editing a schedule) that all users have taken on the admin site.
-                                    One thing to note here is that it does not record the action of logging in  or accessing the site.
+                                    can only add a new nurse schedule or set of time slots in the main application.
+									<p>Finally, to the left of these two sections is
+                                    the Recent Actions tab, which record the recent actions (such as editing a schedule) that all users have taken on the admin site.</p>
+                                 
                                 </td>
                             </tr>
                             <tr>
                                 <th>Groups Select Page:</th>
                                 <td>Use the search bar to find the group you wish to edit. By clicking the check box to the right of the name,
                                     you can then use the actions drop down menu to delete the ones you have selected.  By clicking on a group’s
-                                    name you get redirected to the change group page. To get to the group add page click the small add button on
+                                    name one gets redirected to the change group page. To get to the group add page, click the small add button on
                                     the top left of the page under the change password link.
                                 </td>
                             </tr>
                             <tr>
                                 <th>Groups Add Page:</th>
-                                <td>To start, type the name of the group you wish to create in the NAME textbox. Then, either use the scroll bar,
+                                <td>To start, type the name of the group you wish to create in the "NAME" textbox. Then, either use the scroll bar,
                                     or the search box to select the combination of permission for the the members of the group.  After clicking on the
                                     set of permissions, click the right arrow in between the two boxes to move that set of permissions into the chosen
                                     permissions box. This can be reversed by clicking the item in the chosen permissions box and proceeding to click the left
-                                    arrow. If you feel that it is convenient, you can click the choose all to add all permissions or the remove all to remove
+                                    arrow. If you feel that it is convenient, you can click the "Choose All" button to add all permissions or the remove all to remove
                                     all permissions from the group. At the bottom you can click the corresponding buttons to save and make a new group, save
                                     your progress and continue editing, or save and exit back to the main page (the save button).
                                 </td>
@@ -270,18 +268,18 @@
                                 <th>Change User Page:</th>
                                 <td>The first textbox is used to change the username, under the personal info tab the user can fill out the first
                                     name, last name, and email address if he or she so desires. Under the permissions tab there are three check boxes
-                                    which are active, staff status, and superuser status. Their effects are described on the page. Under these you can
+                                    which are active, staff status, and superuser status. Their effects are described for the user on the page. Under these you can
                                     select which groups you wish the user to belong to and click the right arrow to move them to the set of chosen groups.
                                     Below this the user will see set of 2 boxes for user permissions  (see description of the add group page for further detail
-                                    of how to use these boxes). Finally, the last section is if important dates such as last login and date joined, which can also
+                                    of how to use these boxes). Finally, the last section is for important dates such as last login and date joined, which can also
                                     be changed. At the bottom you can click the corresponding buttons to delete the user, save and make a new user, save your progress
                                     and continue editing, or save and exit back to the main page (the save button).
                                 </td>
                             </tr>
                             <tr>
                                 <th>Users Add Page:</th>
-                                <td> To start, type the name of the user you wish to create in the NAME textbox. Then, enter the password for the new user.
-                                      After this is filled out, please retype your password into the password confirmation box to ensure you typed the correct
+                                <td> To start, type the name of the user you wish to create in the NAME textbox. Then, enter the password for the new user and
+									  please retype your password into the password confirmation box to ensure you typed the correct
                                       password. At the bottom you can click the corresponding buttons to save and make a new user, save your progress and continue
                                       editing, or save and exit back to the main page (the save button).
                                 </td>
@@ -289,8 +287,8 @@
                             <tr>
                                 <th>Chemotherapy Drug Select Page:</th>
                                 <td>This page will display all the drugs in the database. By clicking the check box to the right of their name, you can then use
-                                    the actions drop down menu to delete the ones you have selected.  By clicking on one of the drug name you get redirected to the
-                                    change chemotherapy drug page. To get to the chemotherapy drug add page click the small add button on the top left of the page
+                                    the actions drop down menu to delete the ones you have selected.  By clicking on one of the drug names you get redirected to the
+                                    "Change Chemotherapy Drug" page. To get to the chemotherapy drug add page click the small add button on the top left of the page
                                     under the change password link.
                                 </td>
                             </tr>
@@ -305,16 +303,16 @@
                             </tr>
                             <tr>
                                 <th>Change Chemotherapy Drug Page:</th>
-                                <td>This page is identical to the Chemotherapy Add Page except one can delete the drug by clicking the red delete button and the one
-                                    can view the history of the drug relative to the database by clicking the grey history button at the top right under the log out
+                                <td>This page is identical to the "Chemotherapy Add" page except one can delete the drug by clicking the red delete button and one
+                                    can view the history of the drug relative to the database by clicking the grey "History" button at the top right under the "Log Out"
                                     link.
                                 </td>
                             </tr>
                             <tr>
                                 <th>RN Schedule Select Page:</th>
-                                <td>This page will display all the RN schedules in the database. By clicking the check box to the right of their name,
+                                <td>This page will display all the RN schedules in the database. After clicking the check box to the right of their name,
                                     you can then use the actions drop down menu to delete the ones you have selected.  By clicking on one of the RN schedule
-                                    names you get redirected to the change RN schedule page.
+                                    names you get redirected to the "Change RN Schedule" page.
                                 </td>
                             </tr>
                             <tr>
@@ -325,22 +323,22 @@
                             </tr>
                             <tr>
                                 <th>Time Slot Inputs Select Page:</th>
-                                <td>This page will display all the sets of time slot inputs in the database. By clicking the check box to the right of
-                                    their name, you can then use the actions drop down menu to delete the ones you have selected.  By clicking on one of
+                                <td>This page will display all the sets of time slot inputs in the database. After clicking the check box to the right of
+                                    their name, you can then use the actions drop down menu to delete the ones you have selected. By clicking on one of
                                     the time slot input names you get redirected to the change time slot inputs page.
                                 </td>
                             </tr>
                             <tr>
                                 <th>Change Time Slot Inputs Page:</th>
                                 <td>Fill out the name box to change the name of the saved set of time slot inputs. Below this you
-                                    can click the corresponding buttons to delete this set of time slot inputs, save your progress and
+                                    can click the corresponding buttons to delete the selected set of time slot inputs, save your progress and
                                     continue editing, or save and exit back to the main page (the save button).
                                 </td>
                             </tr>
                             <tr>
                                 <th>Logout Page:</th>
                                 <td>This page simply informs the user that he/she has been successfully logged out. By clicking the blue link under
-                                    the text called log in again the user will be brought back to the login page for the application.
+                                    the text called "Log In Again" the user will be brought back to the login page for the application.
                                 </td>
                             </tr>
                             <tr>
@@ -388,12 +386,18 @@
                             our skillset and because we felt that Python is very easy to work with. As previously mentioned Python was used for the
                             backend development which includes (but is not limited to) the algorithm for generating a
                             schedule, communicating with the database, customizing the admin site, and grabbing information from the textboxes on
-                            the actual website. For the font end we used the classic combination of HTML5 and CSS (enhanced with Bootstrap libraries)
+                            the actual website.
+						</p>
+						<p>
+							For the font end we used the classic combination of HTML5 and CSS (enhanced with Bootstrap libraries)
                             to design the web pages and make them aesthetically pleasing. We paired these with Javascript to add functionality to the
                             various links and buttons that were placed on the website. Many of our Javascript functions utilized Ajax to call the various
-                            database related functions we had written in Python to either save, delete, or query for data (using Postgressql on Heroku,
+                            database related functions we had written in Python to either save, delete, or query for data (using Postgressql on Heroku ,
                             SQlite on local host). Ajax was chosen because it makes the page more responsive as it can make a call to the python script without causing a post
-                            back of the entire page. We used it solely for calls that interact with the database. The website itself is (at the time of this writing) hosted on Heroku,
+                            back of the entire page. We used it solely for calls that interact with the database. 
+						</p>
+						<p>
+							The website itself is (at the time of this writing) hosted on Heroku,
                             which is a cloud server and is a temporary place to use the website until the client is ready to move the web app to one of their own servers.
                             Heroku was chosen because it was very compatible to use with git which was our preferred version control software. To interact with git our
                             team chose to use SourceTree as it is very eay to work with and has a great GUI (in our humble opinions).
@@ -402,7 +406,7 @@
                         <table class="table">
                             <tr>
                                 <th style="min-width: 100px;">Python: </th>
-                                <td>The programming language we plan on using in the back-end of the code.</td>
+                                <td>A high level programming language used in the back-end of the code.</td>
                             </tr>
                             <tr>
                                 <th>Django:</th>
@@ -425,7 +429,7 @@
                             </tr>
                             <tr>
                                 <th>Postgressql:</th>
-                                <td>A standalone database that we are using for our hosted site Heroku/td>
+                                <td>A standalone database that we are using for our hosted site Heroku</td>
                             </tr>
                             <tr>
                                 <th>Ajax:</th>
