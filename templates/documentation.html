@@ -24,24 +24,146 @@
         <!--Main Content -->
         <div class="col-md-9" role="main">
             <section class="group">
-                <h2 id="ApplicationPurpose">Application Purpose</h2>
-                dasdasdas dsadasd dsadasdasdsaddsadas
-            </section>
-
-            <section class="group">
                 <h2 id="Preface">Preface</h2>
-                <h3 id="Vocabulary">Vocabulary</h3>
-                <h3 id="Navigation">Navigation</h3>
+                <div class="row well">
+                    <h3 id="Vocabulary">Vocabulary</h3>
+                    <div class="col-sm-12">
+                        <p>
+                            Definitions of commonly used terms.
+                        </p><br>
+                            <table class="table">
+                            <tr>
+                                <th>RN</th>
+                                <td>Registered nurse.</td>
+                            </tr>
+                            <tr>
+                                <th>Pod</th>
+                                <td>A single letter used to identify a team of nurses who can help one another with patients.</td>
+                            </tr>
+                            <tr>
+                                <th>Appointment</th>
+                                <td>A scheduled time slot that has been assigned to a RN, at a particular chair, with a given start and end time.</td>
+                            </tr>
+                            <tr>
+                                <th>Time Slot</th>
+                                <td>Some specified amount of time that will attempt to be scheduled as an appointment.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row well">
+                    <h3 id="Navigation">Navigation</h3>
+                </div>
             </section>
 
             <section class="group">
                 <h2 id="Functionality">Functionality</h2>
-                <h3 id="CreatingNewSchedule">Creating a New Schedule</h3>
-                <h3 id="CalendarView">The Calendar view</h3>
-                <h3 id="SavedSchedules">Viewing Saved Schedules</h3>
+                <div class="row well">
+                    <h3 id="CreatingNewSchedule">Creating a New Schedule</h3>
+                    <table class="table">
+                        <tr>
+                            <th style="min-width: 100px;">RN Schedule</th>
+                            <td>A list of nurse availability for a given day including their start time, lunch time, leave time, and the pod they are working within.</td>
+                        </tr>
+                        <tr>
+                            <th>RN Number</th>
+                            <td>Unique ID associated with RN. Look at left most column at RN Schedules when
+                                using the new Schedule page to find the ID.</td>
+                        </tr>
+                        <tr>
+                            <th>Pod Team</th>
+                            <td>A single letter used to identify a team of nurses who can help one another with patients.</td>
+                        </tr>
+                        <tr>
+                            <th>Start Time</th>
+                            <td>The time when a RN officially starts work.</td>
+                        </tr>
+                        <tr>
+                            <th>Lunch Time</th>
+                            <td>The time when a RN officially starts his/her lunch.</td>
+                        </tr>
+                        <tr>
+                            <th>Lunch Duration</th>
+                            <td>The duration of RN's lunch break.</td>
+                        </tr>
+                        <tr>
+                            <th>End Time</th>
+                            <td>The time where a RN officially ends work.</td>
+                        </tr>
+                        <tr>
+                            <th>Reserved Time Periods</th>
+                            <td>Used to place mandatory appointments for a particular RN before generating the schedule. Example:
+                                If Nurse 1 knows he/she has an appointment that can not be missed for 1 hour at
+                                9 am. You would use section of the form to input it.</td>
+                        </tr>
+                        <tr>
+                            <th>Chair Number</th>
+                            <td>Represents which chair you want to assign the mandatory appointment. Total number
+                                of chairs per nurse can be changed at the settings page.</td>
+                        </tr>
+                        <tr>
+                            <th>Needed Timeslots</th>
+                            <td>Location where users can input the number of different appointments that users want.
+                                Example: 30 30 minute appointments, 15 1 hour appointments, etc</td>
+                        </tr>
+                        <tr>
+                            <th>Prioritize Longer Appointments</th>
+                            <td>If checked, the algorithm will try to fit as many longest appointments and work
+                                its way down to smaller appointments. If not checked, priority will be given based
+                                on the order of the list from top to bottom.</td>
+                        </tr>
+                        <tr>
+                            <th>Prepopulate Timeslots</th>
+                            <td>If clicked, it will autofill the timeslots selections with every single timeslot and
+                                autofill the total needed with 0.</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="row well">
+                    <h3 id="CalendarView">The Calendar view</h3>
+                    <div class="col-sm-12">
+                        <p>
+                            This page is where users can see the final schedule for the RNs. Each column is broken down
+                            by the hour and each row block represents a pod and their respective nurse.
+                            Users also have the ability to save and print their schedule which can be found at the top right of the calendar.
+                        </p>
+                        <table class="table">
+                            <tr>
+                                <th>Pod</th>
+                                <td>Each pod is represented by a solid grey filled bar. Right below are the respective
+                                    RN for the pods. A pod can be collapsed to make it easier to view other pods.</td>
+                            </tr>
+                            <tr>
+                                <th>Nurse / Chairs</th>
+                                <td>Each RN is represented by a unique ID and is responsible for some number of chais as specified in the settings.
+                                    The rows next to the RNs represent their respective chairs.</td>
+                            </tr>
+                            <tr>
+                                <th>Appointment</th>
+                                <td>The color bars shown represent all scheduled appointments. Each appointment length
+                                    has their own unique color code. Each appointment can be clicked on to show more
+                                    specific details such as start time, end time, and duration.</td>
+                            </tr>
+                            <tr>
+                                <th>Striped Bars</th>
+                                <td>The blue striped bars represent the RN's lunch time. The grey striped bars represent
+                                    times when they are not available due to early end time or later start time.</td>
+                            </tr>
+                            <tr>
+                                <th>Dropdown Menu</th>
+                                <td>The drop down menu in the top left corner gives the user the ability to select a chemotherapy drug and
+                                    only the appointments which can satisfy the selected drug's rules will be shown.</td>
+                            </tr>
+                        </table>
+                        <br>
+                    </div>
+                </div>
+                <div class="row well">
+                    <h3 id="SavedSchedules">Viewing Saved Schedules</h3>
+                </div>
                 <div class="row well">
                     <h3 id="Settings">Schedule Generation Settings</h3>
-                    <div class="col-md-8">
+                    <div class="col-sm-12">
                         <p>
                             These settings allow the user to change the way that the schedules are generated.
                             Please be aware that changing these settings will effect all users.
@@ -68,46 +190,284 @@
                                 <td>The amount of minutes after the open time before any appointments can be scheduled</td>
                             </tr>
                         </table>
-                        <br>
-                        <p>
-                            The settings are saved to the text file called UserSettings in YAML format.
-                        </p>
                     </div>
-                    <div class="col-md-4"><img src="\static\images\SettingsExample.png"></div>
                 </div>
-                <h3 id="AdminPage">The Admin Page</h3>
+                <div class="row well">
+                    <h3 id="AdminPage">The Admin Page</h3>
+                    <div class="col-md-12">
+                        <table class="table">
+                            <tr>
+                                <th style="min-width: 100px;">Login Page: </th>
+                                <td>To log into the admin page the user must be a designated Superuser,
+                                    the process for which is explained in section XXX. Once you have obtained your credentials,
+                                    you can simply log into the main website with them and append “/admin/” to the main page to
+                                    gain access to the admin page.</td>
+                            </tr>
+                            <tr>
+                                <th>The Main Page:</th>
+                                <td>In the top right of the main page, you should see some text saying WELCOME, USERNAME followed by three options:
+                                    ViewSite, which will take you back to he main page of the scheduling application, Change Password which will take
+                                    you to the password change page, and Log Out which will log the user out and bring the user to the logout page. On
+                                    the left side of the page under the AUTHENTICATION AND AUTHORIZATION bar there are two rows, one for users and one for groups
+                                    (a group of users with a set of permissions or traits). By clicking the title “Users” or “Groups”, the admin site will redirect you to the
+                                    appropriate pages to edit the current users or groups in the database. Clicking the pencil icon to the far right of
+                                    the row will have the same effect. By clicking on the + button on either of these rows, the admin site will redirect
+                                    you to the “add” page for users or groups.Below this there is the PATIENTSCHEDULING section which works in a very similar
+                                    fashion to the section above it. The main differences are that the rows reference to the chemotherapy drugs, nurse schedules
+                                    in the system, and Saved Time Slots Inputs, which reference the sets of time slots that you can save and load in the main
+                                    application. One thing to note here is that the last two rows in this section can only be edited on the admin page as you
+                                    can only add a new nurse schedule or set of time slots in the main application Finally, to the left of these two sections is
+                                    the Recent actions tab, which record the recent actions (such as editing a schedule) that all users have taken on the admin site.
+                                    One thing to note here is that it does not record the action of logging in  or accessing the site.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Groups Select Page:</th>
+                                <td>Use the search bar to find the group you wish to edit. By clicking the check box to the right of the name,
+                                    you can then use the actions drop down menu to delete the ones you have selected.  By clicking on a group’s
+                                    name you get redirected to the change group page. To get to the group add page click the small add button on
+                                    the top left of the page under the change password link.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Groups Add Page:</th>
+                                <td>To start, type the name of the group you wish to create in the NAME textbox. Then, either use the scroll bar,
+                                    or the search box to select the combination of permission for the the members of the group.  After clicking on the
+                                    set of permissions, click the right arrow in between the two boxes to move that set of permissions into the chosen
+                                    permissions box. This can be reversed by clicking the item in the chosen permissions box and proceeding to click the left
+                                    arrow. If you feel that it is convenient, you can click the choose all to add all permissions or the remove all to remove
+                                    all permissions from the group. At the bottom you can click the corresponding buttons to save and make a new group, save
+                                    your progress and continue editing, or save and exit back to the main page (the save button).
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Change Group Page:</th>
+                                <td>This page is identical to the add group page except the user can also click the red delete
+                                    button at the bottom left to delete the group.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Users Select Page:</th>
+                                <td>Use the search bar to find the user you wish to edit. Conversely you can also use the several filters
+                                    provided to you under the FILTER section to the right. By clicking the check box to the right of their
+                                    name, you can then use the actions drop down menu to delete the ones you have selected.  By clicking on
+                                    a user’s name you get redirected to the change user page. To get to the user add page click the small add
+                                    button on the top left of the page under the change password link.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Change User Page:</th>
+                                <td>The first textbox is used to change the username, under the personal info tab the user can fill out the first
+                                    name, last name, and email address if he or she so desires. Under the permissions tab there are three check boxes
+                                    which are active, staff status, and superuser status. Their effects are described on the page. Under these you can
+                                    select which groups you wish the user to belong to and click the right arrow to move them to the set of chosen groups.
+                                    Below this the user will see set of 2 boxes for user permissions  (see description of the add group page for further detail
+                                    of how to use these boxes). Finally, the last section is if important dates such as last login and date joined, which can also
+                                    be changed. At the bottom you can click the corresponding buttons to delete the user, save and make a new user, save your progress
+                                    and continue editing, or save and exit back to the main page (the save button).
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Users Add Page:</th>
+                                <td> To start, type the name of the user you wish to create in the NAME textbox. Then, enter the password for the new user.
+                                      After this is filled out, please retype your password into the password confirmation box to ensure you typed the correct
+                                      password. At the bottom you can click the corresponding buttons to save and make a new user, save your progress and continue
+                                      editing, or save and exit back to the main page (the save button).
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Chemotherapy Drug Select Page:</th>
+                                <td>This page will display all the drugs in the database. By clicking the check box to the right of their name, you can then use
+                                    the actions drop down menu to delete the ones you have selected.  By clicking on one of the drug name you get redirected to the
+                                    change chemotherapy drug page. To get to the chemotherapy drug add page click the small add button on the top left of the page
+                                    under the change password link.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Chemotherapy Drug Add Page:</th>
+                                <td>To start, type the name of the drug you wish to create in the NAME textbox. Then, enter the earliest and latest times the drug can
+                                    be scheduled for any given day (you can click the now button to automatically enter the current time). After this is filled out,
+                                    please enter any additional rules or pertinent information about the drug into the “Other Rules” box to be displayed when that drug
+                                    is selected at the calendar view page. At the bottom you can click the corresponding buttons to save and make a new user, save
+                                    your progress and continue editing, or save and exit back to the main page (the save button).
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Change Chemotherapy Drug Page:</th>
+                                <td>This page is identical to the Chemotherapy Add Page except one can delete the drug by clicking the red delete button and the one
+                                    can view the history of the drug relative to the database by clicking the grey history button at the top right under the log out
+                                    link.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>RN Schedule Select Page:</th>
+                                <td>This page will display all the RN schedules in the database. By clicking the check box to the right of their name,
+                                    you can then use the actions drop down menu to delete the ones you have selected.  By clicking on one of the RN schedule
+                                    names you get redirected to the change RN schedule page.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Change RN Schedule Page:</th>
+                                <td>Fill out the name box to change the name of the saved schedule. Below this you can click the corresponding buttons to delete
+                                    this schedule, save your progress and continue editing, or save and exit back to the main page (the save button).
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Time Slot Inputs Select Page:</th>
+                                <td>This page will display all the sets of time slot inputs in the database. By clicking the check box to the right of
+                                    their name, you can then use the actions drop down menu to delete the ones you have selected.  By clicking on one of
+                                    the time slot input names you get redirected to the change time slot inputs page.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Change Time Slot Inputs Page:</th>
+                                <td>Fill out the name box to change the name of the saved set of time slot inputs. Below this you
+                                    can click the corresponding buttons to delete this set of time slot inputs, save your progress and
+                                    continue editing, or save and exit back to the main page (the save button).
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Logout Page:</th>
+                                <td>This page simply informs the user that he/she has been successfully logged out. By clicking the blue link under
+                                    the text called log in again the user will be brought back to the login page for the application.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Change Password Page:</th>
+                                <td>As suggested by the name this page is for changing the user’s old password to a new one. Simply follow the instructions
+                                    provided on this page by typing in the provided text boxes and click the CHANGE MY PASSWORD button on the middle right side
+                                    of the page to change your password.
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
             </section>
 
             <section class="group">
                 <h2 id="Distribution">Distribution</h2>
-                <div class="well">
-                <h3 id="Database">Setting up the Database</h3>
-                <p>
-                    The python file settings.py is what Django uses to determine the application settings being used.
-                    The 'DATABASES' field will need to be changed to specify your database engine (ex: postgresql) and
-                    the connection information.
-                </p>
-                <p>
-                    <a href="https://docs.djangoproject.com/en/1.9/ref/databases/">Click Here</a>
-                     For more information on what database engines Django supports.
-                </p>
-                <p>
-                    <a href="https://docs.djangoproject.com/en/1.9/topics/settings/">Click Here</a>
-                     For more information on configuring the settings.py file.
-                </p>
+                <div class="row well">
+                    <h3 id="CodeLocation">Accessing the Code</h3>
+                     <p>The source code is open source and is under a <a href="http://choosealicense.com/licenses/gpl-3.0/">general public licence</a>.
+                         It is available on GitHub at <a href="https://github.com/JettJengaGod/Patient-Access-Template-Program">Patient-Access-Template-Program</a></p>
+                 </div>
+                <div class="row well">
+                    <h3 id="Database">Setting up the Database</h3>
+                    <p>
+                        The python file settings.py is what Django uses to determine the application settings being used.
+                        The 'DATABASES' field will need to be changed to specify your database engine (ex: postgresql) and
+                        the connection information.
+                    </p>
+                    <p>
+                        <a href="https://docs.djangoproject.com/en/1.9/ref/databases/">Click Here</a>
+                         For more information on what database engines Django supports.
+                    </p>
+                    <p>
+                        <a href="https://docs.djangoproject.com/en/1.9/topics/settings/">Click Here</a>
+                         For more information on configuring the settings.py file.
+                    </p>
+                </div>
+                <div class="row well">
+                    <h3 id="TechnologyOverview">Technologies Explanation:</h3>
+                    <div class="col-sm-12">
+                        <p>
+                            This web app was developed using the Pycharm IDE as it already had an excellent interface for building web tools
+                            using Django and Python. We chose to use Django with a Python backend because we wished to use new technologies to enhance
+                            our skillset and because we felt that Python is very easy to work with. As previously mentioned Python was used for the
+                            backend development which includes (but is not limited to) the algorithm for generating a
+                            schedule, communicating with the database, customizing the admin site, and grabbing information from the textboxes on
+                            the actual website. For the font end we used the classic combination of HTML5 and CSS (enhanced with Bootstrap libraries)
+                            to design the web pages and make them aesthetically pleasing. We paired these with Javascript to add functionality to the
+                            various links and buttons that were placed on the website. Many of our Javascript functions utilized Ajax to call the various
+                            database related functions we had written in Python to either save, delete, or query for data (using Postgressql on Heroku,
+                            SQlite on local host). Ajax was chosen because it makes the page more responsive as it can make a call to the python script without causing a post
+                            back of the entire page. We used it solely for calls that interact with the database. The website itself is (at the time of this writing) hosted on Heroku,
+                            which is a cloud server and is a temporary place to use the website until the client is ready to move the web app to one of their own servers.
+                            Heroku was chosen because it was very compatible to use with git which was our preferred version control software. To interact with git our
+                            team chose to use SourceTree as it is very eay to work with and has a great GUI (in our humble opinions).
+                        </p><br>
+                        <h4>Glossary of terms</h4>
+                        <table class="table">
+                            <tr>
+                                <th style="min-width: 100px;">Python: </th>
+                                <td>The programming language we plan on using in the back-end of the code.</td>
+                            </tr>
+                            <tr>
+                                <th>Django:</th>
+                                <td>A high level open-source, Python, web application framework which follows MVC
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>CSS (Cascading Style Sheets):</th>
+                                <td>A language used to describe the look and format of HTML
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Javascript</th>
+                                <td>A programming language used to create interactive effects in web applications</td>
+                            </tr>
+                            <tr>
+                                <th>SQLite: </th>
+                                <td>The Django built in database
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Postgressql:</th>
+                                <td>A standalone database that we are using for our hosted site Heroku</td>
+                            </tr>
+                            <tr>
+                                <th>Ajax:</th>
+                                <td>A means of communicating from client to server in order to retrieve information from the server.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Heroku:</th>
+                                <td>A way to deploy websites using a cloud server</td>
+                            </tr>
+                            <tr>
+                                <th>Github:</th>
+                                <td>Version control software that allows for simultaneous editing
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Bootstrap:</th>
+                                <td>An open-source, front-end framework that contains CSS stylesheets, and Javascript extensions</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </section>
 
             <section class="group">
                 <h2 id="MeetTheCreators">Meet The Creators</h2>
-                <img alt="Rachel Church" src="http://www.gravatar.com/avatar/b002350502e3734bcc94d9d11240e022">
-                Rachel Church <br>
-                <img alt="Alex Peng" src="http://www.gravatar.com/avatar/d85b9512652016482919000a189124fa">
-                Alex Peng <br>
-                <img alt="Jett Lewis" src="http://www.gravatar.com/avatar/cc0e9ffcb0e8c4ec97e0525b40e2a17d">
-                Jett Lewis <br>
-                <img alt="Carl Glahn" src="http://www.gravatar.com/avatar/7a494380b665811215fa70cfda441d2b">
-                Carl Glahn <br>
+                <div class="row text-center">
+                    <div class="col-sm-3">
+                        <a href="https://www.linkedin.com/in/rachelnchurch">
+                            <img alt="Rachel Church" src="http://www.gravatar.com/avatar/b002350502e3734bcc94d9d11240e022"><br>
+                            Rachel Church
+                        </a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="https://www.linkedin.com/in/alexander-peng-5192408a">
+                            <img alt="Alex Peng" src="http://www.gravatar.com/avatar/d85b9512652016482919000a189124fa"><br>
+                            Alex Peng
+                        </a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="https://www.linkedin.com/in/alexjett">
+                            <img alt="Jett Lewis" src="http://www.gravatar.com/avatar/cc0e9ffcb0e8c4ec97e0525b40e2a17d"><br>
+                            Jett Lewis
+                        </a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="https://www.linkedin.com/in/carl-glahn-096b4288">
+                            <img alt="Carl Glahn" src="http://www.gravatar.com/avatar/7a494380b665811215fa70cfda441d2b"><br>
+                            Carl Glahn
+                        </a>
+                    </div>
+                </div>
+                <br><br>
             </section>
         </div>
 
@@ -115,7 +475,6 @@
         <div class="col-md-3 hidden-print hidden-xs">
         <nav class="bs-docs-sidebar affix">
             <ul class="nav nav-stacked fixed">
-                <li><a href="#ApplicationPurpose">Application Purpose</a></li>
                 <li><a href="#Preface">Preface</a>
                     <ul class="nav nav-stacked">
                         <li><a href="#Vocabulary">Vocabulary</a></li>
@@ -133,9 +492,9 @@
                 </li>
                 <li><a href="#Distribution">Distribution</a>
                     <ul class="nav nav-stacked">
-                        <li><a href="#CodeLocation">Code Location</a></li>
-                        <li><a href="#TechnologyOverview">Technology Overview</a></li>
+                        <li><a href="#CodeLocation">Accessing the Code</a></li>
                         <li><a href="#Database">Database</a></li>
+                        <li><a href="#TechnologyOverview">Technology Overview</a></li>
                     </ul>
                 </li>
                 <li><a href="#MeetTheCreators">Meet the Creators</a></li>
