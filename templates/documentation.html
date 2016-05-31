@@ -24,15 +24,10 @@
         <!--Main Content -->
         <div class="col-md-9" role="main">
             <section class="group">
-                <h2 id="ApplicationPurpose">Application Purpose</h2>
-                dasdasdas dsadasd dsadasdasdsaddsadas
-            </section>
-
-            <section class="group">
                 <h2 id="Preface">Preface</h2>
                 <div class="row well">
                     <h3 id="Vocabulary">Vocabulary</h3>
-                    <div class="col-md-8">
+                    <div class="col-sm-12">
                         <p>
                             Definitions of common terms used.
                         </p><br>
@@ -100,15 +95,19 @@
                         </table>
                     </div>
                 </div>
-                <h3 id="Navigation">Navigation</h3>
+                <div class="row well">
+                    <h3 id="Navigation">Navigation</h3>
+                </div>
             </section>
 
             <section class="group">
                 <h2 id="Functionality">Functionality</h2>
-                <h3 id="CreatingNewSchedule">Creating a New Schedule</h3>
+                <div class="row well">
+                    <h3 id="CreatingNewSchedule">Creating a New Schedule</h3>
+                </div>
                 <div class="row well">
                     <h3 id="CalendarView">The Calendar view</h3>
-                    <div class="col-md-8">
+                    <div class="col-sm-12">
                         <p>
                             This page is where users can see the final schedule for the RNs. Each column is broken down
                             by the hour and each row block represents a pod and their respective nurse.
@@ -156,10 +155,12 @@
                         </p>
                     </div>
                 </div>
-                <h3 id="SavedSchedules">Viewing Saved Schedules</h3>
+                <div class="row well">
+                    <h3 id="SavedSchedules">Viewing Saved Schedules</h3>
+                </div>
                 <div class="row well">
                     <h3 id="Settings">Schedule Generation Settings</h3>
-                    <div class="col-md-8">
+                    <div class="col-sm-12">
                         <p>
                             These settings allow the user to change the way that the schedules are generated.
                             Please be aware that changing these settings will effect all users.
@@ -186,10 +187,11 @@
                                 <td>The amount of minutes after the open time before any appointments can be scheduled</td>
                             </tr>
                         </table>
+                    </div>
                 </div>
-                <h3 id="AdminPage">The Admin Page</h3>
                 <div class="row well">
-                    <div class="col-md-8">
+                    <h3 id="AdminPage">The Admin Page</h3>
+                    <div class="col-md-12">
                         <p>
                             This is a page by page explanation of the admin site
                         </p><br>
@@ -339,20 +341,57 @@
                             </tr>
 
                         </table>
-
                     </div>
                 </div>
-                <h3 id="AdminPage">Technologies Explanation:</h3>
+            </section>
+
+            <section class="group">
+                <h2 id="Distribution">Distribution</h2>
                 <div class="row well">
-                    <div class="col-md-8">
+                    <h3 id="CodeLocation">Accessing the Code</h3>
+                     <p>The source code is open source and is under a <a href="http://choosealicense.com/licenses/gpl-3.0/">general public licence</a>.
+                         It is available on GitHub at <a href="https://github.com/JettJengaGod/Patient-Access-Template-Program">Patient-Access-Template-Program</a></p>
+                 </div>
+                <div class="row well">
+                    <h3 id="Database">Setting up the Database</h3>
+                    <p>
+                        The python file settings.py is what Django uses to determine the application settings being used.
+                        The 'DATABASES' field will need to be changed to specify your database engine (ex: postgresql) and
+                        the connection information.
+                    </p>
+                    <p>
+                        <a href="https://docs.djangoproject.com/en/1.9/ref/databases/">Click Here</a>
+                         For more information on what database engines Django supports.
+                    </p>
+                    <p>
+                        <a href="https://docs.djangoproject.com/en/1.9/topics/settings/">Click Here</a>
+                         For more information on configuring the settings.py file.
+                    </p>
+                </div>
+                <div class="row well">
+                    <h3 id="TechnologyOverview">Technologies Explanation:</h3>
+                    <div class="col-sm-12">
                         <p>
-                            This section explains how the technologies fit together.
+                            This web app was developed using the Pycharm IDE as it already had an excellent interface for building web tools
+                            using Django and Python. We chose to use Django with a Python backend because we wished to use new technologies to enhance
+                            our skillset and because we felt that Python is very easy to work with. As previously mentioned Python was used for the
+                            backend development which includes (but is not limited to) the algorithm for generating a
+                            schedule, communicating with the database, customizing the admin site, and grabbing information from the textboxes on
+                            the actual website. For the font end we used the classic combination of HTML5 and CSS (enhanced with Bootstrap libraries)
+                            to design the web pages and make them aesthetically pleasing. We paired these with Javascript to add functionality to the
+                            various links and buttons that were placed on the website. Many of our Javascript functions utilized Ajax to call the various
+                            database related functions we had written in Python to either save, delete, or query for data (using Postgressql on Heroku,
+                            SQlite on local host). Ajax was chosen because it makes the page more responsive as it can make a call to the python script without causing a post
+                            back of the entire page. We used it solely for calls that interact with the database. The website itself is (at the time of this writing) hosted on Heroku,
+                            which is a cloud server and is a temporary place to use the website until the client is ready to move the web app to one of their own servers.
+                            Heroku was chosen because it was very compatible to use with git which was our preferred version control software. To interact with git our
+                            team chose to use SourceTree as it is very eay to work with and has a great GUI (in our humble opinions).
                         </p><br>
                         <h4 id="AdminPage"><u>Glossary of terms</u></h4>
                         <table class="table">
                             <tr>
                                 <th style="min-width: 100px;">Python: </th>
-                                <td>The programming language we plan on using in the back-end of the code</td>
+                                <td>The programming language we plan on using in the back-end of the code.</td>
                             </tr>
                             <tr>
                                 <th>Django:</th>
@@ -375,7 +414,7 @@
                             </tr>
                             <tr>
                                 <th>Postgressql:</th>
-                                <td>A standalone database that we are using for our hosted site/td>
+                                <td>A standalone database that we are using for our hosted site Heroku/td>
                             </tr>
                             <tr>
                                 <th>Ajax:</th>
@@ -395,46 +434,8 @@
                                 <th>Bootstrap:</th>
                                 <td>An open-source, front-end framework that contains CSS stylesheets, and Javascript extensions</td>
                             </tr>
-                            <tr>
-                                <th><u><h4>Overview:</h4></u></th>
-                                <td>This web app was developed using the Pycharm IDE as it already had an excellent interface for building web tools
-                                    using Django and Python. We chose to use Django with a Python backend because we wished to use new technologies to enhance
-                                    our skillset and because we felt that Python is very easy to work with. As previously mentioned Python was used for the
-                                    backend development which includes (but is not limited to) the algorithm for generating a
-                                    schedule, communicating with the database, customizing the admin site, and grabbing information from the textboxes on
-                                    the actual website. For the font end we used the classic combination of HTML5 and CSS (enhanced with Bootstrap libraries)
-                                    to design the web pages and make them aesthetically pleasing. We paired these with Javascript to add functionality to the
-                                    various links and buttons that were placed on the website. Many of our Javascript functions utilized Ajax to call the various
-                                    database related functions we had written in Python to either save, delete, or query for data (using Postgressql on Heroku,
-                                    SQlite on local host). Ajax was chosen because it makes the page more responsive as it can make a call to the python script without causing a post
-                                    back of the entire page. We used it solely for calls that interact with the database. The website itself is (at the time of this writing) hosted on Heroku,
-                                    which is a cloud server and is a temporary place to use the website until the client is ready to move the web app to one of their own servers.
-                                    Heroku was chosen because it was very compatible to use with git which was our preferred version control software. To interact with git our
-                                    team chose to use SourceTree as it is very eay to work with and has a great GUI (in our humble opinions).
-                                </td>
-                            </tr>
                         </table>
                     </div>
-                </div>
-            </section>
-
-            <section class="group">
-                <h2 id="Distribution">Distribution</h2>
-                <div class="well">
-                <h3 id="Database">Setting up the Database</h3>
-                <p>
-                    The python file settings.py is what Django uses to determine the application settings being used.
-                    The 'DATABASES' field will need to be changed to specify your database engine (ex: postgresql) and
-                    the connection information.
-                </p>
-                <p>
-                    <a href="https://docs.djangoproject.com/en/1.9/ref/databases/">Click Here</a>
-                     For more information on what database engines Django supports.
-                </p>
-                <p>
-                    <a href="https://docs.djangoproject.com/en/1.9/topics/settings/">Click Here</a>
-                     For more information on configuring the settings.py file.
-                </p>
                 </div>
             </section>
 
@@ -455,7 +456,6 @@
         <div class="col-md-3 hidden-print hidden-xs">
         <nav class="bs-docs-sidebar affix">
             <ul class="nav nav-stacked fixed">
-                <li><a href="#ApplicationPurpose">Application Purpose</a></li>
                 <li><a href="#Preface">Preface</a>
                     <ul class="nav nav-stacked">
                         <li><a href="#Vocabulary">Vocabulary</a></li>
@@ -473,9 +473,9 @@
                 </li>
                 <li><a href="#Distribution">Distribution</a>
                     <ul class="nav nav-stacked">
-                        <li><a href="#CodeLocation">Code Location</a></li>
-                        <li><a href="#TechnologyOverview">Technology Overview</a></li>
+                        <li><a href="#CodeLocation">Accessing the Code</a></li>
                         <li><a href="#Database">Database</a></li>
+                        <li><a href="#TechnologyOverview">Technology Overview</a></li>
                     </ul>
                 </li>
                 <li><a href="#MeetTheCreators">Meet the Creators</a></li>
