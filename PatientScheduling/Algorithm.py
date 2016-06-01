@@ -539,7 +539,6 @@ class Alg_Appointment:
 #
 # Returns:
 #
-#
 #    discarded - a list of appointments that could not be scheduled
 #    final - a list of scheduled <Alg_Appointments>
 
@@ -547,52 +546,26 @@ class Alg_Appointment:
 def schedule_slots(pods, appointments, final):
     number = 5
     discarded = []
-    appointments = sorting_hat(appointments, 19, 8)
-    while len(appointments[0]) is not 0:
+    appointments = sorting_hat(appointments, 24, 8)
+    while len(appointments) is not 0:
         stuck = number + 0
         for i in range(len(pods)):
-            if len(appointments[0]) is 0:
+            if len(appointments) is 0:
                 break
-            a = pods[i].morning_schedule(appointments[0][0], number)
+            a = pods[i].morning_schedule(appointments[0], number)
             if a:
                 print a
-                appointments[0].pop(0)
+                appointments.pop(0)
                 final.append(a)
                 number += 1
-        if number is stuck and len(appointments[0]) is not 0:
-            discarded.append(appointments[0].pop(0))
-    while len(appointments[1]) is not 0:
-        stuck = number + 0
-        for i in range(len(pods)):
-            if len(appointments[1]) is 0:
-                break
-            a = pods[i].evening_schedule(appointments[1][0], number)
-            if a:
-                print a
-                appointments[1].pop(0)
-                final.append(a)
-                number += 1
-        if number is stuck and len(appointments[1]) is not 0:
-            discarded.append(appointments[1].pop(0))
-    while len(appointments[2]) is not 0:
-        stuck = number + 0
-        for i in range(len(pods)):
-            if len(appointments[2]) is 0:
-                break
-            a = pods[i].morning_schedule(appointments[2][0], number)
-            if a:
-                print a
-                appointments[2].pop(0)
-                final.append(a)
-                number += 1
-        if number is stuck and len(appointments[2]) is not 0:
-            discarded.append(appointments[2].pop(0))
-
+        if number is stuck and len(appointments) is not 0:
+            discarded.append(appointments.pop(0))
+            # return "Failed"
     final.sort(key=lambda x: (x.nurse.id, x.chair, x.time))
     return discarded
 
 
-def sorting_hat(l, high, low):
+def sorting_hat(l,high,low):
     l = sorted(l)
     l.reverse()
     highlist = []
@@ -603,4 +576,7 @@ def sorting_hat(l, high, low):
     while l[1] < low and len(l) > 1:
         highlist.append(l.pop(0))
         lowlist.append(l.pop(0))
-    return [highlist, lowlist, l]
+    highlist += l
+    l = highlist
+    l+=(lowlist)
+    return l
