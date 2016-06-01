@@ -341,7 +341,8 @@ class Nurse:
 
     def schedule(self, appointment, number, chair, time):
         for i in range(time, time + appointment):
-            self.chairs[chair][i] = number
+            if self.chairs[chair][i] is not 1:
+                self.chairs[chair][i] = number
         for i in range(num_chairs):
             if self.chairs[i][time] >= 3:  # if there is an appointment
                 self.chairs[i][time] = 3
@@ -456,10 +457,10 @@ class Pod:
         for i in range(0, length):
             if current.chairs[chair][time + i] > 2:  # any point in the middle is already scheduled with an appointment
                 return False
-        if current.chairs[chair][time + length] is 1 or current.chairs[chair][time + length + 1] is 1 or current.chairs[chair][time + length - 1] is 1:  # ends during lunch
+        if current.chairs[chair][time + length-1] is 1 or current.chairs[chair][time + length-1] is 1:  # ends during lunch
             return False
         extra = -1
-        if current.chairs[chair][time] is 1 or current.chairs[chair][time-1] is 1 or current.chairs[chair][time+1] is 1:  # starts during lunch
+        if current.chairs[chair][time] is 1 or current.chairs[chair][time+1] is 1:  # starts during lunch
             return False
         if current.chairs[chair][time] > 0 or current.chairs[chair][time+1] > 0:  # needs help starting the appointment
             for i in range(len(self.nurses)):
@@ -566,6 +567,8 @@ def schedule_slots(pods, appointments, final):
 
 
 def sorting_hat(l,high,low):
+    if len(l) < 3:
+        return l
     l = sorted(l)
     l.reverse()
     highlist = []
@@ -576,6 +579,8 @@ def sorting_hat(l,high,low):
     while l[1] < low and len(l) > 1:
         highlist.append(l.pop(0))
         lowlist.append(l.pop(0))
+        if len(l) is 1:
+            break
     highlist += l
     l = highlist
     l+=(lowlist)
