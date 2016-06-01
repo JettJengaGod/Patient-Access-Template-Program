@@ -546,7 +546,7 @@ class Alg_Appointment:
 def schedule_slots(pods, appointments, final):
     number = 5
     discarded = []
-    appointments = sorting_hat(appointments, 24, 8)
+    appointments = sorting_hat(appointments, 19, 8)
     while len(appointments) is not 0:
         stuck = number + 0
         for i in range(len(pods)):
