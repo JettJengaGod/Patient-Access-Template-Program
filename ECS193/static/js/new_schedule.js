@@ -655,8 +655,7 @@
                     data: {'SaveName': SaveName,
                         'Duration': row.cells[1].firstChild.value,
                         'Count': row.cells[2].firstChild.value,
-                        'Priority': i,
-                        'TimeOfDay' : row.cells[3].firstChild.options[row.cells[3].firstChild.selectedIndex].value
+                        'Priority': i
                     },
                     complete: function(response, textStatus) {
                         if(textStatus != 'success')
@@ -763,10 +762,6 @@
             var obj = objectList[i].fields;
             row.cells[1].firstChild.value = obj.Duration;
             row.cells[2].firstChild.value = obj.Count;
-            if(obj.TimeOfDay == 'M')
-                row.cells[3].firstChild.selectedIndex = 0;
-            else
-                row.cells[3].firstChild.selectedIndex = 1;
         }
     }
 
