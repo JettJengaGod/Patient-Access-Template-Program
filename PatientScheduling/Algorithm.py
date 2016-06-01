@@ -180,15 +180,10 @@ def clean_input(nurseSchedules, appointments, scheduled_appointments):
     else:
         reserved_appointments = []
     # now we deal with the appointments
-    morning = []
-    evening = []
+    appt = []
     for appointment in appointments:
-        if appointment[2] == u'M':
-            morning.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
-        else:
-            evening.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
-    morning += evening
-    return [nurses, reserved_appointments, morning]
+        appt.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
+    return [nurses, reserved_appointments, appt]
 
 # Function: run_algorithm
 #
@@ -291,7 +286,6 @@ class Nurse:
             for j in range(self.end, longest_time):
                 self.chairs[i][j] = 4
 
-
     def get_pod(self):
         return self.pod
 
@@ -390,7 +384,7 @@ class Pod:
         for nurse in self.nurses:
             str += nurse.__str__()
         return str
-    # Function: single_schedule
+    # Function: morning_schedule
     #   Loops through a pod to see if it can schedule a single appointment
     #   Time -> Nurse -> Chairs
     # Parameters:
@@ -569,6 +563,7 @@ def schedule_slots(pods, appointments, final):
             # return "Failed"
     final.sort(key=lambda x: (x.nurse.id, x.chair, x.time))
     return discarded
+
 
 def sorting_hat(l,high,low):
     l = sorted(l)
