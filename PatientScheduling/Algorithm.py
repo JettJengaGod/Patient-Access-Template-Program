@@ -567,7 +567,7 @@ def schedule_slots(pods, appointments, final):
                 appointments[0].pop(0)
                 final.append(a)
                 number += 1
-        if number is stuck:
+        if number is stuck and len(appointments[0])is not 0:
             discarded.append(appointments[0].pop(0))
             # return "Failed"
     while len(appointments[1]) is not 0:
@@ -581,7 +581,7 @@ def schedule_slots(pods, appointments, final):
                 appointments[1].pop(0)
                 final.append(a)
                 number += 1
-        if number is stuck:
-            discarded.append(appointments[0].pop(0))
+        if number is stuck and len(appointments[1])is not 0:
+            discarded.append(appointments[1].pop(0))
     final.sort(key=lambda x: (x.nurse.id, x.chair, x.time))
     return discarded
