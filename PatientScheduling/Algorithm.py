@@ -180,15 +180,10 @@ def clean_input(nurseSchedules, appointments, scheduled_appointments):
     else:
         reserved_appointments = []
     # now we deal with the appointments
-    morning = []
-    evening = []
+    appt = []
     for appointment in appointments:
-        if appointment[2] == u'M':
-            morning.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
-        else:
-            evening.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
-
-    return [nurses, reserved_appointments, [morning, evening]]
+        appt.extend(convert_to_format(str(appointment[0])) for x in range(int(str(appointment[1]))))
+    return [nurses, reserved_appointments, appt]
 
 # Function: run_algorithm
 #
@@ -291,7 +286,6 @@ class Nurse:
             for j in range(self.end, longest_time):
                 self.chairs[i][j] = 4
 
-
     def get_pod(self):
         return self.pod
 
@@ -390,7 +384,7 @@ class Pod:
         for nurse in self.nurses:
             str += nurse.__str__()
         return str
-    # Function: single_schedule
+    # Function: morning_schedule
     #   Loops through a pod to see if it can schedule a single appointment
     #   Time -> Nurse -> Chairs
     # Parameters:
@@ -552,36 +546,37 @@ class Alg_Appointment:
 def schedule_slots(pods, appointments, final):
     number = 5
     discarded = []
-    appointments[0].sort
-    appointments[0].reverse
-    appointments[1].sort
-    appointments[1].reverse
-    while len(appointments[0]) is not 0:
+    appointments = sorting_hat(appointments, 24, 8)
+    while len(appointments) is not 0:
         stuck = number + 0
         for i in range(len(pods)):
-            if len(appointments[0]) is 0:
+            if len(appointments) is 0:
                 break
-            a = pods[i].morning_schedule(appointments[0][0], number)
+            a = pods[i].morning_schedule(appointments[0], number)
             if a:
                 print a
-                appointments[0].pop(0)
+                appointments.pop(0)
                 final.append(a)
                 number += 1
-        if number is stuck and len(appointments[0])is not 0:
-            discarded.append(appointments[0].pop(0))
+        if number is stuck and len(appointments) is not 0:
+            discarded.append(appointments.pop(0))
             # return "Failed"
-    while len(appointments[1]) is not 0:
-        stuck = number + 0
-        for i in range(len(pods)):
-            if len(appointments[1]) is 0:
-                return discarded
-            a = pods[i].evening_schedule(appointments[1][0], number)
-            if a:
-                print a
-                appointments[1].pop(0)
-                final.append(a)
-                number += 1
-        if number is stuck and len(appointments[1])is not 0:
-            discarded.append(appointments[1].pop(0))
     final.sort(key=lambda x: (x.nurse.id, x.chair, x.time))
     return discarded
+
+
+def sorting_hat(l,high,low):
+    l = sorted(l)
+    l.reverse()
+    highlist = []
+    lowlist = []
+    while l[0] > high:
+        highlist.append(l.pop(0))
+    l = sorted(l)
+    while l[1] < low and len(l) > 1:
+        highlist.append(l.pop(0))
+        lowlist.append(l.pop(0))
+    highlist += l
+    l = highlist
+    l+=(lowlist)
+    return l
