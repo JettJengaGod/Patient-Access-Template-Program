@@ -158,6 +158,14 @@
         <br><br>
 
         {{ AppointmentFormSet.management_form }}
+        {% if AppointmentFormSet.errors %}
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                Please fill out all fields with valid inputs.
+                If you have encountered a bug, please report it to an admin and reset the page you are on by
+                going back to the home page and then back to creating a new schedule.
+            </div>
+        {% endif %}
         <table id="{{ AppointmentFormSet.prefix }}Table" class='table table-striped'>
         <tr>
             <th></th>
