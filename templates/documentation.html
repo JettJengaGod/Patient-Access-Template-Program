@@ -5,6 +5,9 @@
     <script>
         $(document).ready(function(){
             $('#mainNav').hide();
+            if(window.chrome) {
+                $('#notChrome').hide();
+            }
         });
     </script>
     <style>
@@ -23,7 +26,7 @@
     <div class="row">
         <!--Main Content -->
         <div class="col-md-9" role="main">
-			<div class="alert alert-danger" role="alert">
+			<div id="notChrome" class="alert alert-danger" role="alert">
 				This application is designed to be used in Google Chrome browser. Some features may not work in other browsers.
 			</div>
             <section class="group">
@@ -196,6 +199,22 @@
                 </div>
                 <div class="row well">
                     <h3 id="SavedSchedules">Viewing Saved Schedules</h3>
+                    <div class="col-sm-12">
+                        <p>
+                            This page gives users the option to view all past saved schedules.
+                        </p><br>
+                        <table class="table">
+                            <tr>
+                                <th style="min-width: 100px;">Schedule Name</th>
+                                <td>The name that the schedule was saved with.
+                                    To view, please click on the name and it will redirect you to the saved schedule.</td>
+                            </tr>
+                            <tr>
+                                <th>Saved Date</th>
+                                <td>The date that the schedule was saved on.</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
                 <div class="row well">
                     <h3 id="Settings">Schedule Generation Settings</h3>

@@ -43,8 +43,9 @@ def new_schedule(request):
             needed_appointments = []
             for form in app_form:
                 cd = form.cleaned_data
-                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount'))])
-            needed_appointments = sorted(needed_appointments, key=itemgetter(0), reverse=True)
+                needed_appointments.append([int(cd.get('TimePeriod')), int(cd.get('Amount')), cd.get('TimeOfDay')])
+            if prioritize_longest:
+                needed_appointments = sorted(needed_appointments, key=itemgetter(0), reverse=True)
             # -----Build list of pre-reserved time slots----- #
             reserved_appointments = []
             for form in reserved_form:
@@ -129,6 +130,7 @@ def view_schedule(request, schedule_id):
 @login_required
 def settings_page(request):
     company_form = CompanyForm()
+    save_bool = False
     if request.method != 'POST':
         sett = UserSettings.getAll()
         if sett:
@@ -152,8 +154,9 @@ def settings_page(request):
                     'AppointmentStagger': cd.get("AppointmentStagger")
                 }
             UserSettings.saveAll(settings)
-            return render(request, 'home.html')
-    context = {'CompanyForm': company_form}
+            save_bool = True
+            # return render(request, 'home.html')
+    context = {'CompanyForm': company_form, 'save_bool': save_bool}
     return render(request, 'settings_page.html', context)
 
 

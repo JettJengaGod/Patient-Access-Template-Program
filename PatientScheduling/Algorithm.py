@@ -566,7 +566,7 @@ def schedule_slots(pods, appointments, final):
     return discarded
 
 
-def sorting_hat(l,high,low):
+def sorting_hat(l, high, low):
     if len(l) < 3:
         return l
     l = sorted(l)
@@ -575,6 +575,8 @@ def sorting_hat(l,high,low):
     lowlist = []
     while l[0] > high:
         highlist.append(l.pop(0))
+        if len(l) is 0:
+            break
     l = sorted(l)
     while l[1] < low and len(l) > 1:
         highlist.append(l.pop(0))

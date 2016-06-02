@@ -137,9 +137,19 @@
         <div id="appointment_alert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div id="ExceedTimeAlert" class="alert alert-danger" role="alert" style="display: none;"></div>
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <button type="button" class="btn btn-primary" onclick="SaveTimeSlotButtonClick('{{ AppointmentFormSet.prefix }}');" >Save Time Slots Input</button>
                 <button type="button" class="btn btn-primary" onclick="LoadTimeSlotNames()" data-toggle="modal" data-target="#loadTimeSlotModal">Load Saved Input</button>
+            </div>
+            <div class="col-md-3">
+                <a data-toggle="popover"  tabindex="0" title="Appointment Priority" role="button"
+                   data-placement="top" data-trigger="focus"
+                      data-content="When checked the longer duration time slots are prioritized.
+                      When not checked, the time slots that are placed higher in the list are given higher priority.">
+                        <span class="glyphicon glyphicon-question-sign help-glyphicon" aria-hidden="true"></span>
+                </a>
+                <label for="PrioritizeLongest">Prioritize Longer Appointments: </label>
+                <input id="PrioritizeLongest" name="PrioritizeLongest" type="checkbox" checked="checked">
             </div>
             <div class="col-md-3">
                 <button type="button" class="btn btn-primary" onclick="PrepopulateTimeslots('{{ AppointmentFormSet.prefix }}', {{ appt_ts }});">Prepopulate Timeslots</button>
@@ -152,7 +162,7 @@
             <div class="alert alert-danger">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 Please fill out all fields with valid inputs.
-                If you have encountered a bug, please report it to an admin and reset the page you are on by
+                If you have encountered a bug, reset the page you are on by
                 going back to the home page and then back to creating a new schedule.
             </div>
         {% endif %}
@@ -161,6 +171,7 @@
             <th></th>
             <th>Time Period</th>
             <th>Total Needed</th>
+            <th>Preferred Time</th>
         </tr>
         {% for form in AppointmentFormSet.forms %}
             <tr id="{{ AppointmentFormSet.prefix }}-row-{{ forloop.counter }}" class="dynamic-{{ AppointmentFormSet.prefix }}-row">
@@ -172,6 +183,7 @@
                 </td>
                 <td>{{ form.TimePeriod }}</td>
                 <td>{{ form.Amount }}</td>
+                <td>{{ form.TimeOfDay }}</td>
             </tr>
         {% endfor %}
         <tr><td colspan="6">
