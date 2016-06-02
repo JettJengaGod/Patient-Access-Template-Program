@@ -229,6 +229,7 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID, closeTi
     var DurationCell = row.cells[MiddleCell(startIndex, endIndex)]; //The cell to put the duration name in
     var startdiv, enddiv;
     var startPlaced = false;
+    var blackLine = 0;
     // appointment doesn't start on the hour
     if (startMinutes > 0) {
         //right shift
@@ -266,6 +267,7 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID, closeTi
         }
         endPlaced = true;
         enddiv.style.borderRight = 'black solid 1px';
+        blackLine = 1;
     }
     // fills out entire hour slot
     while (totalTime > 0) {
@@ -286,7 +288,9 @@ function AddAppointment(RNIndex, chairIndex, startTime, endTime, apptID, closeTi
         startdiv.style.borderRight = 'black solid 1px';
     }
     else {
-        startdiv.style.borderLeft = 'black solid 1px';
+
+        if (!endPlaced)
+            startdiv.style.borderLeft = 'black solid 1px';
         if (!endPlaced) enddiv.style.borderRight = 'black solid 1px';
     }
 }
