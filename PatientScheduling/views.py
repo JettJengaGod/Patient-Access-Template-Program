@@ -129,6 +129,7 @@ def view_schedule(request, schedule_id):
 @login_required
 def settings_page(request):
     company_form = CompanyForm()
+    save_bool = False
     if request.method != 'POST':
         sett = UserSettings.getAll()
         if sett:
@@ -152,8 +153,9 @@ def settings_page(request):
                     'AppointmentStagger': cd.get("AppointmentStagger")
                 }
             UserSettings.saveAll(settings)
-            return render(request, 'home.html')
-    context = {'CompanyForm': company_form}
+            save_bool = True
+            # return render(request, 'home.html')
+    context = {'CompanyForm': company_form, 'save_bool': save_bool}
     return render(request, 'settings_page.html', context)
 
 
