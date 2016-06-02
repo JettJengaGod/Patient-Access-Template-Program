@@ -113,10 +113,11 @@ class ReservedForm(forms.Form):
         StartTime = cleaned_data.get("StartTime")
         EndTime = cleaned_data.get("EndTime")
         RNNumber = cleaned_data.get("EndTime")
+        ChairNumber = cleaned_data.get("ChairNumber")
         try:
             if StartTime > EndTime:
                 raise forms.ValidationError('The start time must be before the end time')
-            if RNNumber != None and (StartTime == None or EndTime == None):
+            if RNNumber != None and (StartTime == None or EndTime == None or ChairNumber == None):
                 raise forms.ValidationError('Please complete all fields')
         except:
             return # allow the django alert to pop up
