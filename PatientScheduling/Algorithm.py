@@ -581,7 +581,7 @@ def sorting_hat(l, high, low):
     while l[1] < low and len(l) > 1:
         highlist.append(l.pop(0))
         lowlist.append(l.pop(0))
-        if len(l) is 1:
+        if len(l) <= 1:
             break
     highlist += l
     l = highlist
