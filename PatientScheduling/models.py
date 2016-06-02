@@ -54,10 +54,12 @@ class SavedTimeSlot(models.Model):
     Priority = models.IntegerField(default=0)
     Duration = models.IntegerField(default=0)
     Count = models.IntegerField(default=0)
+    TimeOfDay = models.CharField(default='M', max_length=1)
     Group = models.ForeignKey(SavedTimeSlotGroup, null=False, on_delete=models.CASCADE)
 
 
 class Appointment(models.Model):
+    # models.AutoField(primary_key=True) is a default field
     SavedSchedule = models.ForeignKey(SavedSchedule)
     NurseScheduleID = models.PositiveIntegerField(default=0)
     ChairID = models.PositiveIntegerField(default=0)

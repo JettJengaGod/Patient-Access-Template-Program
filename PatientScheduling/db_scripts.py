@@ -221,6 +221,7 @@ def load_time_slot_group(request):
       request.GET['Duration'] - the duration of the given time slot
       request.GET['Count'] - how many time slots are requested
       request.GET['Priority'] - the scheduling priority of the time slot
+      request.GET['TimeOfDay'] - either M (morning) or E (evening) preferred schedule time
 
    Returns:
 
@@ -237,7 +238,8 @@ def save_time_slot(request):
     duration = request.GET['Duration']
     priority = request.GET['Priority']
     count = request.GET['Count']
-    time_slot = SavedTimeSlot(Group=group_object, Duration=duration, Count=count, Priority=priority)
+    time_of_day = request.GET['TimeOfDay']
+    time_slot = SavedTimeSlot(Group=group_object, Duration=duration, Count=count, Priority=priority, TimeOfDay=time_of_day)
     time_slot.save()
     return HttpResponse('The duration and number of the time slots: ' + save_name + 'has been saved', content_type="application/json")
 
